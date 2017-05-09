@@ -4,7 +4,7 @@
   "description": "A line-based programming language",
   "main": "index.js",
   "bin":{
-    "lin": "node index.js"
+    "lin": "./index.js"
   },
   "repository": {
     "type": "git",
