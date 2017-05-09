@@ -1,0 +1,19 @@
+{
+  "name": "lin",
+  "version": "0.0.0",
+  "description": "A line-based programming language",
+  "main": "index.js",
+  "bin":{
+    "lin": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/molarmanful/lin.git"
+  },
+  "author": "Benjamin Pang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/molarmanful/lin/issues"
+  },
+  "homepage": "https://github.com/molarmanful/lin#readme"
+}
