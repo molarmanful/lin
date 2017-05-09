@@ -1,0 +1,8 @@
+_ stack.push(-stack.pop()+'')
++ stack.push(stack.pop()- -stack.pop()+'')
+- stack.push(-stack.pop()- -stack.pop()+'')
+* stack.push(-stack.pop()*stack.pop()+'')
+/ stack.push(1/stack.pop()*stack.pop()+'')
+DUP stack.push(stack[stack.length-1])
+DROP stack.pop()
+SWAP stack.splice(-2,0,stack.pop())

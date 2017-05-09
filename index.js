@@ -9,7 +9,7 @@ stack=[]
 exec=x=>{
   let lines=x.split`\n`
   parser.parse(lines[0]).map(a=>a.big&&sl[a]?sl[a]():stack.push(a))
-  console.log(stack.join`\n`)
+  ~process.argv.indexOf('-o')&&console.log(stack.join``)
 }
 
 require.main!=module&&(module.exports=this)
