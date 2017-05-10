@@ -17,6 +17,10 @@ module.exports={
   "nip":x=>stack.splice(1,1),
   "tuck":x=>stack.splice(2,0,stack[0]),
   "over":x=>stack.unshift(stack[1]),
+  "roll":x=>stack.unshift(stack.splice(stack.shift(),1)),
+  "roll_":x=>stack.splice(stack.shift(),0,stack.shift()),
+  "clr":x=>stack=[],
+  "rev":x=>stack.reverse(),
 
   "el":x=>(ln.unshift(stack.shift()),lne()),
   "en":x=>(ln.unshift(ln[0]+1),lne()),
