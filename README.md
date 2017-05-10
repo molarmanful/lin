@@ -6,5 +6,6 @@ A line-based programming language.
 
 ### Editing
 `index.js` holds the main executable.
-To add to STDLIB, run `./esl` (which will open the STDLIB file in your `$EDITOR` and compile it to `stdlib.js` using `csl.js` when the editor is closed).
-`lin.pegjs` is a PEG.js parser file that compiles to `lin-peg.js`.
+`help.txt` contains the help text.
+`csl.js` compiles `stdlib` into `stdlib.js`.
+`lin.pegjs` compiles into `lin-peg.js`.

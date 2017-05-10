@@ -1,0 +1,5 @@
+Usage: lin [options] [input]
+
+Options:
+ -o	display stack as final output
+ -e	parse input as string rather than filename

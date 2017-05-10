@@ -5,12 +5,27 @@ sl=require('./stdlib.js')
 fs=require('fs')
 
 stack=[]
+input=process.argv[process.argv.length-1]
 
 exec=x=>{
-  let lines=x.split`\n`
-  parser.parse(lines[0]).map(a=>a.big&&sl[a]?sl[a]():stack.push(a))
-  ~process.argv.indexOf('-o')&&console.log(stack.join``)
+  parser.parse(x).map(a=>
+    a.big&&a[1]&&a[0]=='\\'?
+      stack.unshift(a.slice(1))
+    :a.big&&a[1]&&a[0]=='#'?
+      0
+    :a.big&&sl[a]?
+      sl[a]()
+    :stack.unshift(a)
+  )
 }
 
 require.main!=module&&(module.exports=this)
-process.argv[2]?exec(fs.readFileSync(process.argv[2])+''):console.log("ERR: no file argument specified")
+~process.argv.indexOf('-h')?
+  console.log(fs.readFileSync('help.txt')+'')
+:input?
+  (exec((lines=(
+    ~process.argv.indexOf('-e')?
+      input
+    :fs.readFileSync(input)+''
+  ).split`\n`)[0]),~process.argv.indexOf('-o')&&console.log(stack.join`\n`))
+:console.log("ERR: no input argument specified")
