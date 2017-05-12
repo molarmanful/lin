@@ -19,7 +19,7 @@ $["^"]=x=>unshift(Math.pow(shift(),shift()))
 
 $["pick"]=x=>unshift(get(shift()))
 $["nix"]=x=>splice(shift())
-$["roll"]=x=>(x=get(0),$.pick(),unshift(x),$.nix())
+$["roll"]=x=>(x=get(0),$.pick(),unshift(x+1),$.nix())
 $["roll_"]=x=>splice(shift(),0,shift())
 $["dup"]=x=>unshift(stack[0])
 $["drop"]=x=>shift()
