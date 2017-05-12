@@ -1,29 +1,46 @@
-module.exports={
-  "id":x=>(id=stack.shift(),stack.unshift(lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id).replace(/^ *#[^\d. ]/,''))),
+module.exports=$={}
+$["gi"]=x=>(//
+    unshift(
+      ids[x=shift()]||(
+        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id),
+        line&&(ids[id]=line.replace(/^ *#[^\d. ]/,''))
+      )
+    )
+  )
+$["si"]=x=>ids[shift()]=shift()
 
-  "_":x=>stack.unshift(-stack.shift()),
-  "+":x=>stack.unshift(stack.shift()+stack.shift()),
-  "-":x=>stack.unshift(stack.shift()-stack.shift()),
-  "*":x=>stack.unshift(stack.shift()*stack.shift()),
-  "/":x=>stack.unshift(stack.shift()/stack.shift()),
-  "%":x=>stack.unshift(stack.shift()%stack.shift()),
-  "^":x=>stack.unshift(Math.pow(stack.shift(),stack.shift())),
+$["_"]=x=>unshift(-shift())
+$["+"]=x=>unshift(shift()- -shift())
+$["-"]=x=>unshift(shift()-shift())
+$["*"]=x=>unshift(shift()*shift())
+$["/"]=x=>unshift(shift()/shift())
+$["%"]=x=>unshift(shift()%shift())
+$["^"]=x=>unshift(Math.pow(shift(),shift()))
 
-  "dup":x=>stack.unshift(stack[0]),
-  "drop":x=>stack.shift(),
-  "swap":x=>stack.splice(1,0,stack.shift()),
-  "rot":x=>stack.unshift(stack.splice(2,1)),
-  "rot_":x=>stack.splice(2,0,stack.shift()),
-  "nip":x=>stack.splice(1,1),
-  "tuck":x=>stack.splice(2,0,stack[0]),
-  "over":x=>stack.unshift(stack[1]),
-  "roll":x=>stack.unshift(stack.splice(stack.shift(),1)),
-  "roll_":x=>stack.splice(stack.shift(),0,stack.shift()),
-  "clr":x=>stack=[],
-  "rev":x=>stack.reverse(),
+$["pick"]=x=>unshift(get(shift()))
+$["nix"]=x=>splice(shift())
+$["roll"]=x=>(x=get(0),$.pick(),unshift(x),$.nix())
+$["roll_"]=x=>splice(shift(),0,shift())
+$["dup"]=x=>unshift(stack[0])
+$["drop"]=x=>shift()
+$["rot"]=x=>unshift(splice(2,1))
+$["rot_"]=x=>($.rot(),$.rot())
+$["swap"]=x=>($.dup(),$.rot_(),$.drop())
+$["nip"]=x=>($.swap(),$.drop())
+$["tuck"]=x=>($.dup(),$.rot())
+$["over"]=x=>($.swap(),$.tuck())
+$["clr"]=x=>stack=[]
+$["rev"]=x=>stack.reverse()
 
-  "el":x=>(ln.unshift(stack.shift()),lne()),
-  "en":x=>(ln.unshift(ln[0]+1),lne()),
-  "ep":x=>(ln.unshift(ln[0]-1),lne()),
-  "es":x=>exec(stack.shift()),
-0:0}
+$["el"]=x=>(ln.unshift(shift()),lne())
+$["en"]=x=>(ln[0].big||ln.unshift(ln[0]+1),lne())
+$["ep"]=x=>(ln[0].big||ln.unshift(ln[0]-1),lne())
+$["ei"]=x=>(ln.unshift(''),id=shift(),
+    exec(
+      ids[x=shift()]||(
+        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id),
+        line&&(ids[id]=line.replace(/^ *#[^\d. ]/,''))
+      )
+    )
+  )
+$["es"]=x=>(ln.unshift(''),exec(shift()))

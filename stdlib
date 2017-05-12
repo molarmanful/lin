@@ -1,27 +1,45 @@
-id (id=stack.shift(),stack.unshift(lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id).replace(/^ *#[^\d. ]/,'')))
+gi (//
+    unshift(
+      ids[x=shift()]||(
+        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id),
+        line&&(ids[id]=line.replace(/^ *#[^\d. ]/,''))
+      )
+    )
+  )
+si ids[shift()]=shift()
 
-_ stack.unshift(-stack.shift())
-+ stack.unshift(stack.shift()+stack.shift())
-- stack.unshift(stack.shift()-stack.shift())
-* stack.unshift(stack.shift()*stack.shift())
-/ stack.unshift(stack.shift()/stack.shift())
-% stack.unshift(stack.shift()%stack.shift())
-^ stack.unshift(Math.pow(stack.shift(),stack.shift()))
+_ unshift(-shift())
++ unshift(shift()- -shift())
+- unshift(shift()-shift())
+* unshift(shift()*shift())
+/ unshift(shift()/shift())
+% unshift(shift()%shift())
+^ unshift(Math.pow(shift(),shift()))
 
-dup stack.unshift(stack[0])
-drop stack.shift()
-swap stack.splice(1,0,stack.shift())
-rot stack.unshift(stack.splice(2,1))
-rot_ stack.splice(2,0,stack.shift())
-nip stack.splice(1,1)
-tuck stack.splice(2,0,stack[0])
-over stack.unshift(stack[1])
-roll stack.unshift(stack.splice(stack.shift(),1))
-roll_ stack.splice(stack.shift(),0,stack.shift())
+pick unshift(get(shift()))
+nix splice(shift())
+roll (x=get(0),$.pick(),unshift(x),$.nix())
+roll_ splice(shift(),0,shift())
+dup unshift(stack[0])
+drop shift()
+rot unshift(splice(2,1))
+rot_ ($.rot(),$.rot())
+swap ($.dup(),$.rot_(),$.drop())
+nip ($.swap(),$.drop())
+tuck ($.dup(),$.rot())
+over ($.swap(),$.tuck())
 clr stack=[]
 rev stack.reverse()
 
-el (ln.unshift(stack.shift()),lne())
-en (ln.unshift(ln[0]+1),lne())
-ep (ln.unshift(ln[0]-1),lne())
-es exec(stack.shift())
+el (ln.unshift(shift()),lne())
+en (ln[0].big||ln.unshift(ln[0]+1),lne())
+ep (ln[0].big||ln.unshift(ln[0]-1),lne())
+ei (ln.unshift(''),id=shift(),
+    exec(
+      ids[x=shift()]||(
+        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id),
+        line&&(ids[id]=line.replace(/^ *#[^\d. ]/,''))
+      )
+    )
+  )
+es (ln.unshift(''),exec(shift()))
