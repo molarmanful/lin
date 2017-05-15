@@ -14,7 +14,7 @@ input=process.argv[process.argv.length-1]
 
 //convenience functions for stdlib
 mod=(x,y)=>(x%y+y)%y
-form=x=>stack.map(a=>JSON.stringify(a)).join`\n`
+form=x=>stack.map(a=>JSON.stringify(a)).reverse().join`\n`
 get=x=>stack[mod(x,stack.length)]
 splice=(x,y=1,z)=>z==[]._?
   stack.splice(mod(x,stack.length),y)
