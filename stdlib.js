@@ -27,6 +27,11 @@ $["&"]=x=>($.swap(),unshift(shift()&shift()))
 $["|"]=x=>($.swap(),unshift(shift()|shift()))
 $["$"]=x=>($.swap(),unshift(shift()^shift()))
 
+$["floor"]=x=>unshift(Math.floor(shift()))
+$["trunc"]=x=>unshift(Math.trunc(shift()))
+$["round"]=x=>unshift(Math.round(shift()))
+$["ceil"]=x=>unshift(Math.ceil(shift()))
+
 $["pick"]=x=>unshift(get(shift()))
 $["nix"]=x=>splice(shift())
 $["roll"]=x=>(x=get(0),$.pick(),unshift(x+1),$.nix())
