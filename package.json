@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "A line-based programming language",
   "main": "index.js",
-  "bin":{
+  "bin": {
     "lin": "./index.js"
   },
   "repository": {
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/molarmanful/lin/issues"
   },
-  "homepage": "https://github.com/molarmanful/lin#readme"
+  "homepage": "https://github.com/molarmanful/lin#readme",
+  "dependencies": {
+    "unescape-js": "^1.0.8"
+  }
 }

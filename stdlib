@@ -1,20 +1,30 @@
 gi (//
     unshift(
       ids[x=shift()]||(
-        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id),
-        line&&(ids[id]=line.replace(/^ *#[^\d. ]/,''))
+        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==x),
+        line&&(ids[x]=unesc(line.replace(/^ *#[^\d. ]/,'')))
       )
     )
   )
+gs unshift(form())
 si ids[shift()]=shift()
+
+out process.stdout.write(''+shift())
 
 _ unshift(-shift())
 + unshift(shift()- -shift())
-- unshift(shift()-shift())
+- ($.swap(),unshift(shift()-shift()))
 * unshift(shift()*shift())
-/ unshift(shift()/shift())
-% unshift(shift()%shift())
-^ unshift(Math.pow(shift(),shift()))
+/ ($.swap(),unshift(shift()/shift()))
+// ($.swap(),unshift(Math.floor(shift()/shift())))
+% ($.swap(),unshift(mod(shift(),shift())))
+/% ($.over(),$.over(),$['//'](),$.rot_(),$['%']())
+^ ($.swap(),unshift(Math.pow(shift(),shift())))
+
+~ unshift(~shift())
+& ($.swap(),unshift(shift()&shift()))
+| ($.swap(),unshift(shift()|shift()))
+$ ($.swap(),unshift(shift()^shift()))
 
 pick unshift(get(shift()))
 nix splice(shift())
@@ -22,24 +32,20 @@ roll (x=get(0),$.pick(),unshift(x+1),$.nix())
 roll_ splice(shift(),0,shift())
 dup unshift(stack[0])
 drop shift()
-rot unshift(splice(2,1))
+rot unshift(splice(2,1)[0])
 rot_ ($.rot(),$.rot())
 swap ($.dup(),$.rot_(),$.drop())
 nip ($.swap(),$.drop())
-tuck ($.dup(),$.rot())
+tuck ($.dup(),$.rot_())
 over ($.swap(),$.tuck())
 clr stack=[]
 rev stack.reverse()
+len unshift(stack.length)
 
 el (ln.unshift(shift()),lne())
 en (ln[0].big||ln.unshift(ln[0]+1),lne())
 ep (ln[0].big||ln.unshift(ln[0]-1),lne())
-ei (ln.unshift(''),id=shift(),
-    exec(
-      ids[x=shift()]||(
-        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==id),
-        line&&(ids[id]=line.replace(/^ *#[^\d. ]/,''))
-      )
-    )
-  )
+ei ($.gi(),$.es())
 es (ln.unshift(''),exec(shift()))
+e& ($.swap(),shift()?$.ei():shift())
+e| ($.swap(),shift()?shift():$.ei())
