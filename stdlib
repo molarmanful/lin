@@ -45,7 +45,14 @@ len unshift(stack.length)
 el (ln.unshift(shift()),lne())
 en (ln[0].big||ln.unshift(ln[0]+1),lne())
 ep (ln[0].big||ln.unshift(ln[0]-1),lne())
-ei ($.gi(),$.es())
+ei (//
+    exec(
+      ids[x=shift()]||(
+        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==x),
+        line&&(ids[x]=line.replace(/^ *#[^\d. ]/,''))
+      )
+    )
+  )
 es (ln.unshift(''),exec(shift()))
 e& ($.swap(),shift()?$.ei():shift())
 e| ($.swap(),shift()?shift():$.ei())

@@ -46,7 +46,14 @@ $["len"]=x=>unshift(stack.length)
 $["el"]=x=>(ln.unshift(shift()),lne())
 $["en"]=x=>(ln[0].big||ln.unshift(ln[0]+1),lne())
 $["ep"]=x=>(ln[0].big||ln.unshift(ln[0]-1),lne())
-$["ei"]=x=>($.gi(),$.es())
+$["ei"]=x=>(//
+    exec(
+      ids[x=shift()]||(
+        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==x),
+        line&&(ids[x]=line.replace(/^ *#[^\d. ]/,''))
+      )
+    )
+  )
 $["es"]=x=>(ln.unshift(''),exec(shift()))
 $["e&"]=x=>($.swap(),shift()?$.ei():shift())
 $["e|"]=x=>($.swap(),shift()?shift():$.ei())
