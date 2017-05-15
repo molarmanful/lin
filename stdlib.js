@@ -12,6 +12,7 @@ $["si"]=x=>ids[shift()]=shift()
 
 $["out"]=x=>process.stdout.write(''+shift())
 
+$["E"]=x=>($.swap(),unshift(shift()*Math.pow(10,shift())))
 $["_"]=x=>unshift(-shift())
 $["+"]=x=>unshift(shift()- -shift())
 $["-"]=x=>($.swap(),unshift(shift()-shift()))

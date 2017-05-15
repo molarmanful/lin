@@ -11,6 +11,7 @@ si ids[shift()]=shift()
 
 out process.stdout.write(''+shift())
 
+E ($.swap(),unshift(shift()*Math.pow(10,shift())))
 _ unshift(-shift())
 + unshift(shift()- -shift())
 - ($.swap(),unshift(shift()-shift()))
