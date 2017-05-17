@@ -7,20 +7,21 @@ fs=require('fs')
 unesc=require('unescape-js')
 
 //variables
-stack=[]
+stack={0:[]}
+st=0
 ln=[0]
 ids={}
 input=process.argv[process.argv.length-1]
 
 //convenience functions for stdlib
 mod=(x,y)=>(x%y+y)%y
-form=x=>stack.map(a=>JSON.stringify(a)).reverse().join`\n`
-get=x=>stack[mod(x,stack.length)]
+form=x=>stack[st].map(a=>JSON.stringify(a)).reverse().join`\n`
+get=x=>stack[st][mod(x,stack[st].length)]
 splice=(x,y=1,z)=>z==[]._?
-  stack.splice(mod(x,stack.length),y)
-:stack.splice(mod(x,stack.length),y,z)
-shift=x=>stack.shift()||0
-unshift=x=>stack.unshift(x)
+  stack[st].splice(mod(x,stack[st].length),y)
+:stack[st].splice(mod(x,stack[st].length),y,z)
+shift=x=>stack[st].shift()||0
+unshift=x=>stack[st].unshift(x)
 
 //exec wrapper for line jumping
 lne=x=>(exec(lines[ln[0]]),ln.shift())
@@ -48,10 +49,8 @@ require.main!=module&&(module.exports=this)
 ~process.argv.indexOf('-h')?
   console.log(fs.readFileSync('help.txt')+'')
 //read argument
-:input?
-  (lines=(
-    ~process.argv.indexOf('-e')?
-      input
-    :fs.readFileSync(input)+''
-  ).split`\n`,lne())
-:console.log("ERR: no input argument specified")
+:(lines=(
+  ~process.argv.indexOf('-e')?
+    input
+  :fs.readFileSync(input)+''
+).split`\n`,lne())
