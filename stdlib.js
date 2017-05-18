@@ -1,4 +1,5 @@
 module.exports=$={}
+$["gl"]=x=>unshift(lines[shift()])
 $["gi"]=x=>(//
     unshift(
       ids[x=shift()]||(
@@ -14,6 +15,7 @@ $["out"]=x=>process.stdout.write(''+shift())
 
 $["e"]=x=>unshift(Math.E)
 $["pi"]=x=>unshift(Math.PI)
+$["phi"]=x=>unshift((Math.sqrt(5)+1)/2)
 
 $["E"]=x=>($.swap(),unshift(shift()*Math.pow(10,shift())))
 $["_"]=x=>unshift(-shift())
