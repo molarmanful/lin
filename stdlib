@@ -1,12 +1,6 @@
 gl unshift(lines[shift()])
-gi (//
-    unshift(
-      ids[x=shift()]||(
-        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==x),
-        line&&(ids[x]=unesc(line.replace(/^ *#[^\d. ]/,'')))
-      )
-    )
-  )
+gi unshift(unesc(id()))
+gi\\ unshift(id())
 gs unshift(form())
 si ids[shift()]=shift()
 
@@ -26,10 +20,9 @@ _ unshift(-shift())
 % ($.swap(),unshift(mod(shift(),shift())))
 /% ($.over(),$.over(),$['//'](),$.rot_(),$['%']())
 ^ ($.swap(),unshift(Math.pow(shift(),shift())))
-
 abs unshift(Math.abs(shift()))
 sign unshift(Math.sign(shift()))
-rand unshift(Math.random(shift()))
+rand unshift(Math.random())
 ln unshift(Math.log(shift()))
 log unshift(Math.log10(shift()))
 sin unshift(Math.sin(shift()))
@@ -74,19 +67,12 @@ rev stack[st].reverse()
 len unshift(stack[st].length)
 
 stack stack[st=shift()]||(stack[st]=[])
-sdup unshift(stack[shift()].shift())
+pull unshift(stack[shift()].shift())
 
 el (ln.unshift(shift()),lne())
 en (ln[0].big||ln.unshift(ln[0]+1),lne())
 ep (ln[0].big||ln.unshift(ln[0]-1),lne())
-ei (//
-    exec(
-      ids[x=shift()]||(
-        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==x),
-        line&&(ids[x]=line.replace(/^ *#[^\d. ]/,''))
-      )
-    )
-  )
+ei exec(id())
 es (ln.unshift(''),exec(shift()))
-e& ($.swap(),shift()?$.ei():shift())
-e| ($.swap(),shift()?shift():$.ei())
+e& ($.swap(),shift()&&$.ei())
+e| ($.swap(),shift()||$.ei())

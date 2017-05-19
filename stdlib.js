@@ -1,13 +1,7 @@
 module.exports=$={}
 $["gl"]=x=>unshift(lines[shift()])
-$["gi"]=x=>(//
-    unshift(
-      ids[x=shift()]||(
-        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==x),
-        line&&(ids[x]=unesc(line.replace(/^ *#[^\d. ]/,'')))
-      )
-    )
-  )
+$["gi"]=x=>unshift(unesc(id()))
+$["gi\\"]=x=>unshift(id())
 $["gs"]=x=>unshift(form())
 $["si"]=x=>ids[shift()]=shift()
 
@@ -27,10 +21,9 @@ $["//"]=x=>($.swap(),unshift(Math.floor(shift()/shift())))
 $["%"]=x=>($.swap(),unshift(mod(shift(),shift())))
 $["/%"]=x=>($.over(),$.over(),$['//'](),$.rot_(),$['%']())
 $["^"]=x=>($.swap(),unshift(Math.pow(shift(),shift())))
-
 $["abs"]=x=>unshift(Math.abs(shift()))
 $["sign"]=x=>unshift(Math.sign(shift()))
-$["rand"]=x=>unshift(Math.random(shift()))
+$["rand"]=x=>unshift(Math.random())
 $["ln"]=x=>unshift(Math.log(shift()))
 $["log"]=x=>unshift(Math.log10(shift()))
 $["sin"]=x=>unshift(Math.sin(shift()))
@@ -75,19 +68,12 @@ $["rev"]=x=>stack[st].reverse()
 $["len"]=x=>unshift(stack[st].length)
 
 $["stack"]=x=>stack[st=shift()]||(stack[st]=[])
-$["sdup"]=x=>unshift(stack[shift()].shift())
+$["pull"]=x=>unshift(stack[shift()].shift())
 
 $["el"]=x=>(ln.unshift(shift()),lne())
 $["en"]=x=>(ln[0].big||ln.unshift(ln[0]+1),lne())
 $["ep"]=x=>(ln[0].big||ln.unshift(ln[0]-1),lne())
-$["ei"]=x=>(//
-    exec(
-      ids[x=shift()]||(
-        line=lines.find(a=>(a.match`^ *#([^\d. ])`||[])[1]==x),
-        line&&(ids[x]=line.replace(/^ *#[^\d. ]/,''))
-      )
-    )
-  )
+$["ei"]=x=>exec(id())
 $["es"]=x=>(ln.unshift(''),exec(shift()))
-$["e&"]=x=>($.swap(),shift()?$.ei():shift())
-$["e|"]=x=>($.swap(),shift()?shift():$.ei())
+$["e&"]=x=>($.swap(),shift()&&$.ei())
+$["e|"]=x=>($.swap(),shift()||$.ei())
