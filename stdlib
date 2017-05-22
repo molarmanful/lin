@@ -39,6 +39,7 @@ acosh unshift(Math.acosh(shift()))
 atanh unshift(Math.atanh(shift()))
 max unshift(Math.max(...stack[st]))
 min unshift(Math.min(...stack[st]))
+range ($.swap(),unshift(...range(shift(),shift()).reverse()))
 
 ~ unshift(~shift())
 & ($.swap(),unshift(shift()&shift()))

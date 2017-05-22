@@ -40,6 +40,7 @@ $["acosh"]=x=>unshift(Math.acosh(shift()))
 $["atanh"]=x=>unshift(Math.atanh(shift()))
 $["max"]=x=>unshift(Math.max(...stack[st]))
 $["min"]=x=>unshift(Math.min(...stack[st]))
+$["range"]=x=>($.swap(),unshift(...range(shift(),shift()).reverse()))
 
 $["~"]=x=>unshift(~shift())
 $["&"]=x=>($.swap(),unshift(shift()&shift()))
