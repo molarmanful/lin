@@ -10,7 +10,6 @@ _=require('lodash')
 //variables
 stack={0:[]}
 st=0
-ln=[0]
 ids={}
 input=process.argv[process.argv.length-1]
 

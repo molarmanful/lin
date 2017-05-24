@@ -1,14 +1,19 @@
 gl unshift(lines[shift()])
-gi unshift(unesc(id()))
-gi\\ unshift(id())
+gi unshift(id())
+gi\\ unshift(unesc(id()))
 gs unshift(form())
 si ids[shift()]=shift()
+
+el exec(lines[shift()])
+es exec(shift())
+ei exec(id())
+e& ($.swap(),shift()&&$.ei())
+e| ($.swap(),shift()||$.ei())
 
 out process.stdout.write(''+shift())
 
 e unshift(Math.E)
 pi unshift(Math.PI)
-phi unshift((Math.sqrt(5)+1)/2)
 
 E ($.swap(),unshift(shift()*Math.pow(10,shift())))
 _ unshift(-shift())
@@ -65,15 +70,11 @@ tuck ($.dup(),$.rot_())
 over ($.swap(),$.tuck())
 clr stack[st]=[]
 rev stack[st].reverse()
-len unshift(stack[st].length)
+
+split ($.swap(),unshift(...shift().split(shift())))
+join unshift(stack.join(shift()))
 
 stack stack[st=shift()]||(stack[st]=[])
+push stack[shift()].unshift(shift())
 pull unshift(stack[shift()].shift())
-
-el (ln.unshift(shift()),lne())
-en (ln[0].big||ln.unshift(ln[0]+1),lne())
-ep (ln[0].big||ln.unshift(ln[0]-1),lne())
-ei exec(id())
-es (ln.unshift(''),exec(shift()))
-e& ($.swap(),shift()&&$.ei())
-e| ($.swap(),shift()||$.ei())
+len unshift(stack[st].length)

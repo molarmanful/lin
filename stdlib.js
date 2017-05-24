@@ -1,15 +1,20 @@
 module.exports=$={}
 $["gl"]=x=>unshift(lines[shift()])
-$["gi"]=x=>unshift(unesc(id()))
-$["gi\\"]=x=>unshift(id())
+$["gi"]=x=>unshift(id())
+$["gi\\"]=x=>unshift(unesc(id()))
 $["gs"]=x=>unshift(form())
 $["si"]=x=>ids[shift()]=shift()
+
+$["el"]=x=>exec(lines[shift()])
+$["es"]=x=>exec(shift())
+$["ei"]=x=>exec(id())
+$["e&"]=x=>($.swap(),shift()&&$.ei())
+$["e|"]=x=>($.swap(),shift()||$.ei())
 
 $["out"]=x=>process.stdout.write(''+shift())
 
 $["e"]=x=>unshift(Math.E)
 $["pi"]=x=>unshift(Math.PI)
-$["phi"]=x=>unshift((Math.sqrt(5)+1)/2)
 
 $["E"]=x=>($.swap(),unshift(shift()*Math.pow(10,shift())))
 $["_"]=x=>unshift(-shift())
@@ -66,15 +71,11 @@ $["tuck"]=x=>($.dup(),$.rot_())
 $["over"]=x=>($.swap(),$.tuck())
 $["clr"]=x=>stack[st]=[]
 $["rev"]=x=>stack[st].reverse()
-$["len"]=x=>unshift(stack[st].length)
+
+$["split"]=x=>($.swap(),unshift(...shift().split(shift())))
+$["join"]=x=>unshift(stack.join(shift()))
 
 $["stack"]=x=>stack[st=shift()]||(stack[st]=[])
+$["push"]=x=>stack[shift()].unshift(shift())
 $["pull"]=x=>unshift(stack[shift()].shift())
-
-$["el"]=x=>(ln.unshift(shift()),lne())
-$["en"]=x=>(ln[0].big||ln.unshift(ln[0]+1),lne())
-$["ep"]=x=>(ln[0].big||ln.unshift(ln[0]-1),lne())
-$["ei"]=x=>exec(id())
-$["es"]=x=>(ln.unshift(''),exec(shift()))
-$["e&"]=x=>($.swap(),shift()&&$.ei())
-$["e|"]=x=>($.swap(),shift()||$.ei())
+$["len"]=x=>unshift(stack[st].length)
