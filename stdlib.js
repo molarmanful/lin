@@ -4,6 +4,7 @@ $["gi"]=x=>unshift(id())
 $["gi\\"]=x=>unshift(unesc(id()))
 $["gs"]=x=>unshift(form())
 $["si"]=x=>ids[shift()]=shift()
+$["::"]=x=>id()
 
 $["el"]=x=>exec(lines[shift()])
 $["es"]=x=>exec(shift())

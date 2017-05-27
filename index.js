@@ -28,9 +28,6 @@ splice=(x,y=1,z)=>z==[].$?
 shift=x=>stack[st].shift()||0
 unshift=(...x)=>stack[st].unshift(...x)
 
-//exec wrapper for line jumping
-lne=x=>(exec(lines[ln[0]]),ln.shift())
-
 //main exec function
 exec=x=>{
   x&&x.replace(/\s/g,'')&&parser.parse(x).map(a=>
@@ -57,8 +54,8 @@ require.main!=module&&(module.exports=this)
 ~process.argv.indexOf('-h')?
   console.log(fs.readFileSync('help.txt')+'')
 //read argument
-:(lines=(
+:exec((lines=(
   ~process.argv.indexOf('-e')?
     input
   :fs.readFileSync(input)+''
-).split`\n`,lne())
+).split`\n`)[0])

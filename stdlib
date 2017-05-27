@@ -3,6 +3,7 @@ gi unshift(id())
 gi\\ unshift(unesc(id()))
 gs unshift(form())
 si ids[shift()]=shift()
+:: id()
 
 el exec(lines[shift()])
 es exec(shift())
