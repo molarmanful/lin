@@ -87,3 +87,6 @@ $["push"]=(h=stack[st])=>stack[shift()].unshift(shift())
 $["pull"]=(h=stack[st])=>unshift(stack[shift()].shift())
 $["len"]=(h=stack[st])=>unshift(stack[st].length)
 $["merge"]=(h=stack[st])=>unshift(...stack[shift()])
+$["map"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=[],Y.map(a=>
+    (stack[st]=[X,a],$.ei(),stack[St].push(shift()))
+  ),delete stack[st],st=St)

@@ -86,3 +86,6 @@ push stack[shift()].unshift(shift())
 pull unshift(stack[shift()].shift())
 len unshift(stack[st].length)
 merge unshift(...stack[shift()])
+map (X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=[],Y.map(a=>
+    (stack[st]=[X,a],$.ei(),stack[St].push(shift()))
+  ),delete stack[st],st=St)
