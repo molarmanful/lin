@@ -88,18 +88,21 @@ $["pull"]=(h=stack[st])=>unshift(stack[shift()].shift())
 $["len"]=(h=stack[st])=>unshift(stack[st].length)
 $["merge"]=(h=stack[st])=>unshift(...stack[shift()])
 
-$["map"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=Y.map(a=>
+$["map"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>
     (stack[st]=[X,a],$.ei(),shift())
   ),delete stack[st],st=St)
-$["filter"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=Y.filter(a=>
+$["filter"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=stack[St].filter(a=>
     (stack[st]=[X,a],$.ei(),shift())
   ),delete stack[st],st=St)
-$["fold"]=(h=stack[st])=>(X=shift(),Z=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=[],Y.map(a=>
+$["fold"]=(h=stack[st])=>(X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
     (stack[st]=[X,a,Z],$.ei(),Z=shift())
   ),delete stack[st],st=St,unshift(Z))
-$["some"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',Z=+Y.some(a=>
+$["some"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
     (stack[st]=[X,a],$.ei(),shift())
   ),delete stack[st],st=St,unshift(Z))
-$["every"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',Z=+Y.every(a=>
+$["every"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
+    (stack[st]=[X,a],$.ei(),shift())
+  ),delete stack[st],st=St,unshift(Z))
+$["find"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
     (stack[st]=[X,a],$.ei(),shift())
   ),delete stack[st],st=St,unshift(Z))
