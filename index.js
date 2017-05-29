@@ -19,9 +19,9 @@ id=x=>ids[x=shift()]||(
   line&&(ids[x]=line.replace(/^ *#[^\d. ]/,''))
 )
 mod=(x,y)=>(x%y+y)%y
+range=(x,y)=>_.range(x,y,Math.sign(y-x))
 form=x=>stack[st].map(a=>JSON.stringify(a)).reverse().join`\n`
 get=x=>stack[st][mod(x,stack[st].length)]
-range=(x,y)=>_.range(x,y,Math.sign(y-x))
 splice=(x,y=1,z)=>z==[].$?
   stack[st].splice(mod(x,stack[st].length),y)
 :stack[st].splice(mod(x,stack[st].length),y,z)
@@ -39,10 +39,10 @@ exec=x=>{
       0
     //reps
     :a[0]=='*'&&sl[a.slice(1)]?
-      [...Array(shift())].map($=>sl[a.slice(1)](x))
+      [...Array(shift())].map($=>sl[a.slice(1)]())
     //matched functions
     :a.big&&sl[a]?
-      sl[a](x)
+      sl[a]()
     //everything else (numbers)
     :unshift(a)
   )
