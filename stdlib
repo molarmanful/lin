@@ -86,6 +86,19 @@ push stack[shift()].unshift(shift())
 pull unshift(stack[shift()].shift())
 len unshift(stack[st].length)
 merge unshift(...stack[shift()])
-map (X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=[],Y.reverse().map(a=>
-    (stack[st]=[X,a],$.ei(),stack[St].unshift(shift()))
+
+map (X=shift(),St=st,st=St+' ',stack[St]=Y.map(a=>
+    (stack[st]=[X,a],$.ei(),shift())
   ),delete stack[st],st=St)
+filter (X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=Y.filter(a=>
+    (stack[st]=[X,a],$.ei(),shift())
+  ),delete stack[st],st=St)
+fold (X=shift(),Z=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=[],Y.map(a=>
+    (stack[st]=[X,a,Z],$.ei(),Z=shift())
+  ),delete stack[st],st=St,unshift(Z))
+some (X=shift(),Y=stack[st],St=st,st=St+' ',Z=+Y.some(a=>
+    (stack[st]=[X,a],$.ei(),shift())
+  ),delete stack[st],st=St,unshift(Z))
+every (X=shift(),Y=stack[st],St=st,st=St+' ',Z=+Y.every(a=>
+    (stack[st]=[X,a],$.ei(),shift())
+  ),delete stack[st],st=St,unshift(Z))
