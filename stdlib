@@ -92,11 +92,12 @@ rev stack[st].reverse()
 split ($.swap(),unshift(...shift().split(shift())))
 join unshift(stack.join(shift()))
 ++ ($.swap(),unshift(''+shift()+shift()))
+len unshift((''+shift()).length)
 
 stack stack[st=shift()]||(stack[st]=[])
 push stack[shift()].unshift(shift())
 pull unshift(stack[shift()].shift())
-len unshift(stack[st].length)
+size unshift(stack[st].length)
 merge unshift(...stack[shift()])
 
 map (X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>

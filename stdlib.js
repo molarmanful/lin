@@ -93,11 +93,12 @@ $["rev"]=(h=stack[st])=>stack[st].reverse()
 $["split"]=(h=stack[st])=>($.swap(),unshift(...shift().split(shift())))
 $["join"]=(h=stack[st])=>unshift(stack.join(shift()))
 $["++"]=(h=stack[st])=>($.swap(),unshift(''+shift()+shift()))
+$["len"]=(h=stack[st])=>unshift((''+shift()).length)
 
 $["stack"]=(h=stack[st])=>stack[st=shift()]||(stack[st]=[])
 $["push"]=(h=stack[st])=>stack[shift()].unshift(shift())
 $["pull"]=(h=stack[st])=>unshift(stack[shift()].shift())
-$["len"]=(h=stack[st])=>unshift(stack[st].length)
+$["size"]=(h=stack[st])=>unshift(stack[st].length)
 $["merge"]=(h=stack[st])=>unshift(...stack[shift()])
 
 $["map"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>
