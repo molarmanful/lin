@@ -1,4 +1,5 @@
 Usage: lin [options] [input]
 
 Options:
- -e	parse input as string rather than filename
+  -h     display this help text
+  -e	parse input as string rather than filename
