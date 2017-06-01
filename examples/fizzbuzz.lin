@@ -1,0 +1,2 @@
+100 0 range \a map
+#a dup 3% \Fizz es| over 5% \Buzz es| over 0+ \++ es| outln
