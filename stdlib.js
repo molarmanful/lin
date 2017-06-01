@@ -1,4 +1,6 @@
 module.exports=$={}
+$["("]=(h=stack[st])=>lambda=1
+
 $["gl"]=(h=stack[st])=>unshift(lines[shift()])
 $["gi"]=(h=stack[st])=>unshift(id())
 $["gi\\"]=(h=stack[st])=>unshift(unesc(id()))
@@ -16,6 +18,7 @@ $["es|"]=(h=stack[st])=>($.swap(),shift()?shift():$.es())
 $["es?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
 
 $["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'')
+$["write"]=(h=stack[st])=>fs.writeFileSync(shift(),shift())
 $["out"]=(h=stack[st])=>process.stdout.write(''+shift())
 $["outln"]=(h=stack[st])=>process.stdout.write(''+shift()+'\n')
 

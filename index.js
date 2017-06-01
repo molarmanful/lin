@@ -10,6 +10,8 @@ _=require('lodash')
 //variables
 stack={0:[]}
 st=0
+lambda=0
+paren=[]
 ids={}
 input=process.argv.filter(a=>a[0]!='-')[2]
 
@@ -31,8 +33,13 @@ unshift=(...x)=>stack[st].unshift(...x)
 //main exec function
 exec=x=>{
   x&&x.replace(/\s/g,'')&&parser.parse(x).map(a=>
+    lambda?
+      (
+        a=='('?lambda++:a==')'&&lambda--,
+        lambda?paren.push(a):(unshift(paren.join` `),paren=[])
+      )
     //refs
-    a.big&&a[1]&&a[0]=='\\'?
+    :a.big&&a[1]&&a[0]=='\\'?
       unshift(a.slice(1))
     //ids
     :a.big&&a[1]&&a[0]=='#'?

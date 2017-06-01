@@ -1,3 +1,5 @@
+( lambda=1
+
 gl unshift(lines[shift()])
 gi unshift(id())
 gi\\ unshift(unesc(id()))
@@ -15,6 +17,7 @@ es| ($.swap(),shift()?shift():$.es())
 es? ($.rot(),shift()||$.swap(),shift(),$.es())
 
 read unshift(fs.readFileSync(shift())+'')
+write fs.writeFileSync(shift(),shift())
 out process.stdout.write(''+shift())
 outln process.stdout.write(''+shift()+'\n')
 
