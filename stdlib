@@ -7,8 +7,9 @@ si ids[shift()]=shift()
 el exec(lines[shift()])
 es exec(shift())
 ei exec(id())
-e& ($.swap(),shift()&&$.ei())
-e| ($.swap(),shift()||$.ei())
+e& ($.swap(),shift()?$.ei():shift())
+e| ($.swap(),shift()?shift():$.ei())
+e? ($.rot(),shift()||$.swap(),shift(),$.ei())
 
 out process.stdout.write(''+shift())
 
@@ -47,9 +48,10 @@ min unshift(Math.min(...stack[st]))
 range ($.swap(),unshift(...range(shift(),shift()).reverse()))
 
 not unshift(~shift())
-and ($.swap(),unshift(shift()&shift()))
-or ($.swap(),unshift(shift()|shift()))
-xor ($.swap(),unshift(shift()^shift()))
+NOT unshift(+!shift())
+and unshift(shift()&shift())
+or unshift(shift()|shift())
+xor unshift(shift()^shift())
 
 = unshift(+(shift()==shift()))
 != unshift(+(shift()!=shift()))
@@ -80,6 +82,7 @@ rev stack[st].reverse()
 
 split ($.swap(),unshift(...shift().split(shift())))
 join unshift(stack.join(shift()))
+++ ($.swap(),unshift(''+shift()+shift()))
 
 stack stack[st=shift()]||(stack[st]=[])
 push stack[shift()].unshift(shift())

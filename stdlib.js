@@ -8,8 +8,9 @@ $["si"]=(h=stack[st])=>ids[shift()]=shift()
 $["el"]=(h=stack[st])=>exec(lines[shift()])
 $["es"]=(h=stack[st])=>exec(shift())
 $["ei"]=(h=stack[st])=>exec(id())
-$["e&"]=(h=stack[st])=>($.swap(),shift()&&$.ei())
-$["e|"]=(h=stack[st])=>($.swap(),shift()||$.ei())
+$["e&"]=(h=stack[st])=>($.swap(),shift()?$.ei():shift())
+$["e|"]=(h=stack[st])=>($.swap(),shift()?shift():$.ei())
+$["e?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.ei())
 
 $["out"]=(h=stack[st])=>process.stdout.write(''+shift())
 
@@ -48,9 +49,10 @@ $["min"]=(h=stack[st])=>unshift(Math.min(...stack[st]))
 $["range"]=(h=stack[st])=>($.swap(),unshift(...range(shift(),shift()).reverse()))
 
 $["not"]=(h=stack[st])=>unshift(~shift())
-$["and"]=(h=stack[st])=>($.swap(),unshift(shift()&shift()))
-$["or"]=(h=stack[st])=>($.swap(),unshift(shift()|shift()))
-$["xor"]=(h=stack[st])=>($.swap(),unshift(shift()^shift()))
+$["NOT"]=(h=stack[st])=>unshift(+!shift())
+$["and"]=(h=stack[st])=>unshift(shift()&shift())
+$["or"]=(h=stack[st])=>unshift(shift()|shift())
+$["xor"]=(h=stack[st])=>unshift(shift()^shift())
 
 $["="]=(h=stack[st])=>unshift(+(shift()==shift()))
 $["!="]=(h=stack[st])=>unshift(+(shift()!=shift()))
@@ -81,6 +83,7 @@ $["rev"]=(h=stack[st])=>stack[st].reverse()
 
 $["split"]=(h=stack[st])=>($.swap(),unshift(...shift().split(shift())))
 $["join"]=(h=stack[st])=>unshift(stack.join(shift()))
+$["++"]=(h=stack[st])=>($.swap(),unshift(''+shift()+shift()))
 
 $["stack"]=(h=stack[st])=>stack[st=shift()]||(stack[st]=[])
 $["push"]=(h=stack[st])=>stack[shift()].unshift(shift())
