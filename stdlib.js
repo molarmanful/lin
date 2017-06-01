@@ -1,5 +1,6 @@
 module.exports=$={}
 $["("]=(h=stack[st])=>lambda=1
+$[")"]=(h=stack[st])=>{}
 
 $["gl"]=(h=stack[st])=>unshift(lines[shift()])
 $["gi"]=(h=stack[st])=>unshift(id())
