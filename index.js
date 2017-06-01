@@ -11,7 +11,7 @@ _=require('lodash')
 stack={0:[]}
 st=0
 ids={}
-input=process.argv[process.argv.length-1]
+input=process.argv.filter(a=>a[0]!='-')[2]
 
 //convenience functions for stdlib
 id=x=>ids[x=shift()]||(

@@ -14,6 +14,7 @@ es& ($.swap(),shift()?$.es():shift())
 es| ($.swap(),shift()?shift():$.es())
 es? ($.rot(),shift()||$.swap(),shift(),$.es())
 
+read unshift(fs.readFileSync(shift())+'')
 out process.stdout.write(''+shift())
 outln process.stdout.write(''+shift()+'\n')
 

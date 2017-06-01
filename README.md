@@ -9,6 +9,8 @@ CLI Usage:
 
     lin program.lin
 
+For more options, run `lin -h`.
+
 ### Program Execution
 The parsing is extremely basic. The code is parsed line-by-line; numbers match the pattern `[0-9]*\.?[0-9]+|[0-9]+\.?`, keywords match the pattern `[^0-9. ]+`, and spaces are ignored. This means that a valid lin snippet is really just a series of numbers and keywords.
 

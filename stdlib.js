@@ -15,6 +15,7 @@ $["es&"]=(h=stack[st])=>($.swap(),shift()?$.es():shift())
 $["es|"]=(h=stack[st])=>($.swap(),shift()?shift():$.es())
 $["es?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
 
+$["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'')
 $["out"]=(h=stack[st])=>process.stdout.write(''+shift())
 $["outln"]=(h=stack[st])=>process.stdout.write(''+shift()+'\n')
 
