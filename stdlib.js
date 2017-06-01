@@ -2,21 +2,16 @@ module.exports=$={}
 $["("]=(h=stack[st])=>lambda=1
 $[")"]=(h=stack[st])=>{}
 
-$["gl"]=(h=stack[st])=>unshift(lines[shift()])
 $["gi"]=(h=stack[st])=>unshift(id())
 $["gi\\"]=(h=stack[st])=>unshift(unesc(id()))
 $["gs"]=(h=stack[st])=>unshift(form())
 $["si"]=(h=stack[st])=>ids[shift()]=shift()
+$["::"]=(h=stack[st])=>id()
 
-$["el"]=(h=stack[st])=>exec(lines[shift()])
 $["es"]=(h=stack[st])=>exec(shift())
-$["ei"]=(h=stack[st])=>exec(id())
-$["ei&"]=(h=stack[st])=>($.swap(),shift()?$.ei():shift())
-$["ei|"]=(h=stack[st])=>($.swap(),shift()?shift():$.ei())
-$["ei?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.ei())
-$["es&"]=(h=stack[st])=>($.swap(),shift()?$.es():shift())
-$["es|"]=(h=stack[st])=>($.swap(),shift()?shift():$.es())
-$["es?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
+$["e&"]=(h=stack[st])=>($.swap(),shift()?$.es():shift())
+$["e|"]=(h=stack[st])=>($.swap(),shift()?shift():$.es())
+$["e?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
 
 $["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'')
 $["write"]=(h=stack[st])=>fs.writeFileSync(shift(),shift())
@@ -102,20 +97,20 @@ $["size"]=(h=stack[st])=>unshift(stack[st].length)
 $["merge"]=(h=stack[st])=>unshift(...stack[shift()])
 
 $["map"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
 $["filter"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=stack[St].filter(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
 $["fold"]=(h=stack[st])=>(X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
-    (stack[st]=[X,a,Z],$.ei(),Z=shift())
+    (stack[st]=[X,a,Z],$.es(),Z=shift())
   ),delete stack[st],st=St,unshift(Z))
 $["some"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,unshift(Z))
 $["every"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,unshift(Z))
 $["find"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,unshift(Z))

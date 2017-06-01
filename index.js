@@ -45,6 +45,8 @@ exec=x=>{
     :a.big&&a[1]&&a[0]=='#'?
       0
     //matched functions
+    :a.big&&ids[a]?
+      exec(ids[a])
     :a.big&&sl[a]?
       sl[a]()
     //everything else (numbers)

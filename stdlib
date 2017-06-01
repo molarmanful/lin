@@ -1,21 +1,16 @@
 ( lambda=1
 ) {}
 
-gl unshift(lines[shift()])
 gi unshift(id())
 gi\\ unshift(unesc(id()))
 gs unshift(form())
 si ids[shift()]=shift()
+:: id()
 
-el exec(lines[shift()])
 es exec(shift())
-ei exec(id())
-ei& ($.swap(),shift()?$.ei():shift())
-ei| ($.swap(),shift()?shift():$.ei())
-ei? ($.rot(),shift()||$.swap(),shift(),$.ei())
-es& ($.swap(),shift()?$.es():shift())
-es| ($.swap(),shift()?shift():$.es())
-es? ($.rot(),shift()||$.swap(),shift(),$.es())
+e& ($.swap(),shift()?$.es():shift())
+e| ($.swap(),shift()?shift():$.es())
+e? ($.rot(),shift()||$.swap(),shift(),$.es())
 
 read unshift(fs.readFileSync(shift())+'')
 write fs.writeFileSync(shift(),shift())
@@ -101,20 +96,20 @@ size unshift(stack[st].length)
 merge unshift(...stack[shift()])
 
 map (X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
 filter (X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=stack[St].filter(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
 fold (X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
-    (stack[st]=[X,a,Z],$.ei(),Z=shift())
+    (stack[st]=[X,a,Z],$.es(),Z=shift())
   ),delete stack[st],st=St,unshift(Z))
 some (X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,unshift(Z))
 every (X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,unshift(Z))
 find (X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
-    (stack[st]=[X,a],$.ei(),shift())
+    (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,unshift(Z))
