@@ -15,9 +15,9 @@ $["e?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
 
 $["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'')
 $["write"]=(h=stack[st])=>fs.writeFileSync(shift(),shift())
-$["in"]=(h=stack[st])=>(q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
-    unshift(a)
-    $.swap(),$.es()
+$["in"]=(h=stack[st])=>(e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
+    unshift(e,a)
+    $.es()
     q.close()
   }))
 $["out"]=(h=stack[st])=>process.stdout.write(''+shift())

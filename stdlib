@@ -14,9 +14,9 @@ e? ($.rot(),shift()||$.swap(),shift(),$.es())
 
 read unshift(fs.readFileSync(shift())+'')
 write fs.writeFileSync(shift(),shift())
-in (q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
-    unshift(a)
-    $.swap(),$.es()
+in (e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
+    unshift(e,a)
+    $.es()
     q.close()
   }))
 out process.stdout.write(''+shift())
