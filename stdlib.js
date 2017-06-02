@@ -42,6 +42,7 @@ $["^"]=(h=stack[st])=>($.swap(),unshift(Math.pow(shift(),shift())))
 $["abs"]=(h=stack[st])=>unshift(Math.abs(shift()))
 $["sign"]=(h=stack[st])=>unshift(Math.sign(shift()))
 $["rand"]=(h=stack[st])=>unshift(Math.random())
+$["time"]=(h=stack[st])=>unshift(_.now())
 $["ln"]=(h=stack[st])=>unshift(Math.log(shift()))
 $["log"]=(h=stack[st])=>unshift(Math.log10(shift()))
 $["sin"]=(h=stack[st])=>unshift(Math.sin(shift()))
@@ -83,16 +84,18 @@ $["pick"]=(h=stack[st])=>unshift(get(shift()))
 $["nix"]=(h=stack[st])=>splice(shift())
 $["roll"]=(h=stack[st])=>(x=get(0),$.pick(),unshift(x+1),$.nix())
 $["roll_"]=(h=stack[st])=>splice(shift(),0,shift())
+$["trade"]=(h=stack[st])=>unshift(splice(shift()-1,1,shift())[0])
 $["dup"]=(h=stack[st])=>unshift(stack[st][0])
 $["drop"]=(h=stack[st])=>shift()
-$["rot"]=(h=stack[st])=>unshift(splice(2,1)[0])
+$["rot"]=(h=stack[st])=>unshift(splice(2)[0])
 $["rot_"]=(h=stack[st])=>($.rot(),$.rot())
-$["swap"]=(h=stack[st])=>($.dup(),$.rot_(),$.drop())
+$["swap"]=(h=stack[st])=>unshift(splice(1)[0])
 $["nip"]=(h=stack[st])=>($.swap(),$.drop())
 $["tuck"]=(h=stack[st])=>($.dup(),$.rot_())
 $["over"]=(h=stack[st])=>($.swap(),$.tuck())
 $["clr"]=(h=stack[st])=>stack[st]=[]
 $["rev"]=(h=stack[st])=>stack[st].reverse()
+$["dip"]=(h=stack[st])=>($.swap(),i=shift(),$.es(),unshift(i))
 
 $["split"]=(h=stack[st])=>($.swap(),unshift(...shift().split(shift())))
 $["join"]=(h=stack[st])=>unshift(stack.join(shift()))
@@ -124,7 +127,7 @@ $["fold"]=(h=stack[st])=>(X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
 $["some"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
-$["every"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
+$["all"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
 $["find"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>

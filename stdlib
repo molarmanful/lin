@@ -41,6 +41,7 @@ _ unshift(-shift())
 abs unshift(Math.abs(shift()))
 sign unshift(Math.sign(shift()))
 rand unshift(Math.random())
+time unshift(_.now())
 ln unshift(Math.log(shift()))
 log unshift(Math.log10(shift()))
 sin unshift(Math.sin(shift()))
@@ -82,16 +83,18 @@ pick unshift(get(shift()))
 nix splice(shift())
 roll (x=get(0),$.pick(),unshift(x+1),$.nix())
 roll_ splice(shift(),0,shift())
+trade unshift(splice(shift()-1,1,shift())[0])
 dup unshift(stack[st][0])
 drop shift()
-rot unshift(splice(2,1)[0])
+rot unshift(splice(2)[0])
 rot_ ($.rot(),$.rot())
-swap ($.dup(),$.rot_(),$.drop())
+swap unshift(splice(1)[0])
 nip ($.swap(),$.drop())
 tuck ($.dup(),$.rot_())
 over ($.swap(),$.tuck())
 clr stack[st]=[]
 rev stack[st].reverse()
+dip ($.swap(),i=shift(),$.es(),unshift(i))
 
 split ($.swap(),unshift(...shift().split(shift())))
 join unshift(stack.join(shift()))
@@ -123,7 +126,7 @@ fold (X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
 some (X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
-every (X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
+all (X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
 find (X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
