@@ -2,6 +2,8 @@ module.exports=$={}
 $["("]=(h=stack[st])=>lambda=1
 $[")"]=(h=stack[st])=>{}
 $["()"]=(h=stack[st])=>unshift('')
+$["\""]=(h=stack[st])=>unshift(' ')
+$["\\"]=(h=stack[st])=>unshift('\n')
 
 $["gi"]=(h=stack[st])=>unshift(id())
 $["gi\\"]=(h=stack[st])=>unshift(unesc(id()))
@@ -97,8 +99,8 @@ $["clr"]=(h=stack[st])=>stack[st]=[]
 $["rev"]=(h=stack[st])=>stack[st].reverse()
 $["dip"]=(h=stack[st])=>($.swap(),i=shift(),$.es(),unshift(i))
 
-$["split"]=(h=stack[st])=>($.swap(),unshift(...shift().split(shift())))
-$["join"]=(h=stack[st])=>unshift(stack.join(shift()))
+$["split"]=(h=stack[st])=>($.swap(),unshift(...(shift()+'').split(shift()).reverse()))
+$["join"]=(h=stack[st])=>(i=shift(),unshift(stack[st].slice(0).reverse().join(i)))
 $["++"]=(h=stack[st])=>($.swap(),unshift(''+shift()+shift()))
 $["len"]=(h=stack[st])=>unshift((''+shift()).length)
 $[">char"]=(h=stack[st])=>unshift(String.fromCharCode(shift()))

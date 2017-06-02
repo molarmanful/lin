@@ -1,6 +1,8 @@
 ( lambda=1
 ) {}
 () unshift('')
+\" unshift(' ')
+\\ unshift('\n')
 
 gi unshift(id())
 gi\\ unshift(unesc(id()))
@@ -96,8 +98,8 @@ clr stack[st]=[]
 rev stack[st].reverse()
 dip ($.swap(),i=shift(),$.es(),unshift(i))
 
-split ($.swap(),unshift(...shift().split(shift())))
-join unshift(stack.join(shift()))
+split ($.swap(),unshift(...(shift()+'').split(shift()).reverse()))
+join (i=shift(),unshift(stack[st].slice(0).reverse().join(i)))
 ++ ($.swap(),unshift(''+shift()+shift()))
 len unshift((''+shift()).length)
 >char unshift(String.fromCharCode(shift()))
