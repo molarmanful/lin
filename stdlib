@@ -14,6 +14,11 @@ e? ($.rot(),shift()||$.swap(),shift(),$.es())
 
 read unshift(fs.readFileSync(shift())+'')
 write fs.writeFileSync(shift(),shift())
+in (q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
+    unshift(a)
+    $.swap(),$.es()
+    q.close()
+  }))
 out process.stdout.write(''+shift())
 outln process.stdout.write(''+shift()+'\n')
 
@@ -103,13 +108,13 @@ filter (X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=stack[St].filter(a=>
   ),delete stack[st],st=St)
 fold (X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
     (stack[st]=[X,a,Z],$.es(),Z=shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])
 some (X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
     (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])
 every (X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
     (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])
 find (X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
     (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])

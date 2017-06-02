@@ -15,6 +15,11 @@ $["e?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
 
 $["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'')
 $["write"]=(h=stack[st])=>fs.writeFileSync(shift(),shift())
+$["in"]=(h=stack[st])=>(q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
+    unshift(a)
+    $.swap(),$.es()
+    q.close()
+  }))
 $["out"]=(h=stack[st])=>process.stdout.write(''+shift())
 $["outln"]=(h=stack[st])=>process.stdout.write(''+shift()+'\n')
 
@@ -104,13 +109,13 @@ $["filter"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=stac
   ),delete stack[st],st=St)
 $["fold"]=(h=stack[st])=>(X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
     (stack[st]=[X,a,Z],$.es(),Z=shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])
 $["some"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
     (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])
 $["every"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
     (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])
 $["find"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
     (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,unshift(Z))
+  ),delete stack[st],st=St,stack[st]=[Z])
