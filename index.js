@@ -18,8 +18,8 @@ input=process.argv.filter(a=>a[0]!='-')[2]
 
 //convenience functions for stdlib
 id=x=>ids[x=shift()]||(
-  line=lines.find(a=>(a.match`^ *#([^0-9. ])`||[])[1]==x),
-  line&&(ids[x]=line.replace(/^ *#[^0-9. ]/,''))
+  line=lines.find(a=>a.match(`^ *#${x}`)),
+  line&&(ids[x]=line.replace(RegExp(`^ *#${x}`),''))
 )
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y,Math.sign(y-x))

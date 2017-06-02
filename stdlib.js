@@ -1,6 +1,7 @@
 module.exports=$={}
 $["("]=(h=stack[st])=>lambda=1
 $[")"]=(h=stack[st])=>{}
+$["()"]=(h=stack[st])=>unshift('')
 
 $["gi"]=(h=stack[st])=>unshift(id())
 $["gi\\"]=(h=stack[st])=>unshift(unesc(id()))
@@ -12,6 +13,8 @@ $["es"]=(h=stack[st])=>exec(shift())
 $["e&"]=(h=stack[st])=>($.swap(),shift()?$.es():shift())
 $["e|"]=(h=stack[st])=>($.swap(),shift()?shift():$.es())
 $["e?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
+$["ei"]=(h=stack[st])=>(i=shift(),setInterval(a=>exec(i),shift()))
+$["et"]=(h=stack[st])=>(i=shift(),setTimeout(a=>exec(i),shift()))
 
 $["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'')
 $["write"]=(h=stack[st])=>fs.writeFileSync(shift(),shift())
@@ -69,6 +72,7 @@ $[">"]=(h=stack[st])=>unshift(+(shift()<shift()))
 $["<"]=(h=stack[st])=>unshift(+(shift()>shift()))
 $[">="]=(h=stack[st])=>unshift(+(shift()<=shift()))
 $["<="]=(h=stack[st])=>unshift(+(shift()>=shift()))
+$["<=>"]=(h=stack[st])=>(i=shift(),j=shift(),unshift(i<j?1:i>j?-1:0))
 
 $["floor"]=(h=stack[st])=>unshift(Math.floor(shift()))
 $["trunc"]=(h=stack[st])=>unshift(Math.trunc(shift()))
@@ -94,12 +98,19 @@ $["split"]=(h=stack[st])=>($.swap(),unshift(...shift().split(shift())))
 $["join"]=(h=stack[st])=>unshift(stack.join(shift()))
 $["++"]=(h=stack[st])=>($.swap(),unshift(''+shift()+shift()))
 $["len"]=(h=stack[st])=>unshift((''+shift()).length)
+$[">char"]=(h=stack[st])=>unshift(String.fromCharCode(shift()))
+$["<char"]=(h=stack[st])=>unshift(shift().charCodeAt())
+$["lower"]=(h=stack[st])=>unshift(shift().toLowerCase())
+$["upper"]=(h=stack[st])=>unshift(shift().toUpperCase())
 
 $["stack"]=(h=stack[st])=>stack[st=shift()]||(stack[st]=[])
 $["push"]=(h=stack[st])=>stack[shift()].unshift(shift())
 $["pull"]=(h=stack[st])=>unshift(stack[shift()].shift())
 $["size"]=(h=stack[st])=>unshift(stack[st].length)
 $["merge"]=(h=stack[st])=>unshift(...stack[shift()])
+$["uniq"]=(h=stack[st])=>stack[st]=_.uniq(stack[st])
+$["take"]=(h=stack[st])=>stack[st]=_.take(stack[st],shift())
+$["drop"]=(h=stack[st])=>stack[st]=_.drop(stack[st],shift())
 
 $["map"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>
     (stack[st]=[X,a],$.es(),shift())
@@ -119,3 +130,15 @@ $["every"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
 $["find"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
+$["findi"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].findIndex(a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St,stack[st]=[Z])
+$["takewhile"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.takeWhile(stack[St],a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St)
+$["dropwhile"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.dropWhile(stack[St],a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St)
+$["sort"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.sortBy(stack[St],a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St)

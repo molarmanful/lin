@@ -1,5 +1,6 @@
 ( lambda=1
 ) {}
+() unshift('')
 
 gi unshift(id())
 gi\\ unshift(unesc(id()))
@@ -11,6 +12,8 @@ es exec(shift())
 e& ($.swap(),shift()?$.es():shift())
 e| ($.swap(),shift()?shift():$.es())
 e? ($.rot(),shift()||$.swap(),shift(),$.es())
+ei (i=shift(),setInterval(a=>exec(i),shift()))
+et (i=shift(),setTimeout(a=>exec(i),shift()))
 
 read unshift(fs.readFileSync(shift())+'')
 write fs.writeFileSync(shift(),shift())
@@ -68,6 +71,7 @@ xor unshift(shift()^shift())
 < unshift(+(shift()>shift()))
 >= unshift(+(shift()<=shift()))
 <= unshift(+(shift()>=shift()))
+<=> (i=shift(),j=shift(),unshift(i<j?1:i>j?-1:0))
 
 floor unshift(Math.floor(shift()))
 trunc unshift(Math.trunc(shift()))
@@ -93,12 +97,19 @@ split ($.swap(),unshift(...shift().split(shift())))
 join unshift(stack.join(shift()))
 ++ ($.swap(),unshift(''+shift()+shift()))
 len unshift((''+shift()).length)
+>char unshift(String.fromCharCode(shift()))
+<char unshift(shift().charCodeAt())
+lower unshift(shift().toLowerCase())
+upper unshift(shift().toUpperCase())
 
 stack stack[st=shift()]||(stack[st]=[])
 push stack[shift()].unshift(shift())
 pull unshift(stack[shift()].shift())
 size unshift(stack[st].length)
 merge unshift(...stack[shift()])
+uniq stack[st]=_.uniq(stack[st])
+take stack[st]=_.take(stack[st],shift())
+drop stack[st]=_.drop(stack[st],shift())
 
 map (X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>
     (stack[st]=[X,a],$.es(),shift())
@@ -118,3 +129,15 @@ every (X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
 find (X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
+findi (X=shift(),St=st,st=St+' ',Z=stack[St].findIndex(a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St,stack[st]=[Z])
+takewhile (X=shift(),St=st,st=St+' ',stack[St]=_.takeWhile(stack[St],a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St)
+dropwhile (X=shift(),St=st,st=St+' ',stack[St]=_.dropWhile(stack[St],a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St)
+sort (X=shift(),St=st,st=St+' ',stack[St]=_.sortBy(stack[St],a=>
+    (stack[st]=[X,a],$.es(),shift())
+  ),delete stack[st],st=St)
