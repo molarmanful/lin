@@ -105,6 +105,10 @@ $[">char"]=(h=stack[st])=>unshift(String.fromCharCode(shift()))
 $["<char"]=(h=stack[st])=>unshift(shift().charCodeAt())
 $["lower"]=(h=stack[st])=>unshift(shift().toLowerCase())
 $["upper"]=(h=stack[st])=>unshift(shift().toUpperCase())
+$["repeat"]=(h=stack[st])=>($.swap(),unshift((shift()+'').repeat(shift())))
+$["pad"]=(h=stack[st])=>(i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i)))
+$["padl"]=(h=stack[st])=>(i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i)))
+$["padr"]=(h=stack[st])=>(i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i)))
 
 $["stack"]=(h=stack[st])=>stack[st=shift()]||(stack[st]=[])
 $["push"]=(h=stack[st])=>stack[shift()].unshift(shift())
@@ -136,10 +140,10 @@ $["find"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
 $["findi"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].findIndex(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
-$["takewhile"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.takeWhile(stack[St],a=>
+$["takew"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.takeWhile(stack[St],a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
-$["dropwhile"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.dropWhile(stack[St],a=>
+$["dropw"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.dropWhile(stack[St],a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
 $["sort"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.sortBy(stack[St],a=>

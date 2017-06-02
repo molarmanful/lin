@@ -104,6 +104,10 @@ len unshift((''+shift()).length)
 <char unshift(shift().charCodeAt())
 lower unshift(shift().toLowerCase())
 upper unshift(shift().toUpperCase())
+repeat ($.swap(),unshift((shift()+'').repeat(shift())))
+pad (i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i)))
+padl (i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i)))
+padr (i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i)))
 
 stack stack[st=shift()]||(stack[st]=[])
 push stack[shift()].unshift(shift())
@@ -135,10 +139,10 @@ find (X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
 findi (X=shift(),St=st,st=St+' ',Z=stack[St].findIndex(a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St,stack[st]=[Z])
-takewhile (X=shift(),St=st,st=St+' ',stack[St]=_.takeWhile(stack[St],a=>
+takew (X=shift(),St=st,st=St+' ',stack[St]=_.takeWhile(stack[St],a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
-dropwhile (X=shift(),St=st,st=St+' ',stack[St]=_.dropWhile(stack[St],a=>
+dropw (X=shift(),St=st,st=St+' ',stack[St]=_.dropWhile(stack[St],a=>
     (stack[st]=[X,a],$.es(),shift())
   ),delete stack[st],st=St)
 sort (X=shift(),St=st,st=St+' ',stack[St]=_.sortBy(stack[St],a=>
