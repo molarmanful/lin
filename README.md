@@ -20,3 +20,6 @@ By default, only the first line is parsed and interpreted. It is possible to exe
 
 ### Special Syntax
 Any keyword with a `\` in front of it will push the rest of the keyword (excluding the leading `\`) onto the stack. Any keyword with `#` in front of it will be ignored or treated as an ID. Other than that, numbers get pushed to the stack, and keywords are executed as commands.
+
+### Commands
+See `docs/commands.md`.
