@@ -1,0 +1,3 @@
+\BIN :: 2594 BIN out
+#BIN \BINa :: BINa drop rev () join
+#BINa 2/% swap dup \BINa e&
