@@ -1,8 +1,8 @@
 ( lambda=1
 ) {}
 () unshift('')
-\" unshift(' ')
-\\ unshift('\n')
+\\ unshift(' ')
+\\\\ unshift('\n')
 
 gi unshift(id())
 gi\\ unshift(unesc(id()))

@@ -2,8 +2,8 @@ module.exports=$={}
 $["("]=(h=stack[st])=>lambda=1
 $[")"]=(h=stack[st])=>{}
 $["()"]=(h=stack[st])=>unshift('')
-$["\""]=(h=stack[st])=>unshift(' ')
-$["\\"]=(h=stack[st])=>unshift('\n')
+$["\\"]=(h=stack[st])=>unshift(' ')
+$["\\\\"]=(h=stack[st])=>unshift('\n')
 
 $["gi"]=(h=stack[st])=>unshift(id())
 $["gi\\"]=(h=stack[st])=>unshift(unesc(id()))
