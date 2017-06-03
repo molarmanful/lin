@@ -121,33 +121,33 @@ $["uniq"]=(h=stack[st])=>stack[st]=_.uniq(stack[st])
 $["take"]=(h=stack[st])=>stack[st]=_.take(stack[st],shift())
 $["drop"]=(h=stack[st])=>stack[st]=_.drop(stack[st],shift())
 
-$["map"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=stack[St].map(a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St)
-$["filter"]=(h=stack[st])=>(X=shift(),Y=stack[st],St=st,st=St+' ',stack[St]=stack[St].filter(a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St)
-$["fold"]=(h=stack[st])=>(X=shift(),Z=shift(),St=st,st=St+' ',stack[St].map(a=>
-    (stack[st]=[X,a,Z],$.es(),Z=shift())
-  ),delete stack[st],st=St,stack[st]=[Z])
-$["some"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].some(a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,stack[st]=[Z])
-$["all"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=+stack[St].every(a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,stack[st]=[Z])
-$["find"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].find(a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,stack[st]=[Z])
-$["findi"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',Z=stack[St].findIndex(a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St,stack[st]=[Z])
-$["takew"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.takeWhile(stack[St],a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St)
-$["dropw"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.dropWhile(stack[St],a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St)
-$["sort"]=(h=stack[st])=>(X=shift(),St=st,st=St+' ',stack[St]=_.sortBy(stack[St],a=>
-    (stack[st]=[X,a],$.es(),shift())
-  ),delete stack[st],st=St)
+$["map"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=stack[st].map(a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],st=iter.shift())
+$["filter"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=stack[st].filter(a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],st=iter.shift())
+$["fold"]=(h=stack[st])=>(X=shift(),Z=shift(),iter.unshift(st),stack[st].map(a=>
+    (stack[st=iter[0]+' ']=[X,a,Z],$.es(),Z=shift())
+  ),delete stack[iter[0]+' '],st=iter.shift(),unshift(Z))
+$["some"]=(h=stack[st])=>(X=shift(),iter.unshift(st),Z=+stack[st].some(a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
+$["all"]=(h=stack[st])=>(X=shift(),iter.unshift(st),Z=+stack[st].every(a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
+$["find"]=(h=stack[st])=>(X=shift(),iter.unshift(st),Z=+stack[st].find(a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
+$["findi"]=(h=stack[st])=>(X=shift(),iter.unshift(st),Z=+stack[st].findIndex(a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
+$["takew"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=_.takeWhile(stack[st],a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],st=iter.shift())
+$["dropw"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=_.dropWhile(stack[st],a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],st=iter.shift())
+$["sort"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=_.sortBy(stack[st],a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],st=iter.shift())

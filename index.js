@@ -15,6 +15,7 @@ lambda=0
 paren=[]
 ids={}
 input=process.argv.filter(a=>a[0]!='-')[2]
+iter=[]
 
 //convenience functions for stdlib
 id=x=>ids[x=shift()]||(
