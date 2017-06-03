@@ -150,3 +150,6 @@ dropw (X=shift(),iter.unshift(st),stack[st]=_.dropWhile(stack[st],a=>
 sort (X=shift(),iter.unshift(st),stack[st]=_.sortBy(stack[st],a=>
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
+part (X=shift(),Y=shift(),iter.unshift(st),Z=_.partition(stack[st],a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],st=iter.shift(),stack[st]=Z[0],stack[Y]=Z[1])

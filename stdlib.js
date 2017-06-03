@@ -151,3 +151,6 @@ $["dropw"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=_.dropWhile(stac
 $["sort"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=_.sortBy(stack[st],a=>
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
+$["part"]=(h=stack[st])=>(X=shift(),Y=shift(),iter.unshift(st),Z=_.partition(stack[st],a=>
+    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+  ),delete stack[iter[0]+' '],st=iter.shift(),stack[st]=Z[0],stack[Y]=Z[1])
