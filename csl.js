@@ -5,8 +5,8 @@ fs.writeFileSync('stdlib.js',
     (fs.readFileSync('stdlib')+'').replace(/^(\S+) (.+)$/gm,'$["$1"]=(h=stack[st])=>$2')
   }`
 )
-fs.writeFileSync('commands.md',
+fs.writeFileSync('docs/commands.md',
   `# Commands\n**NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.\n\n${
-    (fs.readFileSync('stdlib')+'').match(/^(\S+) .+ \/\/(.+)$/gm).join`\n`.replace(/^(\S+) .+\/\/(.+)$/gm,'- <code>$1</code>: $2')
+    (fs.readFileSync('stdlib')+'').match(/^(\S+) .+ \/\/(.+)$/gm).join`\n`.replace(/^(\S+) .+ \/\/(.+)$/gm,'- <code>$1</code>: $2')
   }`
 )

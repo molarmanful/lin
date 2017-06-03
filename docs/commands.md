@@ -1,0 +1,118 @@
+# Commands
+**NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.
+
+- <code>()</code>: push empty string
+- <code>\\</code>: push space
+- <code>\\\\</code>: push newline
+- <code>gi</code>: push string at ID given by index 0
+- <code>gi\\</code>: `gi` but parse escape codes
+- <code>gs</code>: push stack joined by newlines
+- <code>si</code>: set ID at index 0
+- <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
+- <code>es</code>: execute string at index 0
+- <code>e&</code>: `es` if index 1 is truthy
+- <code>e|</code>: `es` if index 1 is falsy
+- <code>e?</code>: `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+- <code>ei</code>: `es` at millisecond intervals given by index 1
+- <code>et</code>: `es` after waiting milliseconds given by index 0
+- <code>read</code>: read file at path given by index 0
+- <code>write</code>: write string at index 1 to file at path given by index 0
+- <code>in</code>: `es` with line of STDIN at index 0
+- <code>out</code>: output index 0 to STDOUT
+- <code>outln</code>: output index 0 as a line to STDOUT
+- <code>e</code>: Euler's constant
+- <code>pi</code>: π
+- <code>E</code>: `(index 1)*10^(index 0)`
+- <code>_</code>: negation
+- <code>+</code>: addition
+- <code>-</code>: subtraction
+- <code>*</code>: multiplication
+- <code>/</code>: division
+- <code>//</code>: integer division
+- <code>%</code>: modulus
+- <code>/%</code>: divmod
+- <code>^</code>: exponentiation
+- <code>abs</code>: absolute value
+- <code>sign</code>: sign function
+- <code>rand</code>: push random number between 0 and 1
+- <code>time</code>: push milliseconds since January 1, 1970 00:00:00.000
+- <code>ln</code>: natural logarithm
+- <code>log</code>: base-10 logarithm
+- <code>sin</code>: sine
+- <code>cos</code>: cosine
+- <code>tan</code>: tangent
+- <code>sinh</code>: hyperbolic sine
+- <code>cosh</code>: hyperbolic cosine
+- <code>tanh</code>: hyperbolic tangent
+- <code>asin</code>: inverse sine
+- <code>acos</code>: inverse cosine
+- <code>atan</code>: inverse tangent
+- <code>asinh</code>: inverse hyperbolic sine
+- <code>acosh</code>: inverse hyperbolic cosine
+- <code>atanh</code>: inverse hyperbolic tangent
+- <code>max</code>: push max
+- <code>min</code>: push min
+- <code>range</code>: inclusive range
+- <code>not</code>: bitwise not
+- <code>NOT</code>: logical not
+- <code>and</code>: bitwise and
+- <code>or</code>: bitwise or
+- <code>xor</code>: bitwise xor
+- <code>=</code>: equal
+- <code>!=</code>: not equal
+- <code>></code>: greater than
+- <code><</code>: less than
+- <code>>=</code>: greater than or equal to
+- <code><=</code>: less than or equal to
+- <code><=></code>: comparison function (-1 for less than, 0 for equal, 1 for greater than)
+- <code>floor</code>: round towards -∞
+- <code>trunc</code>: round towards 0
+- <code>round</code>: round towards or away from 0 depending on < or >= .5
+- <code>ceil</code>: round towards ∞
+- <code>pick</code>: `dup` but with any index
+- <code>nix</code>: `drop` but with any index
+- <code>roll</code>: `rot` but with any index
+- <code>roll_</code>: `rot_` but with any index
+- <code>trade</code>: swap index 1 with index given by index 0
+- <code>dup</code>: push index 0
+- <code>drop</code>: pop index 0
+- <code>rot</code>: bring index 2 to index 0
+- <code>rot_</code>: bring index 0 to index 2
+- <code>swap</code>: bring index 1 to index 0
+- <code>nip</code>: pop index 1
+- <code>tuck</code>: push index 0 to index 2
+- <code>over</code>: push index 1
+- <code>clr</code>: pop all items
+- <code>rev</code>: reverse stack
+- <code>dip</code>: pop index 0, `es`, push popped index 0
+- <code>split</code>: split string at index 1 over string at index 0
+- <code>join</code>: join stack over string at index 0
+- <code>++</code>: concatenate top 2 items as strings
+- <code>len</code>: push string length of index 0
+- <code>>char</code>: convert number to Unicode
+- <code><char</code>: convert Unicode to number
+- <code>lower</code>: lowercase
+- <code>upper</code>: uppercase
+- <code>repeat</code>: repeat string by index 0
+- <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
+- <code>padl</code>: `pad` but only from the left
+- <code>padr</code>: `pad but only from the right`
+- <code>stack</code>: initialize stack with name given by index 0 or switch to that stack if it already exists
+- <code>push</code>: push index 1 to another stack with name given by index 0
+- <code>pull</code>: push top item of another stack with name given by index 0
+- <code>size</code>: push stack length
+- <code>merge</code>: push items of another stack with name given by index 0
+- <code>uniq</code>: remove all duplicates in current stack
+- <code>take</code>: keep top _n_ items, where _n_ is index 0
+- <code>drop</code>: pop top _n_ items, where _n_ is index 0
+- <code>map</code>: `es` on each individual item in the stack
+- <code>filter</code>: remove each item that is falsy after `es`
+- <code>fold</code>: VERY hard to explain; [this might help](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
+- <code>any</code>: push 1 if any items return truthy after `es`, else push 0
+- <code>all</code>: push 1 if all items return truthy after `es`, else push 0
+- <code>find</code>: find first item that returns truthy after `es` or undefined on failure
+- <code>findi</code>: `find` but returns index (or -1 on fail)
+- <code>takew</code>: `take` items until `es` returns falsy for an item
+- <code>dropw</code>: `drop` items until `es` returns falsy for an item
+- <code>sort</code>: sort items in ascending order based on `es`
+- <code>part</code>: separate items based on whether they return truthy after `es`; failing items are put into a stack with the name given by index 1
