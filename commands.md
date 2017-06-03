@@ -23,4 +23,3 @@
 - <code>e</code>: Euler's constant
 - <code>pi</code>: π
 - <code>E</code>: `(index 1)*10^(index 0)`
-- <code>/%</code>: '](),$.rot_(),$['%']())
