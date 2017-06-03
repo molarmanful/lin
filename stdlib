@@ -1,36 +1,36 @@
 ( lambda=1
 ) {}
-() unshift('')
-\\ unshift(' ')
-\\\\ unshift('\n')
+() unshift('') //push empty string
+\\ unshift(' ') //push space
+\\\\ unshift('\n') //push newline
 
-gi unshift(id())
-gi\\ unshift(unesc(id()))
-gs unshift(form())
-si ids[shift()]=shift()
-:: id()
+gi unshift(id()) //push string at ID given by index 0
+gi\\ unshift(unesc(id())) //`gi` but parse escape codes
+gs unshift(form()) //push stack joined by newlines
+si ids[shift()]=shift() //set ID at index 0
+:: id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 
-es exec(shift())
-e& ($.swap(),shift()?$.es():shift())
-e| ($.swap(),shift()?shift():$.es())
-e? ($.rot(),shift()||$.swap(),shift(),$.es())
-ei (i=shift(),setInterval(a=>exec(i),shift()))
-et (i=shift(),setTimeout(a=>exec(i),shift()))
+es exec(shift()) //execute string at index 0
+e& ($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
+e| ($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
+e? ($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+ei (i=shift(),setInterval(a=>exec(i),shift())) //`es` at millisecond intervals given by index 1
+et (i=shift(),setTimeout(a=>exec(i),shift())) //`es` after waiting milliseconds given by index 0
 
-read unshift(fs.readFileSync(shift())+'')
-write fs.writeFileSync(shift(),shift())
-in (e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
+read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
+write fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
+in (e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{ //`es` with line of STDIN at index 0
     unshift(e,a)
     $.es()
     q.close()
   }))
-out process.stdout.write(''+shift())
-outln process.stdout.write(''+shift()+'\n')
+out process.stdout.write(''+shift()) //output index 0 to STDOUT
+outln process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 
-e unshift(Math.E)
-pi unshift(Math.PI)
+e unshift(Math.E) //Euler's constant
+pi unshift(Math.PI) //π
 
-E ($.swap(),unshift(shift()*Math.pow(10,shift())))
+E ($.swap(),unshift(shift()*Math.pow(10,shift()))) //`(index 1)*10^(index 0)`
 _ unshift(-shift())
 + unshift(shift()- -shift())
 - ($.swap(),unshift(shift()-shift()))

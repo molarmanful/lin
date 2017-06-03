@@ -1,37 +1,37 @@
 module.exports=$={}
 $["("]=(h=stack[st])=>lambda=1
 $[")"]=(h=stack[st])=>{}
-$["()"]=(h=stack[st])=>unshift('')
-$["\\"]=(h=stack[st])=>unshift(' ')
-$["\\\\"]=(h=stack[st])=>unshift('\n')
+$["()"]=(h=stack[st])=>unshift('') //push empty string
+$["\\"]=(h=stack[st])=>unshift(' ') //push space
+$["\\\\"]=(h=stack[st])=>unshift('\n') //push newline
 
-$["gi"]=(h=stack[st])=>unshift(id())
-$["gi\\"]=(h=stack[st])=>unshift(unesc(id()))
-$["gs"]=(h=stack[st])=>unshift(form())
-$["si"]=(h=stack[st])=>ids[shift()]=shift()
-$["::"]=(h=stack[st])=>id()
+$["gi"]=(h=stack[st])=>unshift(id()) //push string at ID given by index 0
+$["gi\\"]=(h=stack[st])=>unshift(unesc(id())) //`gi` but parse escape codes
+$["gs"]=(h=stack[st])=>unshift(form()) //push stack joined by newlines
+$["si"]=(h=stack[st])=>ids[shift()]=shift() //set ID at index 0
+$["::"]=(h=stack[st])=>id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 
-$["es"]=(h=stack[st])=>exec(shift())
-$["e&"]=(h=stack[st])=>($.swap(),shift()?$.es():shift())
-$["e|"]=(h=stack[st])=>($.swap(),shift()?shift():$.es())
-$["e?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es())
-$["ei"]=(h=stack[st])=>(i=shift(),setInterval(a=>exec(i),shift()))
-$["et"]=(h=stack[st])=>(i=shift(),setTimeout(a=>exec(i),shift()))
+$["es"]=(h=stack[st])=>exec(shift()) //execute string at index 0
+$["e&"]=(h=stack[st])=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
+$["e|"]=(h=stack[st])=>($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
+$["e?"]=(h=stack[st])=>($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+$["ei"]=(h=stack[st])=>(i=shift(),setInterval(a=>exec(i),shift())) //`es` at millisecond intervals given by index 1
+$["et"]=(h=stack[st])=>(i=shift(),setTimeout(a=>exec(i),shift())) //`es` after waiting milliseconds given by index 0
 
-$["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'')
-$["write"]=(h=stack[st])=>fs.writeFileSync(shift(),shift())
-$["in"]=(h=stack[st])=>(e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{
+$["read"]=(h=stack[st])=>unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
+$["write"]=(h=stack[st])=>fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
+$["in"]=(h=stack[st])=>(e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{ //`es` with line of STDIN at index 0
     unshift(e,a)
     $.es()
     q.close()
   }))
-$["out"]=(h=stack[st])=>process.stdout.write(''+shift())
-$["outln"]=(h=stack[st])=>process.stdout.write(''+shift()+'\n')
+$["out"]=(h=stack[st])=>process.stdout.write(''+shift()) //output index 0 to STDOUT
+$["outln"]=(h=stack[st])=>process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 
-$["e"]=(h=stack[st])=>unshift(Math.E)
-$["pi"]=(h=stack[st])=>unshift(Math.PI)
+$["e"]=(h=stack[st])=>unshift(Math.E) //Euler's constant
+$["pi"]=(h=stack[st])=>unshift(Math.PI) //π
 
-$["E"]=(h=stack[st])=>($.swap(),unshift(shift()*Math.pow(10,shift())))
+$["E"]=(h=stack[st])=>($.swap(),unshift(shift()*Math.pow(10,shift()))) //`(index 1)*10^(index 0)`
 $["_"]=(h=stack[st])=>unshift(-shift())
 $["+"]=(h=stack[st])=>unshift(shift()- -shift())
 $["-"]=(h=stack[st])=>($.swap(),unshift(shift()-shift()))
