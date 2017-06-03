@@ -22,7 +22,7 @@ id=x=>ids[x=shift()]||(
   line&&(ids[x]=line.replace(RegExp(`^ *#${x}`),''))
 )
 mod=(x,y)=>(x%y+y)%y
-range=(x,y)=>_.range(x,y,Math.sign(y-x))
+range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
 form=x=>stack[st].map(a=>a&&a.big?JSON.stringify(a):a).reverse().join`\n`
 get=x=>stack[st][mod(x,stack[st].length)]
 splice=(x,y=1,z)=>z==[].$?

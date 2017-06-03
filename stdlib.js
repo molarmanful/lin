@@ -61,7 +61,7 @@ $["acosh"]=(h=stack[st])=>unshift(Math.acosh(shift()))
 $["atanh"]=(h=stack[st])=>unshift(Math.atanh(shift()))
 $["max"]=(h=stack[st])=>unshift(Math.max(...stack[st]))
 $["min"]=(h=stack[st])=>unshift(Math.min(...stack[st]))
-$["range"]=(h=stack[st])=>($.swap(),unshift(...range(shift(),shift()).reverse()))
+$["range"]=(h=stack[st])=>(i=shift(),j=shift(),unshift(...range(j,i).reverse()))
 
 $["not"]=(h=stack[st])=>unshift(~shift())
 $["NOT"]=(h=stack[st])=>unshift(+!shift())

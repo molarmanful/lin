@@ -1,1 +1,1 @@
-100 0 range ( dup 3% \Fizz e| over 5% \Buzz e| over 0+ \++ e| outln ) map
+100 1 range ( dup 3% \Fizz e| over 5% \Buzz e| over 0+ \++ e| outln ) map
