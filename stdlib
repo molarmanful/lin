@@ -62,11 +62,14 @@ max unshift(Math.max(...stack[st])) //push max
 min unshift(Math.min(...stack[st])) //push min
 range (i=shift(),j=shift(),unshift(...range(j,i).reverse())) //inclusive range
 
-not unshift(~shift()) //bitwise not
-NOT unshift(+!shift()) //logical not
-and unshift(shift()&shift()) //bitwise and
-or unshift(shift()|shift()) //bitwise or
-xor unshift(shift()^shift()) //bitwise xor
+~ unshift(~shift()) //bitwise not
+! unshift(+!shift()) //logical not
+& unshift(shift()&shift()) //bitwise and
+| unshift(shift()|shift()) //bitwise or
+$ unshift(shift()^shift()) //bitwise xor
+<< ($.swap(),unshift(shift()<<shift())) //bitwise left shift
+>> ($.swap(),unshift(shift()>>shift())) //bitwise right shift, sign-propagating
+>>> ($.swap(),unshift(shift()>>>shift())) //bitwise right shift, zero-fill
 
 = unshift(+(shift()==shift())) //equal
 != unshift(+(shift()!=shift())) //not equal

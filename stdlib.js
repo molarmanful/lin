@@ -63,11 +63,14 @@ $["max"]=(h=stack[st])=>unshift(Math.max(...stack[st])) //push max
 $["min"]=(h=stack[st])=>unshift(Math.min(...stack[st])) //push min
 $["range"]=(h=stack[st])=>(i=shift(),j=shift(),unshift(...range(j,i).reverse())) //inclusive range
 
-$["not"]=(h=stack[st])=>unshift(~shift()) //bitwise not
-$["NOT"]=(h=stack[st])=>unshift(+!shift()) //logical not
-$["and"]=(h=stack[st])=>unshift(shift()&shift()) //bitwise and
-$["or"]=(h=stack[st])=>unshift(shift()|shift()) //bitwise or
-$["xor"]=(h=stack[st])=>unshift(shift()^shift()) //bitwise xor
+$["~"]=(h=stack[st])=>unshift(~shift()) //bitwise not
+$["!"]=(h=stack[st])=>unshift(+!shift()) //logical not
+$["&"]=(h=stack[st])=>unshift(shift()&shift()) //bitwise and
+$["|"]=(h=stack[st])=>unshift(shift()|shift()) //bitwise or
+$["$"]=(h=stack[st])=>unshift(shift()^shift()) //bitwise xor
+$["<<"]=(h=stack[st])=>($.swap(),unshift(shift()<<shift())) //bitwise left shift
+$[">>"]=(h=stack[st])=>($.swap(),unshift(shift()>>shift())) //bitwise right shift, sign-propagating
+$[">>>"]=(h=stack[st])=>($.swap(),unshift(shift()>>>shift())) //bitwise right shift, zero-fill
 
 $["="]=(h=stack[st])=>unshift(+(shift()==shift())) //equal
 $["!="]=(h=stack[st])=>unshift(+(shift()!=shift())) //not equal

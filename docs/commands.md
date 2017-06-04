@@ -53,11 +53,14 @@
 - <code>max</code>: push max
 - <code>min</code>: push min
 - <code>range</code>: inclusive range
-- <code>not</code>: bitwise not
-- <code>NOT</code>: logical not
-- <code>and</code>: bitwise and
-- <code>or</code>: bitwise or
-- <code>xor</code>: bitwise xor
+- <code>~</code>: bitwise not
+- <code>!</code>: logical not
+- <code>&</code>: bitwise and
+- <code>|</code>: bitwise or
+- <code>$</code>: bitwise xor
+- <code><<</code>: bitwise left shift
+- <code>>></code>: bitwise right shift, sign-propagating
+- <code>>>></code>: bitwise right shift, zero-fill
 - <code>=</code>: equal
 - <code>!=</code>: not equal
 - <code>></code>: greater than
