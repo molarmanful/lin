@@ -96,7 +96,7 @@
 - <code>repeat</code>: repeat string by index 0
 - <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
 - <code>padl</code>: `pad` but only from the left
-- <code>padr</code>: `pad but only from the right`
+- <code>padr</code>: `pad` but only from the right
 - <code>stack</code>: initialize stack with name given by index 0 or switch to that stack if it already exists
 - <code>push</code>: push index 1 to another stack with name given by index 0
 - <code>pull</code>: push top item of another stack with name given by index 0

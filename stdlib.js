@@ -110,7 +110,7 @@ $["upper"]=(h=stack[st])=>unshift(shift().toUpperCase()) //uppercase
 $["repeat"]=(h=stack[st])=>($.swap(),unshift((shift()+'').repeat(shift()))) //repeat string by index 0
 $["pad"]=(h=stack[st])=>(i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i))) //pad string given by index 2 until length given by index 0 with string given by index 1
 $["padl"]=(h=stack[st])=>(i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i))) //`pad` but only from the left
-$["padr"]=(h=stack[st])=>(i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad but only from the right`
+$["padr"]=(h=stack[st])=>(i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad` but only from the right
 
 $["stack"]=(h=stack[st])=>stack[st=shift()]||(stack[st]=[]) //initialize stack with name given by index 0 or switch to that stack if it already exists
 $["push"]=(h=stack[st])=>stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
