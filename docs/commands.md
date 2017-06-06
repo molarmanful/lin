@@ -108,6 +108,9 @@
 - <code>take</code>: keep top _n_ items, where _n_ is index 0
 - <code>drop</code>: pop top _n_ items, where _n_ is index 0
 - <code>merge</code>: push items of another stack with name given by index 0
+- <code>union</code>: set union with current stack and stack with name given by index 0
+- <code>intersection</code>: set intersection with current stack and stack with name given by index 0
+- <code>difference</code>: set difference with current stack and stack with name given by index 0
 - <code>map</code>: `es` on each individual item in the stack
 - <code>filter</code>: remove each item that is falsy after `es`
 - <code>fold</code>: VERY hard to explain; [this might help](https://en.wikipedia.org/wiki/Fold_(higher-order_function))

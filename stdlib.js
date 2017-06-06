@@ -123,6 +123,9 @@ $["uniq"]=(h=stack[st])=>stack[st]=_.uniq(stack[st]) //remove all duplicates in 
 $["take"]=(h=stack[st])=>stack[st]=_.take(stack[st],shift()) //keep top _n_ items, where _n_ is index 0
 $["drop"]=(h=stack[st])=>stack[st]=_.drop(stack[st],shift()) //pop top _n_ items, where _n_ is index 0
 $["merge"]=(h=stack[st])=>unshift(...stack[shift()]) //push items of another stack with name given by index 0
+$["union"]=(h=stack[st])=>(i=shift(),stack[st]=_.union(stack[st],stack[i])) //set union with current stack and stack with name given by index 0
+$["intersection"]=(h=stack[st])=>(i=shift(),stack[st]=_.intersection(stack[st],stack[i])) //set intersection with current stack and stack with name given by index 0
+$["difference"]=(h=stack[st])=>(i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set difference with current stack and stack with name given by index 0
 
 $["map"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=stack[st].map(a=> //`es` on each individual item in the stack
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
