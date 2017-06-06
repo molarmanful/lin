@@ -2,7 +2,7 @@
 fs=require('fs')
 fs.writeFileSync('stdlib.js',
   `module.exports=$={}\n${
-    (fs.readFileSync('stdlib')+'').replace(/^(\S+) (.+)$/gm,'$["$1"]=(h=stack[st])=>$2')
+    (fs.readFileSync('stdlib')+'').replace(/^(\S+) (.+)$/gm,'$["$1"]=(h,i,j,k,X,Y,Z)=>$2')
   }`
 )
 fs.writeFileSync('docs/commands.md',
