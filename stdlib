@@ -6,9 +6,13 @@
 
 gi unshift(id()) //push string at ID given by index 0
 gi\\ unshift(unesc(id())) //`gi` but parse escape codes
+gl unshift(loc()) //`gi` but in the local scope
+gl\\ unshift(unesc(loc())) //`gl` but parse escape codes
 gs unshift(form()) //push stack joined by newlines
-si ids[shift()]=shift() //set ID at index 0
-:: id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
+si ids[shift()]=shift() //set global ID at index 0
+sl stack[st].scope[shift()]=shift() //set local ID at index 0
+:: loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
+::: id() //`::` but exposes ID's into the global scope
 
 es exec(shift()) //execute string at index 0
 e& ($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy

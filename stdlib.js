@@ -7,9 +7,13 @@ $["\\\\"]=(h=stack[st])=>unshift('\n') //push newline
 
 $["gi"]=(h=stack[st])=>unshift(id()) //push string at ID given by index 0
 $["gi\\"]=(h=stack[st])=>unshift(unesc(id())) //`gi` but parse escape codes
+$["gl"]=(h=stack[st])=>unshift(loc()) //`gi` but in the local scope
+$["gl\\"]=(h=stack[st])=>unshift(unesc(loc())) //`gl` but parse escape codes
 $["gs"]=(h=stack[st])=>unshift(form()) //push stack joined by newlines
-$["si"]=(h=stack[st])=>ids[shift()]=shift() //set ID at index 0
-$["::"]=(h=stack[st])=>id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
+$["si"]=(h=stack[st])=>ids[shift()]=shift() //set global ID at index 0
+$["sl"]=(h=stack[st])=>stack[st].scope[shift()]=shift() //set local ID at index 0
+$["::"]=(h=stack[st])=>loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
+$[":::"]=(h=stack[st])=>id() //`::` but exposes ID's into the global scope
 
 $["es"]=(h=stack[st])=>exec(shift()) //execute string at index 0
 $["e&"]=(h=stack[st])=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy

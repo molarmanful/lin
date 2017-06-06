@@ -1,3 +1,3 @@
 \f :: \I \am \in \a \frame! f
-#f \t :: rev 1stack 0merge \len map max 1si t clr 0merge ( \* \ ++ swap ++ 1gi 3+ \ padr \* ++ outln ) map t 0stack
+#f rev 1stack \t ::: 0merge \len map max 1si t clr 0merge ( \* \ ++ swap ++ 1gi 3+ \ padr \* ++ outln ) map t 0stack
 #t \* 1gi 4+ repeat outln

@@ -18,9 +18,13 @@ input=process.argv.filter(a=>a[0]!='-')[2]
 iter=[]
 
 //convenience functions for stdlib
-id=x=>ids[x=shift()]||(
+id=(x=shift())=>ids[x]||(
   line=lines.find(a=>a.match(`^ *#${x}`)),
   line&&(ids[x]=line.replace(RegExp(`^ *#${x}`),''))
+)
+loc=(x=shift())=>stack[st].scope[x]||ids[x]||(
+  line=lines.find(a=>a.match(`^ *#${x}`)),
+  line&&(stack[st].scope[x]=line.replace(RegExp(`^ *#${x}`),''))
 )
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
@@ -34,7 +38,8 @@ unshift=(...x)=>stack[st].unshift(...x)
 
 //main exec function
 exec=x=>{
-  x&&x.replace(/\s/g,'')&&parser.parse(x).map(a=>
+  x&&x.replace(/\s/g,'')&&parser.parse(x).map(a=>{
+    stack[st].scope||(stack[st].scope={})
     lambda?
       (
         a=='('?lambda++:a==')'&&lambda--,
@@ -47,13 +52,15 @@ exec=x=>{
     :a.big&&a[1]&&a[0]=='#'?
       0
     //matched functions
+    :a.big&&stack[st].scope[a]?
+      exec(stack[st].scope[a])
     :a.big&&ids[a]?
       exec(ids[a])
     :a.big&&sl[a]?
       sl[a]()
     //everything else (numbers)
     :unshift(a)
-  )
+  })
 }
 
 //export as module

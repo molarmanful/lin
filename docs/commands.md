@@ -6,9 +6,13 @@
 - <code>\\\\</code>: push newline
 - <code>gi</code>: push string at ID given by index 0
 - <code>gi\\</code>: `gi` but parse escape codes
+- <code>gl</code>: `gi` but in the local scope
+- <code>gl\\</code>: `gl` but parse escape codes
 - <code>gs</code>: push stack joined by newlines
-- <code>si</code>: set ID at index 0
+- <code>si</code>: set global ID at index 0
+- <code>sl</code>: set local ID at index 0
 - <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
+- <code>:::</code>: `::` but exposes ID's into the global scope
 - <code>es</code>: execute string at index 0
 - <code>e&</code>: `es` if index 1 is truthy
 - <code>e|</code>: `es` if index 1 is falsy
