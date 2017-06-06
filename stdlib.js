@@ -119,10 +119,10 @@ $["stack"]=(h=stack[st])=>stack[st=shift()]||(stack[st]=[]) //initialize stack w
 $["push"]=(h=stack[st])=>stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
 $["pull"]=(h=stack[st])=>unshift(stack[shift()].shift()) //push top item of another stack with name given by index 0
 $["size"]=(h=stack[st])=>unshift(stack[st].length) //push stack length
-$["merge"]=(h=stack[st])=>unshift(...stack[shift()]) //push items of another stack with name given by index 0
 $["uniq"]=(h=stack[st])=>stack[st]=_.uniq(stack[st]) //remove all duplicates in current stack
 $["take"]=(h=stack[st])=>stack[st]=_.take(stack[st],shift()) //keep top _n_ items, where _n_ is index 0
 $["drop"]=(h=stack[st])=>stack[st]=_.drop(stack[st],shift()) //pop top _n_ items, where _n_ is index 0
+$["merge"]=(h=stack[st])=>unshift(...stack[shift()]) //push items of another stack with name given by index 0
 
 $["map"]=(h=stack[st])=>(X=shift(),iter.unshift(st),stack[st]=stack[st].map(a=> //`es` on each individual item in the stack
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())

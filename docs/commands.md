@@ -104,10 +104,10 @@
 - <code>push</code>: push index 1 to another stack with name given by index 0
 - <code>pull</code>: push top item of another stack with name given by index 0
 - <code>size</code>: push stack length
-- <code>merge</code>: push items of another stack with name given by index 0
 - <code>uniq</code>: remove all duplicates in current stack
 - <code>take</code>: keep top _n_ items, where _n_ is index 0
 - <code>drop</code>: pop top _n_ items, where _n_ is index 0
+- <code>merge</code>: push items of another stack with name given by index 0
 - <code>map</code>: `es` on each individual item in the stack
 - <code>filter</code>: remove each item that is falsy after `es`
 - <code>fold</code>: VERY hard to explain; [this might help](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
