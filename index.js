@@ -4,7 +4,7 @@
 parser=require('./lin-peg.js')
 sl=require('./stdlib.js')
 fs=require('fs')
-rl=require('readline')
+cp=require('child_process')
 unesc=require('unescape-js')
 _=require('lodash')
 

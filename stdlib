@@ -23,11 +23,7 @@ et (i=shift(),setTimeout(a=>exec(i),shift())) //`es` after waiting milliseconds 
 
 read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 write fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
-in (e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{ //`es` with line of STDIN at index 0
-    unshift(e,a)
-    $.es()
-    q.close()
-  }))
+in unshift((''+cp.execSync('read x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input
 out process.stdout.write(''+shift()) //output index 0 to STDOUT
 outln process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 

@@ -24,11 +24,7 @@ $["et"]=(h,i,j,k,X,Y,Z)=>(i=shift(),setTimeout(a=>exec(i),shift())) //`es` after
 
 $["read"]=(h,i,j,k,X,Y,Z)=>unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 $["write"]=(h,i,j,k,X,Y,Z)=>fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
-$["in"]=(h,i,j,k,X,Y,Z)=>(e=shift(),q=rl.createInterface(process.stdin,process.stdout),q.question('',a=>{ //`es` with line of STDIN at index 0
-    unshift(e,a)
-    $.es()
-    q.close()
-  }))
+$["in"]=(h,i,j,k,X,Y,Z)=>unshift((''+cp.execSync('read x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input
 $["out"]=(h,i,j,k,X,Y,Z)=>process.stdout.write(''+shift()) //output index 0 to STDOUT
 $["outln"]=(h,i,j,k,X,Y,Z)=>process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 
