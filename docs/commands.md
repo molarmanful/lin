@@ -3,7 +3,7 @@
 
 - <code>()</code>: push empty string
 - <code>\\</code>: push space
-- <code>\\\\</code>: push newline
+- <code>n\\</code>: push newline
 - <code>gi</code>: push string at ID given by index 0
 - <code>gi\\</code>: `gi` but parse escape codes
 - <code>gl</code>: `gi` but in the local scope

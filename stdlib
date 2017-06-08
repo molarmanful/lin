@@ -2,7 +2,7 @@
 ) {}
 () unshift('') //push empty string
 \\ unshift(' ') //push space
-\\\\ unshift('\n') //push newline
+n\\ unshift('\n') //push newline
 
 gi unshift(id()) //push string at ID given by index 0
 gi\\ unshift(unesc(id())) //`gi` but parse escape codes

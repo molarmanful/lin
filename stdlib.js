@@ -3,7 +3,7 @@ $["("]=(h,i,j,k,X,Y,Z)=>lambda=1
 $[")"]=(h,i,j,k,X,Y,Z)=>{}
 $["()"]=(h,i,j,k,X,Y,Z)=>unshift('') //push empty string
 $["\\"]=(h,i,j,k,X,Y,Z)=>unshift(' ') //push space
-$["\\\\"]=(h,i,j,k,X,Y,Z)=>unshift('\n') //push newline
+$["n\\"]=(h,i,j,k,X,Y,Z)=>unshift('\n') //push newline
 
 $["gi"]=(h,i,j,k,X,Y,Z)=>unshift(id()) //push string at ID given by index 0
 $["gi\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(id())) //`gi` but parse escape codes
