@@ -1,2 +1,2 @@
-\tm ::: 0 \tm \ ++ 10repeat es
-#tm () join dup outln () outln \clr dip () split ( 0+ dup ! ++ ) map
+\tm ::: 0 \tm \ ++ 10repeat es out
+#tm \clr dip () split ( 0+ dup ! ++ ) map () join
