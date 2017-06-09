@@ -23,6 +23,7 @@ ew {i=shift(),j=shift();while(exec(j),shift())exec(i)}
 read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 write fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
 in unshift((''+cp.execSync('read x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input
+inh unshift((''+cp.execSync('read -s x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input without echoing
 out process.stdout.write(''+shift()) //output index 0 to STDOUT
 outln process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 

@@ -20,6 +20,7 @@
 - <code>read</code>: read file at path given by index 0
 - <code>write</code>: write string at index 1 to file at path given by index 0
 - <code>in</code>: pushes user input
+- <code>inh</code>: pushes user input without echoing
 - <code>out</code>: output index 0 to STDOUT
 - <code>outln</code>: output index 0 as a line to STDOUT
 - <code>e</code>: Euler's constant
