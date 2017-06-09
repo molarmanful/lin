@@ -18,6 +18,7 @@ es exec(shift()) //execute string at index 0
 e& ($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
 e| ($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 e? ($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+ew {i=shift(),j=shift();while(exec(j),shift())exec(i)}
 
 read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 write fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
