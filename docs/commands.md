@@ -17,8 +17,6 @@
 - <code>e&</code>: `es` if index 1 is truthy
 - <code>e|</code>: `es` if index 1 is falsy
 - <code>e?</code>: `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
-- <code>ei</code>: `es` at millisecond intervals given by index 1
-- <code>et</code>: `es` after waiting milliseconds given by index 0
 - <code>read</code>: read file at path given by index 0
 - <code>write</code>: write string at index 1 to file at path given by index 0
 - <code>in</code>: pushes user input

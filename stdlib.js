@@ -19,8 +19,6 @@ $["es"]=(h,i,j,k,X,Y,Z)=>exec(shift()) //execute string at index 0
 $["e&"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
 $["e|"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 $["e?"]=(h,i,j,k,X,Y,Z)=>($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
-$["ei"]=(h,i,j,k,X,Y,Z)=>(i=shift(),setInterval(a=>exec(i),shift())) //`es` at millisecond intervals given by index 1
-$["et"]=(h,i,j,k,X,Y,Z)=>(i=shift(),setTimeout(a=>exec(i),shift())) //`es` after waiting milliseconds given by index 0
 
 $["read"]=(h,i,j,k,X,Y,Z)=>unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 $["write"]=(h,i,j,k,X,Y,Z)=>fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
