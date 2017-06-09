@@ -1,2 +1,1 @@
-\a :: 1 1 50 a drop gs out
-#a rot_ over over + 3roll 1- dup \a e&
+1 1 50 ( rot_ over over + 3roll 1- dup ) () ew drop gs out
