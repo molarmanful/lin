@@ -115,7 +115,7 @@ $["pad"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i))) 
 $["padl"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i))) //`pad` but only from the left
 $["padr"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad` but only from the right
 
-$["stack"]=(h,i,j,k,X,Y,Z)=>stack[st=shift()]||(stack[st]=[]) //initialize stack with name given by index 0 or switch to that stack if it already exists
+$["stack"]=(h,i,j,k,X,Y,Z)=>(stack[X=shift()]||(stack[X]=[]),$.es()) //execute string given by index 1 on stack with name given by index 0
 $["push"]=(h,i,j,k,X,Y,Z)=>stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
 $["pull"]=(h,i,j,k,X,Y,Z)=>unshift(stack[shift()].shift()) //push top item of another stack with name given by index 0
 $["size"]=(h,i,j,k,X,Y,Z)=>unshift(stack[st].length) //push stack length
@@ -126,6 +126,10 @@ $["merge"]=(h,i,j,k,X,Y,Z)=>unshift(...stack[shift()]) //push items of another s
 $["union"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.union(stack[st],stack[i])) //set union with current stack and stack with name given by index 0
 $["intersection"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.intersection(stack[st],stack[i])) //set intersection with current stack and stack with name given by index 0
 $["difference"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set difference with current stack and stack with name given by index 0
+$["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
+$["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
+    stack[st=iter[0]+'\n']=Y,exec(X),Y=stack[st],
+  delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))
 
 $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=stack[st].map(a=> //`es` on each individual item in the stack
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
@@ -157,6 +161,6 @@ $["dropw"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.dropWhile(st
 $["sort"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.sortBy(stack[st],a=> //sort items in ascending order based on `es`
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
-$["part"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),iter.unshift(st),Z=_.partition(stack[st],a=> //separate items based on whether they return truthy after `es`; failing items are put into a stack with the name given by index 1
+$["part"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.partition(stack[st],a=> //separate items into 2 lists based on whether they return truthy after `es`
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
-  ),delete stack[iter[0]+' '],st=iter.shift(),stack[st]=Z[0],stack[Y]=Z[1])
+  ),delete stack[iter[0]+' '],st=iter.shift())

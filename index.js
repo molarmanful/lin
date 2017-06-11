@@ -28,7 +28,7 @@ loc=(x=shift())=>stack[st].scope[x]||ids[x]||(
 )
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
-form=x=>stack[st].map(a=>a&&a.big?JSON.stringify(a):a).reverse().join`\n`
+form=(x=stack[st],y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${form(a,' ')} ]`:a).reverse().join(y)
 get=x=>stack[st][mod(x,stack[st].length)]
 splice=(x,y=1,z)=>z==[].$?
   stack[st].splice(mod(x,stack[st].length),y)

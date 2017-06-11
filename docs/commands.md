@@ -103,7 +103,7 @@
 - <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
 - <code>padl</code>: `pad` but only from the left
 - <code>padr</code>: `pad` but only from the right
-- <code>stack</code>: initialize stack with name given by index 0 or switch to that stack if it already exists
+- <code>stack</code>: execute string given by index 1 on stack with name given by index 0
 - <code>push</code>: push index 1 to another stack with name given by index 0
 - <code>pull</code>: push top item of another stack with name given by index 0
 - <code>size</code>: push stack length
@@ -114,6 +114,8 @@
 - <code>union</code>: set union with current stack and stack with name given by index 0
 - <code>intersection</code>: set intersection with current stack and stack with name given by index 0
 - <code>difference</code>: set difference with current stack and stack with name given by index 0
+- <code>[]</code>: initialize empty list
+- <code>'</code>: apply function to list given by index 0
 - <code>map</code>: `es` on each individual item in the stack
 - <code>filter</code>: remove each item that is falsy after `es`
 - <code>fold</code>: VERY hard to explain; [this might help](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
@@ -124,4 +126,4 @@
 - <code>takew</code>: `take` items until `es` returns falsy for an item
 - <code>dropw</code>: `drop` items until `es` returns falsy for an item
 - <code>sort</code>: sort items in ascending order based on `es`
-- <code>part</code>: separate items based on whether they return truthy after `es`; failing items are put into a stack with the name given by index 1
+- <code>part</code>: separate items into 2 lists based on whether they return truthy after `es`
