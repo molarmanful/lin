@@ -128,6 +128,7 @@ $["intersection"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.intersection(stack[st]
 $["difference"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set difference with current stack and stack with name given by index 0
 $["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
 $["wrap"]=(h,i,j,k,X,Y,Z)=>unshift([shift()]) //wrap index 0 in a list
+$["wrap_"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(...X.toFixed?[X]:X)) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
 $["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
     stack[st=iter[0]+'\n']=Y,exec(X),Y=stack[st],
   delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))

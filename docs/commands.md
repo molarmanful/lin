@@ -116,6 +116,7 @@
 - <code>difference</code>: set difference with current stack and stack with name given by index 0
 - <code>[]</code>: initialize empty list
 - <code>wrap</code>: wrap index 0 in a list
+- <code>wrap_</code>: opposite of `wrap`; take all items in list at index 0 and push to parent stack
 - <code>'</code>: apply function to list given by index 0
 - <code>map</code>: `es` on each individual item in the stack
 - <code>filter</code>: remove each item that is falsy after `es`
