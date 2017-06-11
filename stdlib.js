@@ -105,7 +105,7 @@ $["dip"]=(h,i,j,k,X,Y,Z)=>($.swap(),i=shift(),$.es(),unshift(i)) //pop index 0, 
 $["split"]=(h,i,j,k,X,Y,Z)=>($.swap(),unshift(...(shift()+'').split(shift()).reverse())) //split string at index 1 over string at index 0
 $["join"]=(h,i,j,k,X,Y,Z)=>(i=shift(),unshift(stack[st].slice(0).reverse().join(i))) //join stack over string at index 0
 $["++"]=(h,i,j,k,X,Y,Z)=>($.swap(),unshift(shift().concat(shift()))) //concatenate top 2 items as strings
-$["len"]=(h,i,j,k,X,Y,Z)=>unshift((''+shift()).length) //push string length of index 0
+$["len"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.toFixed?(X+'').length:X.length)) //push string length of index 0
 $[">char"]=(h,i,j,k,X,Y,Z)=>unshift(String.fromCodePoint(shift())) //convert number to Unicode
 $["<char"]=(h,i,j,k,X,Y,Z)=>unshift(shift().codePointAt()) //convert Unicode to number
 $["lower"]=(h,i,j,k,X,Y,Z)=>unshift(shift().toLowerCase()) //lowercase
