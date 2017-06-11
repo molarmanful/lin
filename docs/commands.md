@@ -115,6 +115,7 @@
 - <code>intersection</code>: set intersection with current stack and stack with name given by index 0
 - <code>difference</code>: set difference with current stack and stack with name given by index 0
 - <code>[]</code>: initialize empty list
+- <code>wrap</code>: wrap index 0 in a list
 - <code>'</code>: apply function to list given by index 0
 - <code>map</code>: `es` on each individual item in the stack
 - <code>filter</code>: remove each item that is falsy after `es`
