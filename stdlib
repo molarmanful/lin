@@ -114,7 +114,7 @@ pad (i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i))) //pad string given by 
 padl (i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i))) //`pad` but only from the left
 padr (i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad` but only from the right
 
-stack (stack[X=shift()]||(stack[X]=[]),$.es()) //execute string given by index 1 on stack with name given by index 0
+stack (iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),exec(Y),st=iter.shift()) //execute string given by index 1 on a stack with name given by index 0
 push stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
 pull unshift(stack[shift()].shift()) //push top item of another stack with name given by index 0
 size unshift(stack[st].length) //push stack length
@@ -127,10 +127,12 @@ intersection (i=shift(),stack[st]=_.intersection(stack[st],stack[i])) //set inte
 difference (i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set difference with current stack and stack with name given by index 0
 [] unshift([]) //initialize empty list
 wrap unshift([shift()]) //wrap index 0 in a list
-wrap_ (X=shift(),unshift(...X.toFixed?[X]:X)) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
+wrap_ (X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
 ' (X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
     stack[st=iter[0]+'\n']=Y,exec(X),Y=stack[st],
   delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))
+flat stack[st]=_.flatten(stack[st]) //`wrap_` all elements
+chunk stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
 
 map (X=shift(),iter.unshift(st),stack[st]=stack[st].map(a=> //`es` on each individual item in the stack
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())

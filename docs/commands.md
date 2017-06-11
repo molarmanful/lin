@@ -103,7 +103,7 @@
 - <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
 - <code>padl</code>: `pad` but only from the left
 - <code>padr</code>: `pad` but only from the right
-- <code>stack</code>: execute string given by index 1 on stack with name given by index 0
+- <code>stack</code>: execute string given by index 1 on a stack with name given by index 0
 - <code>push</code>: push index 1 to another stack with name given by index 0
 - <code>pull</code>: push top item of another stack with name given by index 0
 - <code>size</code>: push stack length
@@ -118,6 +118,8 @@
 - <code>wrap</code>: wrap index 0 in a list
 - <code>wrap_</code>: opposite of `wrap`; take all items in list at index 0 and push to parent stack
 - <code>'</code>: apply function to list given by index 0
+- <code>flat</code>: `wrap_` all elements
+- <code>chunk</code>: split stack into lists of length given by index 0
 - <code>map</code>: `es` on each individual item in the stack
 - <code>filter</code>: remove each item that is falsy after `es`
 - <code>fold</code>: VERY hard to explain; [this might help](https://en.wikipedia.org/wiki/Fold_(higher-order_function))

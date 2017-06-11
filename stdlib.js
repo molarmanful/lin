@@ -115,7 +115,7 @@ $["pad"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i))) 
 $["padl"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i))) //`pad` but only from the left
 $["padr"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad` but only from the right
 
-$["stack"]=(h,i,j,k,X,Y,Z)=>(stack[X=shift()]||(stack[X]=[]),$.es()) //execute string given by index 1 on stack with name given by index 0
+$["stack"]=(h,i,j,k,X,Y,Z)=>(iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),exec(Y),st=iter.shift()) //execute string given by index 1 on a stack with name given by index 0
 $["push"]=(h,i,j,k,X,Y,Z)=>stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
 $["pull"]=(h,i,j,k,X,Y,Z)=>unshift(stack[shift()].shift()) //push top item of another stack with name given by index 0
 $["size"]=(h,i,j,k,X,Y,Z)=>unshift(stack[st].length) //push stack length
@@ -128,10 +128,12 @@ $["intersection"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.intersection(stack[st]
 $["difference"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set difference with current stack and stack with name given by index 0
 $["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
 $["wrap"]=(h,i,j,k,X,Y,Z)=>unshift([shift()]) //wrap index 0 in a list
-$["wrap_"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(...X.toFixed?[X]:X)) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
+$["wrap_"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
 $["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
     stack[st=iter[0]+'\n']=Y,exec(X),Y=stack[st],
   delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))
+$["flat"]=(h,i,j,k,X,Y,Z)=>stack[st]=_.flatten(stack[st]) //`wrap_` all elements
+$["chunk"]=(h,i,j,k,X,Y,Z)=>stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
 
 $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=stack[st].map(a=> //`es` on each individual item in the stack
     (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
