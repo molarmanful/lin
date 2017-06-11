@@ -35,6 +35,7 @@ splice=(x,y=1,z)=>z==[].$?
 :stack[st].splice(mod(x,stack[st].length),y,z)
 shift=x=>stack[st].shift()
 unshift=(...x)=>stack[st].unshift(...x)
+Number.prototype.concat=function(x){return (this+'').concat(x)}
 
 //main exec function
 exec=x=>{

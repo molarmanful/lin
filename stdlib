@@ -103,7 +103,7 @@ dip ($.swap(),i=shift(),$.es(),unshift(i)) //pop index 0, `es`, push popped inde
 
 split ($.swap(),unshift(...(shift()+'').split(shift()).reverse())) //split string at index 1 over string at index 0
 join (i=shift(),unshift(stack[st].slice(0).reverse().join(i))) //join stack over string at index 0
-++ ($.swap(),unshift(''+shift()+shift())) //concatenate top 2 items as strings
+++ ($.swap(),unshift(shift().concat(shift()))) //concatenate top 2 items as strings
 len unshift((''+shift()).length) //push string length of index 0
 >char unshift(String.fromCodePoint(shift())) //convert number to Unicode
 <char unshift(shift().codePointAt()) //convert Unicode to number
