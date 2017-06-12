@@ -1,2 +1,21 @@
-\DEC :: 10111011110111 DEC out
+\DEC ::: 10111011110111 DEC out
 #DEC () split rev size \SIZE si ( \SIZE gi 1- dup \SIZE si 2swap ^ * ) map \+ fold
+
+
+
+# EXPLANATION
+Converts binary to decimal.
+
+- `\DEC :::` pushes the ID of DEC to the global scope. This is a pretty standard way of declaring functions.
+- `10111011110111 DEC out` pushes a binary number, executes DEC on the current stack, and outputs the result.
+
+In the ID declaration of DEC:
+
+- `() split rev` splits the top item on the stack (in this case, the binary number).
+- `size \SIZE si` stores the stack length into an ID called SIZE.
+- `( ... ) map \+ fold` applies the given lambda over each stack item, then sums the entire stack.
+
+Within the lambda:
+
+- `\SIZE gi 1- dup \SIZE si` decrements SIZE, changing the ID's value. This leaves the new value on top of the stack.
+- `2swap ^ *` does `2^(top of stack)`, then multiplies the result by the value of the item being mapped.
