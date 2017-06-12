@@ -100,7 +100,7 @@ $["tuck"]=(h,i,j,k,X,Y,Z)=>($.dup(),$.rot_()) //push index 0 to index 2
 $["over"]=(h,i,j,k,X,Y,Z)=>($.swap(),$.tuck()) //push index 1
 $["clr"]=(h,i,j,k,X,Y,Z)=>stack[st]=[] //pop all items
 $["rev"]=(h,i,j,k,X,Y,Z)=>stack[st].reverse() //reverse stack
-$["dip"]=(h,i,j,k,X,Y,Z)=>($.swap(),i=shift(),exec(shift()),unshift(i)) //pop index 0, `es`, push popped index 0
+$["dip"]=(h,i,j,k,X,Y,Z)=>($.swap(),i=shift(),code[0].unshift(a=>unshift(i)),exec(shift(),1)) //pop index 0, `es`, push popped index 0
 
 $["split"]=(h,i,j,k,X,Y,Z)=>($.swap(),unshift(...(shift()+'').split(shift()).reverse())) //split string at index 1 over string at index 0
 $["join"]=(h,i,j,k,X,Y,Z)=>(i=shift(),unshift(stack[st].slice(0).reverse().join(i))) //join stack over string at index 0
@@ -115,7 +115,7 @@ $["pad"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i))) 
 $["padl"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i))) //`pad` but only from the left
 $["padr"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad` but only from the right
 
-$["stack"]=(h,i,j,k,X,Y,Z)=>(iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),exec(Y),st=iter.shift()) //execute string given by index 1 on a stack with name given by index 0
+$["stack"]=(h,i,j,k,X,Y,Z)=>(iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),code[0].unshift(a=>st=iter.shift()),exec(Y,1)) //execute string given by index 1 on a stack with name given by index 0
 $["push"]=(h,i,j,k,X,Y,Z)=>stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
 $["pull"]=(h,i,j,k,X,Y,Z)=>unshift(stack[shift()].shift()) //push top item of another stack with name given by index 0
 $["size"]=(h,i,j,k,X,Y,Z)=>unshift(stack[st].length) //push stack length
@@ -130,8 +130,8 @@ $["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
 $["wrap"]=(h,i,j,k,X,Y,Z)=>unshift([shift()]) //wrap index 0 in a list
 $["wrap_"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
 $["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
-    stack[st=iter[0]+'\n']=Y,exec(X),Y=stack[st],
-  delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))
+    stack[st=iter[0]+'\n']=Y,
+    code[0].unshift(a=>(Y=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))),exec(X,1))
 $["flat"]=(h,i,j,k,X,Y,Z)=>stack[st]=_.flatten(stack[st]) //`wrap_` all elements
 $["chunk"]=(h,i,j,k,X,Y,Z)=>stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
 

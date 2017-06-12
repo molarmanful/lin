@@ -49,7 +49,9 @@ exec=(x,y)=>{
       while(code[0].length){
         a=code[0].shift()
         stack[st].scope||(stack[st].scope={})
-        lambda?
+        a.call?
+          a()
+        :lambda?
           (
             a=='('?lambda++:a==')'&&lambda--,
             lambda?paren.push(a):(unshift(paren.join` `),paren=[])

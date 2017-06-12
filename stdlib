@@ -99,7 +99,7 @@ tuck ($.dup(),$.rot_()) //push index 0 to index 2
 over ($.swap(),$.tuck()) //push index 1
 clr stack[st]=[] //pop all items
 rev stack[st].reverse() //reverse stack
-dip ($.swap(),i=shift(),exec(shift()),unshift(i)) //pop index 0, `es`, push popped index 0
+dip ($.swap(),i=shift(),code[0].unshift(a=>unshift(i)),exec(shift(),1)) //pop index 0, `es`, push popped index 0
 
 split ($.swap(),unshift(...(shift()+'').split(shift()).reverse())) //split string at index 1 over string at index 0
 join (i=shift(),unshift(stack[st].slice(0).reverse().join(i))) //join stack over string at index 0
@@ -114,7 +114,7 @@ pad (i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i))) //pad string given by 
 padl (i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i))) //`pad` but only from the left
 padr (i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad` but only from the right
 
-stack (iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),exec(Y),st=iter.shift()) //execute string given by index 1 on a stack with name given by index 0
+stack (iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),code[0].unshift(a=>st=iter.shift()),exec(Y,1)) //execute string given by index 1 on a stack with name given by index 0
 push stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
 pull unshift(stack[shift()].shift()) //push top item of another stack with name given by index 0
 size unshift(stack[st].length) //push stack length
@@ -129,8 +129,8 @@ difference (i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set differen
 wrap unshift([shift()]) //wrap index 0 in a list
 wrap_ (X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
 ' (X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
-    stack[st=iter[0]+'\n']=Y,exec(X),Y=stack[st],
-  delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))
+    stack[st=iter[0]+'\n']=Y,
+    code[0].unshift(a=>(Y=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))),exec(X,1))
 flat stack[st]=_.flatten(stack[st]) //`wrap_` all elements
 chunk stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
 
