@@ -40,6 +40,7 @@ Number.prototype.concat=function(x){return (this+'').concat(x)}
 
 //main exec function
 exec=(x,y)=>{
+  x+=''
   if(x&&x.replace(/\s/g,'')){
     if(y){
       code[0].unshift(...parser.parse(x))
