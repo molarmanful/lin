@@ -16,6 +16,7 @@ paren=[]
 ids={}
 input=process.argv.filter(a=>a[0]!='-')[2]
 iter=[]
+code=[]
 
 //convenience functions for stdlib
 id=(x=shift())=>ids[x]||(
@@ -38,30 +39,40 @@ unshift=(...x)=>stack[st].unshift(...x)
 Number.prototype.concat=function(x){return (this+'').concat(x)}
 
 //main exec function
-exec=x=>{
-  x&&x.replace(/\s/g,'')&&parser.parse(x).map(a=>{
-    stack[st].scope||(stack[st].scope={})
-    lambda?
-      (
-        a=='('?lambda++:a==')'&&lambda--,
-        lambda?paren.push(a):(unshift(paren.join` `),paren=[])
-      )
-    //refs
-    :a.big&&a[1]&&a[0]=='\\'?
-      unshift(a.slice(1))
-    //ids
-    :a.big&&a[1]&&a[0]=='#'?
-      0
-    //matched functions
-    :a.big&&stack[st].scope[a]?
-      exec(stack[st].scope[a])
-    :a.big&&ids[a]?
-      exec(ids[a])
-    :a.big&&sl[a]?
-      sl[a]()
-    //everything else (numbers)
-    :unshift(a)
-  })
+exec=(x,y)=>{
+  if(x&&x.replace(/\s/g,'')){
+    if(y){
+      code[0].unshift(...parser.parse(x))
+    }else{
+      code.unshift(parser.parse(x))
+      var a
+      while(code[0].length){
+        a=code[0].shift()
+        stack[st].scope||(stack[st].scope={})
+        lambda?
+          (
+            a=='('?lambda++:a==')'&&lambda--,
+            lambda?paren.push(a):(unshift(paren.join` `),paren=[])
+          )
+        //refs
+        :a.big&&a[1]&&a[0]=='\\'?
+          unshift(a.slice(1))
+        //ids
+        :a.big&&a[1]&&a[0]=='#'?
+          0
+        //matched functions
+        :a.big&&stack[st].scope[a]?
+          exec(stack[st].scope[a],1)
+        :a.big&&ids[a]?
+          exec(ids[a],1)
+        :a.big&&sl[a]?
+          sl[a]()
+        //everything else (numbers)
+        :unshift(a)
+      }
+      code.shift()
+    }
+  }
 }
 
 //export as module

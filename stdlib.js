@@ -15,7 +15,7 @@ $["sl"]=(h,i,j,k,X,Y,Z)=>stack[st].scope[shift()]=shift() //set local ID at inde
 $["::"]=(h,i,j,k,X,Y,Z)=>loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 $[":::"]=(h,i,j,k,X,Y,Z)=>id() //`::` but exposes ID's into the global scope
 
-$["es"]=(h,i,j,k,X,Y,Z)=>exec(shift()) //execute string at index 0
+$["es"]=(h,i,j,k,X,Y,Z)=>exec(shift(),1) //execute string at index 0
 $["e&"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
 $["e|"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 $["e?"]=(h,i,j,k,X,Y,Z)=>($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
@@ -100,7 +100,7 @@ $["tuck"]=(h,i,j,k,X,Y,Z)=>($.dup(),$.rot_()) //push index 0 to index 2
 $["over"]=(h,i,j,k,X,Y,Z)=>($.swap(),$.tuck()) //push index 1
 $["clr"]=(h,i,j,k,X,Y,Z)=>stack[st]=[] //pop all items
 $["rev"]=(h,i,j,k,X,Y,Z)=>stack[st].reverse() //reverse stack
-$["dip"]=(h,i,j,k,X,Y,Z)=>($.swap(),i=shift(),$.es(),unshift(i)) //pop index 0, `es`, push popped index 0
+$["dip"]=(h,i,j,k,X,Y,Z)=>($.swap(),i=shift(),exec(shift()),unshift(i)) //pop index 0, `es`, push popped index 0
 
 $["split"]=(h,i,j,k,X,Y,Z)=>($.swap(),unshift(...(shift()+'').split(shift()).reverse())) //split string at index 1 over string at index 0
 $["join"]=(h,i,j,k,X,Y,Z)=>(i=shift(),unshift(stack[st].slice(0).reverse().join(i))) //join stack over string at index 0
@@ -136,35 +136,35 @@ $["flat"]=(h,i,j,k,X,Y,Z)=>stack[st]=_.flatten(stack[st]) //`wrap_` all elements
 $["chunk"]=(h,i,j,k,X,Y,Z)=>stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
 
 $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=stack[st].map(a=> //`es` on each individual item in the stack
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
 $["filter"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=stack[st].filter(a=> //remove each item that is falsy after `es`
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
 $["fold"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Z=shift(),iter.unshift(st),stack[st].map(a=> //VERY hard to explain; [this might help](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
-    (stack[st=iter[0]+' ']=[X,a,Z],$.es(),Z=shift())
+    (stack[st=iter[0]+' ']=[a,Z],exec(X),Z=shift())
   ),delete stack[iter[0]+' '],st=iter.shift(),unshift(Z))
 $["any"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),Z=+stack[st].some(a=> //push 1 if any items return truthy after `es`, else push 0
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
 $["all"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),Z=+stack[st].every(a=> //push 1 if all items return truthy after `es`, else push 0
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
 $["find"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),Z=stack[st].find(a=> //find first item that returns truthy after `es` or undefined on failure
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
 $["findi"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),Z=+stack[st].findIndex(a=> //`find` but returns index (or -1 on fail)
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])
 $["takew"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.takeWhile(stack[st],a=> //`take` items until `es` returns falsy for an item
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
 $["dropw"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.dropWhile(stack[st],a=> //`drop` items until `es` returns falsy for an item
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
 $["sort"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.sortBy(stack[st],a=> //sort items in ascending order based on `es`
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
 $["part"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.partition(stack[st],a=> //separate items into 2 lists based on whether they return truthy after `es`
-    (stack[st=iter[0]+' ']=[X,a],$.es(),shift())
+    (stack[st=iter[0]+' ']=[a],exec(X),shift())
   ),delete stack[iter[0]+' '],st=iter.shift())
