@@ -15,6 +15,7 @@
 - <code>:::</code>: `::` but exposes ID's into the global scope
 - <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 - <code>es</code>: execute string at index 0
+- <code>e*</code>: execute string at index 1 for number of times given by index 0
 - <code>e&</code>: `es` if index 1 is truthy
 - <code>e|</code>: `es` if index 1 is falsy
 - <code>e?</code>: `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
