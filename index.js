@@ -41,40 +41,41 @@ Number.prototype.concat=function(x){return (this+'').concat(x)}
 //main exec function
 exec=(x,y)=>{
   x+=''
-  if(x&&x.replace(/\s/g,'')){
-    if(y){
-      code[0].unshift(...parser.parse(x))
-    }else{
-      code.unshift(parser.parse(x))
-      var a
-      while(code[0].length){
-        a=code[0].shift()
-        stack[st].scope||(stack[st].scope={})
-        a.call?
-          a()
+  if(y){
+    code[0].unshift(...parser.parse(x))
+  }else{
+    code.unshift(parser.parse(x))
+    var a
+    while(code[0]&&code[0].length){
+      a=code[0].shift()
+      stack[st].scope||(stack[st].scope={})
+      a.call?
+        a()
         :lambda?
-          (
-            a=='('?lambda++:a==')'&&lambda--,
-            lambda?paren.push(a):(unshift(paren.join` `),paren=[])
-          )
-        //refs
+        (
+          a=='('?lambda++:a==')'&&lambda--,
+          lambda?paren.push(a):(unshift(paren.join` `),paren=[])
+        )
+      //refs
         :a.big&&a[1]&&a[0]=='\\'?
-          unshift(a.slice(1))
-        //ids
+        unshift(a.slice(1))
+      //ids
         :a.big&&a[1]&&a[0]=='#'?
-          0
-        //matched functions
+        0
+      //empty strings
+        :a.big&&!a?
+        0
+      //matched functions
         :a.big&&stack[st].scope[a]?
-          exec(stack[st].scope[a],1)
+        exec(stack[st].scope[a],1)
         :a.big&&ids[a]?
-          exec(ids[a],1)
+        exec(ids[a],1)
         :a.big&&sl[a]?
-          sl[a]()
-        //everything else (numbers)
+        sl[a]()
+      //everything else (numbers)
         :unshift(a)
-      }
-      code.shift()
     }
+    code.shift()
   }
 }
 

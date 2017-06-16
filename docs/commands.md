@@ -122,7 +122,7 @@
 - <code>chunk</code>: split stack into lists of length given by index 0
 - <code>map</code>: `es` on each individual item in the stack
 - <code>filter</code>: remove each item that is falsy after `es`
-- <code>fold</code>: VERY hard to explain; [this might help](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
+- <code>fold</code>: `es` with accumulator and item; result of each `es` becomes the new accumulator
 - <code>any</code>: push 1 if any items return truthy after `es`, else push 0
 - <code>all</code>: push 1 if all items return truthy after `es`, else push 0
 - <code>find</code>: find first item that returns truthy after `es` or undefined on failure
