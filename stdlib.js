@@ -145,27 +145,18 @@ $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st), //`es` on each individual
   stack[st].map((a,b)=>
     code[0].unshift(A=>stack[st=iter[0]+' ']=[a],...parse(X),A=>stack[iter[0]][b]=shift())
   ))
-$["filter"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st), //remove each item that is falsy after `es`
-  code[0].unshift(a=>(delete stack[iter[0]+' '],st=iter.shift())),
-  stack[st].map((a,b)=>
-    code[0].unshift(A=>stack[st=iter[0]+' ']=[a],...parse(X),a=>(a=shift(),st=iter[0],a?(stack[st][b]=a):splice(b)))
-  ))
 $["fold"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Z=shift(),iter.unshift(st), //`es` with accumulator and item; result of each `es` becomes the new accumulator
   code[0].unshift(a=>(delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])),
   stack[st].map(a=>
     code[0].unshift(A=>stack[st=iter[0]+' ']=[a,Z],...parse(X),A=>Z=shift())
   ))
 
+$["filter"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=stack[st].filter(a=>a)),$.map()) //remove each item that is falsy after `es`
 $["any"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=[+stack[st].some(a=>a)]),$.map()) //push 1 if any items return truthy after `es`, else push 0
 $["all"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=[+stack[st].every(a=>a)]),$.map()) //push 1 if all items return truthy after `es`, else push 0
 $["find"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=[stack[st].find(a=>a)]),$.map()) //find first item that returns truthy after `es` or undefined on failure
 $["findi"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=[stack[st].findIndex(a=>a)]),$.map()) //`find` but returns index (or -1 on fail)
 $["takew"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=_.takeWhile(stack[st])),$.map()) //`take` items until `es` returns falsy for an item
 $["dropw"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=_.dropWhile(stack[st])),$.map()) //`drop` items until `es` returns falsy for an item
-
-$["sort"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.sortBy(stack[st],a=> //sort items in ascending order based on `es`
-    (stack[st=iter[0]+' ']=[a],exec(X),shift())
-  ),delete stack[iter[0]+' '],st=iter.shift())
-$["part"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st),stack[st]=_.partition(stack[st],a=> //separate items into 2 lists based on whether they return truthy after `es`
-    (stack[st=iter[0]+' ']=[a],exec(X),shift())
-  ),delete stack[iter[0]+' '],st=iter.shift())
+$["sort"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=_.sortBy(stack[st])),$.map()) //sort items in ascending order based on `es`
+$["part"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=_.partition(stack[st])),$.map()) //separate items into 2 lists based on whether they return truthy after `es`
