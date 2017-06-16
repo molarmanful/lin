@@ -30,6 +30,7 @@ loc=(x=shift())=>stack[st].scope[x]||ids[x]||(
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
 form=(x=stack[st],y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${form(a,' ')} ]`:a).reverse().join(y)
+parse=x=>parser.parse(x.pop?x.join` `:x+'')
 get=x=>stack[st][mod(x,stack[st].length)]
 splice=(x,y=1,z)=>z==[].$?
   stack[st].splice(mod(x,stack[st].length),y)
@@ -42,9 +43,9 @@ Number.prototype.concat=function(x){return (this+'').concat(x)}
 exec=(x,y)=>{
   x+=''
   if(y){
-    code[0].unshift(...parser.parse(x))
+    code[0].unshift(...parse(x))
   }else{
-    code.unshift(parser.parse(x))
+    code.unshift(parse(x))
     var a
     while(code[0]&&code[0].length){
       a=code[0].shift()

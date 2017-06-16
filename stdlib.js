@@ -141,17 +141,17 @@ $["chunk"]=(h,i,j,k,X,Y,Z)=>stack[st]=(X=shift(),_.chunk(stack[st],X)) //split s
 $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st), //`es` on each individual item in the stack
   code[0].unshift(a=>(delete stack[iter[0]+' '],st=iter.shift())),
   stack[st].map((a,b)=>
-    code[0].unshift(A=>stack[st=iter[0]+' ']=[a],...parser.parse(X),A=>stack[iter[0]][b]=shift())
+    code[0].unshift(A=>stack[st=iter[0]+' ']=[a],...parse(X),A=>stack[iter[0]][b]=shift())
   ))
 $["filter"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st), //remove each item that is falsy after `es`
   code[0].unshift(a=>(delete stack[iter[0]+' '],st=iter.shift())),
   stack[st].map((a,b)=>
-    code[0].unshift(A=>stack[st=iter[0]+' ']=[a],...parser.parse(X),a=>(a=shift(),st=iter[0],a?(stack[st][b]=a):splice(b)))
+    code[0].unshift(A=>stack[st=iter[0]+' ']=[a],...parse(X),a=>(a=shift(),st=iter[0],a?(stack[st][b]=a):splice(b)))
   ))
 $["fold"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Z=shift(),iter.unshift(st), //`es` with accumulator and item; result of each `es` becomes the new accumulator
   code[0].unshift(a=>(delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])),
   stack[st].map(a=>
-    code[0].unshift(A=>stack[st=iter[0]+' ']=[a,Z],...parser.parse(X),A=>Z=shift())
+    code[0].unshift(A=>stack[st=iter[0]+' ']=[a,Z],...parse(X),A=>Z=shift())
   ))
 
 $["any"]=(h,i,j,k,X,Y,Z)=>(code[0].unshift(a=>stack[st]=[+stack[st].some(a=>a)]),$.map()) //push 1 if any items return truthy after `es`, else push 0
