@@ -42,39 +42,46 @@ Number.prototype.concat=function(x){return (this+'').concat(x)}
 //main exec function
 exec=(x,y)=>{
   x+=''
+  //reuse stack frame
   if(y){
     code[0].unshift(...parse(x))
-  }else{
+  }
+  //new stack frame
+  else{
     code.unshift(parse(x))
     var a
     while(code[0]&&code[0].length){
       a=code[0].shift()
+      //initialize scope if necessary
       stack[st].scope||(stack[st].scope={})
+
+      //for internal JS calls from commands
       a.call?
         a()
-        :lambda?
+      //lambda mode
+      :lambda?
         (
           a=='('?lambda++:a==')'&&lambda--,
           lambda?paren.push(a):(unshift(paren.join` `),paren=[])
         )
       //refs
-        :a.big&&a[1]&&a[0]=='\\'?
+      :a.big&&a[1]&&a[0]=='\\'?
         unshift(a.slice(1))
       //ids
-        :a.big&&a[1]&&a[0]=='#'?
+      :a.big&&a[1]&&a[0]=='#'?
         0
       //empty strings
-        :a.big&&!a?
+      :a.big&&!a?
         0
       //matched functions
-        :a.big&&stack[st].scope[a]?
+      :a.big&&stack[st].scope[a]?
         exec(stack[st].scope[a],1)
-        :a.big&&ids[a]?
+      :a.big&&ids[a]?
         exec(ids[a],1)
-        :a.big&&sl[a]?
+      :a.big&&sl[a]?
         sl[a]()
       //everything else (numbers)
-        :unshift(a)
+      :unshift(a)
     }
     code.shift()
   }
