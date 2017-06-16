@@ -17,6 +17,7 @@
 - <code>e&</code>: `es` if index 1 is truthy
 - <code>e|</code>: `es` if index 1 is falsy
 - <code>e?</code>: `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+- <code>stop</code>: end execution of current call stack frame
 - <code>read</code>: read file at path given by index 0
 - <code>write</code>: write string at index 1 to file at path given by index 0
 - <code>in</code>: pushes user input

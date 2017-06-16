@@ -8,7 +8,7 @@ Each of the commands takes at least a function (and possibly other side argument
 2. During each iteration, the item is put into a new stack, and the function essentially executes within the context of that stack.
 3. Upon the function's completion, the top item in the stack is considered the returned value. It is up to the command to determine what to do with the returned value.
 
-**NOTE:** In the case of the fold command, the accumulated value along with the current item are both put into the new stack.
+**NOTE:** In the case of the fold command, the accumulator along with the current item are both put into the new stack.
 
 ## Visualization
 ```
