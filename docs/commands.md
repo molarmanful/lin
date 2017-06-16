@@ -13,6 +13,7 @@
 - <code>sl</code>: set local ID at index 0
 - <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
 - <code>:::</code>: `::` but exposes ID's into the global scope
+- <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 - <code>es</code>: execute string at index 0
 - <code>e&</code>: `es` if index 1 is truthy
 - <code>e|</code>: `es` if index 1 is falsy

@@ -13,6 +13,7 @@ si ids[shift()]=shift() //set global ID at index 0
 sl stack[st].scope[shift()]=shift() //set local ID at index 0
 :: loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 ::: id() //`::` but exposes ID's into the global scope
+type (X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 es exec(shift(),1) //execute string at index 0
 e& ($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy

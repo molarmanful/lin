@@ -14,6 +14,7 @@ $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
 $["sl"]=(h,i,j,k,X,Y,Z)=>stack[st].scope[shift()]=shift() //set local ID at index 0
 $["::"]=(h,i,j,k,X,Y,Z)=>loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 $[":::"]=(h,i,j,k,X,Y,Z)=>id() //`::` but exposes ID's into the global scope
+$["type"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 $["es"]=(h,i,j,k,X,Y,Z)=>exec(shift(),1) //execute string at index 0
 $["e&"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
