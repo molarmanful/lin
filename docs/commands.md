@@ -117,6 +117,8 @@
 - <code>[]</code>: initialize empty list
 - <code>wrap</code>: wrap index 0 in a list
 - <code>wrap_</code>: opposite of `wrap`; take all items in list at index 0 and push to parent stack
+- <code>enclose</code>: push entire stack as a list
+- <code>usurp</code>: set current stack to the list at index 0
 - <code>'</code>: apply function to list given by index 0
 - <code>flat</code>: `wrap_` all elements
 - <code>chunk</code>: split stack into lists of length given by index 0

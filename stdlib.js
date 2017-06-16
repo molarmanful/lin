@@ -129,6 +129,8 @@ $["difference"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.difference(stack[st],sta
 $["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
 $["wrap"]=(h,i,j,k,X,Y,Z)=>unshift([shift()]) //wrap index 0 in a list
 $["wrap_"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
+$["enclose"]=(h,i,j,k,X,Y,Z)=>unshift(stack[st]) //push entire stack as a list
+$["usurp"]=(h,i,j,k,X,Y,Z)=>stack[st]=[...shift()] //set current stack to the list at index 0
 $["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
     stack[st=iter[0]+'\n']=Y,
     code[0].unshift(a=>(Y=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))),exec(X,1))
