@@ -7,6 +7,7 @@ fs=require('fs')
 cp=require('child_process')
 unesc=require('unescape-js')
 _=require('lodash')
+Lazy=require('lazy.js')
 
 //variables
 stack={0:[]}
@@ -16,7 +17,7 @@ paren=[]
 ids={}
 input=process.argv.filter(a=>a[0]!='-')[2]
 iter=[]
-code=[]
+code=Lazy()
 
 //convenience functions for stdlib
 id=(x=shift())=>ids[x]||(
@@ -39,19 +40,27 @@ shift=x=>stack[st].shift()
 unshift=(...x)=>stack[st].unshift(...x)
 Number.prototype.concat=function(x){return (this+'').concat(x)}
 
+//convenience functions for call stack
+
+addf=(...x)=>code=Lazy([Lazy(x).concat(code.take())]).concat(code.drop())
+addc=x=>code=Lazy([Lazy(x)]).concat(code)
+
 //main exec function
 exec=(x,y)=>{
   x+=''
   //reuse stack frame
   if(y){
-    code[0].unshift(...parse(x))
+    addf(...parse(x))
   }
   //new stack frame
   else{
-    code.unshift(parse(x))
-    var a
-    while(code[0]&&code[0].length){
-      a=code[0].shift()
+    addc(parse(x))
+    var a,b
+    while(code.head()!=[]._&&code.head().head()!=[]._){
+      b=code.head()
+      a=b.head()
+      code=code.drop()
+      addc(b.drop())
       //initialize scope if necessary
       stack[st].scope||(stack[st].scope={})
 
@@ -83,7 +92,7 @@ exec=(x,y)=>{
       //everything else (numbers)
       :unshift(a)
     }
-    code.shift()
+    code=code.drop()
   }
 }
 

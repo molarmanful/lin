@@ -20,8 +20,8 @@ e* {X=shift();Y=shift();while(X-->0)exec(Y,1)} //execute string at index 1 for n
 e& ($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
 e| ($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 e? ($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
-ew (i=shift(),j=shift(),code[0].unshift(a=>(shift()&&(code[0].unshift(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1))
-stop code.shift() //end execution of current call stack frame
+ew (i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1))
+stop code=code.drop() //end execution of current call stack frame
 
 read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 write fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
@@ -102,7 +102,7 @@ tuck ($.dup(),$.rot_()) //push index 0 to index 2
 over ($.swap(),$.tuck()) //push index 1
 clr stack[st]=[] //pop all items
 rev stack[st].reverse() //reverse stack
-dip ($.swap(),i=shift(),code[0].unshift(a=>unshift(i)),exec(shift(),1)) //pop index 0, `es`, push popped index 0
+dip ($.swap(),i=shift(),addf(a=>unshift(i)),exec(shift(),1)) //pop index 0, `es`, push popped index 0
 
 split ($.swap(),unshift(...(shift()+'').split(shift()).reverse())) //split string at index 1 over string at index 0
 join (i=shift(),unshift(stack[st].slice(0).reverse().join(i))) //join stack over string at index 0
@@ -117,7 +117,7 @@ pad (i=shift(),j=shift(),k=shift(),unshift(_.pad(k,j,i))) //pad string given by 
 padl (i=shift(),j=shift(),k=shift(),unshift(_.padStart(k,j,i))) //`pad` but only from the left
 padr (i=shift(),j=shift(),k=shift(),unshift(_.padEnd(k,j,i))) //`pad` but only from the right
 
-stack (iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),code[0].unshift(a=>st=iter.shift()),exec(Y,1)) //execute string given by index 1 on a stack with name given by index 0
+stack (iter.unshift(st),X=shift(),Y=shift(),stack[st=X]||(stack[st]=[]),addf(a=>st=iter.shift()),exec(Y,1)) //execute string given by index 1 on a stack with name given by index 0
 push stack[shift()].unshift(shift()) //push index 1 to another stack with name given by index 0
 pull unshift(stack[shift()].shift()) //push top item of another stack with name given by index 0
 size unshift(stack[st].length) //push stack length
@@ -135,27 +135,27 @@ enclose unshift(stack[st]) //push entire stack as a list
 usurp stack[st]=[...shift()] //set current stack to the list at index 0
 ' (X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
     stack[st=iter[0]+'\n']=Y,
-    code[0].unshift(a=>(Y=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))),exec(X,1))
+    addf(a=>(Y=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))),exec(X,1))
 flat stack[st]=_.flatten(stack[st]) //`wrap_` all elements
 chunk stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
 
 map (X=shift(),iter.unshift(st), //`es` on each individual item in the stack
-  code[0].unshift(a=>(delete stack[iter[0]+' '],st=iter.shift())),
+  addf(a=>(delete stack[iter[0]+' '],st=iter.shift())),
   stack[st].map((a,b)=>
-    code[0].unshift(A=>stack[st=iter[0]+' ']=[a],...parse(X),A=>stack[iter[0]][b]=shift())
+    addf(A=>stack[st=iter[0]+' ']=[a],...parse(X),A=>stack[iter[0]][b]=shift())
   ))
 fold (X=shift(),Z=shift(),iter.unshift(st), //`es` with accumulator and item; result of each `es` becomes the new accumulator
-  code[0].unshift(a=>(delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])),
+  addf(a=>(delete stack[iter[0]+' '],stack[st=iter.shift()]=[Z])),
   stack[st].map(a=>
-    code[0].unshift(A=>stack[st=iter[0]+' ']=[a,Z],...parse(X),A=>Z=shift())
+    addf(A=>stack[st=iter[0]+' ']=[a,Z],...parse(X),A=>Z=shift())
   ))
 
-filter (code[0].unshift(a=>stack[st]=stack[st].filter(a=>a)),$.map()) //remove each item that is falsy after `es`
-any (code[0].unshift(a=>stack[st]=[+stack[st].some(a=>a)]),$.map()) //push 1 if any items return truthy after `es`, else push 0
-all (code[0].unshift(a=>stack[st]=[+stack[st].every(a=>a)]),$.map()) //push 1 if all items return truthy after `es`, else push 0
-find (code[0].unshift(a=>stack[st]=[stack[st].find(a=>a)]),$.map()) //find first item that returns truthy after `es` or undefined on failure
-findi (code[0].unshift(a=>stack[st]=[stack[st].findIndex(a=>a)]),$.map()) //`find` but returns index (or -1 on fail)
-takew (code[0].unshift(a=>stack[st]=_.takeWhile(stack[st])),$.map()) //`take` items until `es` returns falsy for an item
-dropw (code[0].unshift(a=>stack[st]=_.dropWhile(stack[st])),$.map()) //`drop` items until `es` returns falsy for an item
-sort (code[0].unshift(a=>stack[st]=_.sortBy(stack[st])),$.map()) //sort items in ascending order based on `es`
-part (code[0].unshift(a=>stack[st]=_.partition(stack[st])),$.map()) //separate items into 2 lists based on whether they return truthy after `es`
+filter (addf(a=>stack[st]=stack[st].filter(a=>a)),$.map()) //remove each item that is falsy after `es`
+any (addf(a=>stack[st]=[+stack[st].some(a=>a)]),$.map()) //push 1 if any items return truthy after `es`, else push 0
+all (addf(a=>stack[st]=[+stack[st].every(a=>a)]),$.map()) //push 1 if all items return truthy after `es`, else push 0
+find (addf(a=>stack[st]=[stack[st].find(a=>a)]),$.map()) //find first item that returns truthy after `es` or undefined on failure
+findi (addf(a=>stack[st]=[stack[st].findIndex(a=>a)]),$.map()) //`find` but returns index (or -1 on fail)
+takew (addf(a=>stack[st]=_.takeWhile(stack[st])),$.map()) //`take` items until `es` returns falsy for an item
+dropw (addf(a=>stack[st]=_.dropWhile(stack[st])),$.map()) //`drop` items until `es` returns falsy for an item
+sort (addf(a=>stack[st]=_.sortBy(stack[st])),$.map()) //sort items in ascending order based on `es`
+part (addf(a=>stack[st]=_.partition(stack[st])),$.map()) //separate items into 2 lists based on whether they return truthy after `es`
