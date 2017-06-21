@@ -31,7 +31,6 @@ loc=(x=shift())=>stack[st].scope[x]||ids[x]||(
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
 form=(x=stack[st],y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${form(a,' ')} ]`:a).reverse().join(y)
-Form=(x=code,y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${Form(a,' ')} ]`:a).join(y)
 parse=x=>parser.parse(x.pop?x.join` `:x+'')
 get=x=>stack[st][mod(x,stack[st].length)]
 splice=(x,y=1,z)=>z==[].$?
@@ -42,8 +41,12 @@ unshift=(...x)=>stack[st].unshift(...x)
 Number.prototype.concat=function(x){return (this+'').concat(x)}
 
 //convenience functions for call stack
-addc=(...x)=>code.unshift(...x)
+addc=x=>(code.unshift([]),addf(...x))
 addf=(...x)=>code[0].unshift(...x)
+getf=x=>code[0].shift()
+
+addf=(...x)=>code[0]=x.reduceRight((a,b)=>[b,A=>a],code[0])
+getf=x=>[code[0][0],code[0]=code[0][1]()][0]
 
 //main exec function
 exec=(x,y)=>{
@@ -56,10 +59,10 @@ exec=(x,y)=>{
   else{
     addc(parse(x))
     var a,b
-    while(code[0]&&code[0].length){
-      verbose&&['--->',Form(),'---',form(),'>---'].map(a=>console.log(a))
+    while(code[0].length){
+      verbose&&['--->',code[0][0],'---',form(),'>---'].map(a=>console.log(a))
 
-      a=code[0].shift()
+      a=getf()
 
       //initialize scope if necessary
       stack[st].scope||(stack[st].scope={})
