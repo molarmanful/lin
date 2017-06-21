@@ -1,4 +1,4 @@
-1 100 range ( dup 3% \\Fizz e| over 5% \\Buzz e| over 0+ \++ e| outln ) map
+1 100 range ( dup 3% \\Fizz e| over 5% \\Buzz e| over 0+ \++ e| ) map gs out
 
 
 

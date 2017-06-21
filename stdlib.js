@@ -22,7 +22,7 @@ $["e&"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is 
 $["e|"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 $["e?"]=(h,i,j,k,X,Y,Z)=>($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 $["ew"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1))
-$["stop"]=(h,i,j,k,X,Y,Z)=>code=code.drop() //end execution of current call stack frame
+$["stop"]=(h,i,j,k,X,Y,Z)=>code.shift() //end execution of current call stack frame
 
 $["read"]=(h,i,j,k,X,Y,Z)=>unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 $["write"]=(h,i,j,k,X,Y,Z)=>fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0

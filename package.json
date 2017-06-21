@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/molarmanful/lin#readme",
   "dependencies": {
-    "lazy.js": "^0.5.0",
     "lodash": "^4.17.4",
     "unescape-js": "^1.0.8"
   }

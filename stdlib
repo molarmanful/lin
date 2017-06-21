@@ -21,7 +21,7 @@ e& ($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
 e| ($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 e? ($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 ew (i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1))
-stop code=code.drop() //end execution of current call stack frame
+stop code.shift() //end execution of current call stack frame
 
 read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 write fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
