@@ -1,5 +1,5 @@
 \DEC ::: 10111011110111 DEC out
-#DEC () split rev size \SIZE si ( \SIZE gi 1- dup \SIZE si 2swap ^ * ) map \+ fold
+#DEC () split size \SIZE si ( \SIZE gi 1- dup \SIZE si 2swap ^ * ) map \+ fold
 
 
 
