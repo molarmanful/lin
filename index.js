@@ -42,9 +42,6 @@ Number.prototype.concat=function(x){return (this+'').concat(x)}
 
 //convenience functions for call stack
 addc=x=>(code.unshift([]),addf(...x))
-addf=(...x)=>code[0].unshift(...x)
-getf=x=>code[0].shift()
-
 addf=(...x)=>code[0]=x.reduceRight((a,b)=>[b,A=>a],code[0])
 getf=x=>[code[0][0],code[0]=code[0][1]()][0]
 
