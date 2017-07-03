@@ -1,4 +1,4 @@
-#!/bin/env node
+#!/usr/bin/env node
 fs=require('fs')
 fs.writeFileSync('stdlib.js',
   `module.exports=$={}\n${

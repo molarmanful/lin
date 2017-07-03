@@ -131,7 +131,7 @@ difference (i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set differen
 [] unshift([]) //initialize empty list
 wrap unshift([shift()]) //wrap index 0 in a list
 wrap_ (X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
-enclose unshift(stack[st]) //push entire stack as a list
+enclose unshift(stack[st].slice(0)) //push entire stack as a list
 usurp stack[st]=[...shift()] //set current stack to the list at index 0
 ' (X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').split``:Y,iter.unshift(st), //apply function to list given by index 0
     stack[st=iter[0]+'\n']=Y,
