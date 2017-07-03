@@ -90,7 +90,9 @@ exec=(x,y)=>{
       :a.big&&sl[a]?
         sl[a]()
       //everything else (numbers)
-      :unshift(a)
+      a.toFixed?
+        unshift(a)
+      :0
     }
     code.shift()
   }
