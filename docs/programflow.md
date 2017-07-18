@@ -58,7 +58,7 @@ You should notice that the call stack frame, overall, does not really grow in si
 #a 1- dup ( a 1+ ) e&
 ```
 
-The snippet above is a naive factorial implementation using recursion. When executed, here are the stages of call stack that the program runs through:
+The snippet above is a contrived recursive function that decrements until zero then increments until 1 less than the original number. When executed, here are the stages of call stack that the program runs through:
 
 ```
 [ \a ::: 5 a ]
