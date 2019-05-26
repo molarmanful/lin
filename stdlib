@@ -9,6 +9,7 @@ gi\\ unshift(unesc(id())) //`gi` but parse escape codes
 gl unshift(loc()) //`gi` but in the local scope
 gl\\ unshift(unesc(loc())) //`gl` but parse escape codes
 gs unshift(form()) //push stack joined by newlines
+g@ unshift(lines[shift()]) //push line at popped number (0-indexed)
 si ids[shift()]=shift() //set global ID at index 0
 sl stack[st].scope[shift()]=shift() //set local ID at index 0
 :: loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
@@ -25,8 +26,8 @@ stop code.shift() //end execution of current call stack frame
 
 read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 write fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
-in unshift((''+cp.execSync('read x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input
-inh unshift((''+cp.execSync('read -s x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input without echoing
+in unshift((''+cp.execSync('read x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //push user input
+inh unshift((''+cp.execSync('read -s x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //push user input without echoing
 out process.stdout.write(''+shift()) //output index 0 to STDOUT
 outln process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 
