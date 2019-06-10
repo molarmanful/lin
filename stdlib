@@ -31,8 +31,8 @@ inh unshift((''+cp.execSync('read -s x;echo $x',{stdio:[process.stdin]})).slice(
 out process.stdout.write(''+shift()) //output index 0 to STDOUT
 outln process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 
-e unshift(Math.E) //Euler's constant
-pi unshift(Math.PI) //π
+$E unshift(Math.E) //Euler's constant
+$Pi unshift(Math.PI) //π
 
 E ($.swap(),unshift(shift()*Math.pow(10,shift()))) //`(index 1)*10^(index 0)`
 _ unshift(-shift()) //negation

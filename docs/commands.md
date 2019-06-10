@@ -28,8 +28,8 @@
 - <code>inh</code>: push user input without echoing
 - <code>out</code>: output index 0 to STDOUT
 - <code>outln</code>: output index 0 as a line to STDOUT
-- <code>e</code>: Euler's constant
-- <code>pi</code>: π
+- <code>$E</code>: Euler's constant
+- <code>$Pi</code>: π
 - <code>E</code>: `(index 1)*10^(index 0)`
 - <code>_</code>: negation
 - <code>+</code>: addition

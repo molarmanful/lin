@@ -32,8 +32,8 @@ $["inh"]=(h,i,j,k,X,Y,Z)=>unshift((''+cp.execSync('read -s x;echo $x',{stdio:[pr
 $["out"]=(h,i,j,k,X,Y,Z)=>process.stdout.write(''+shift()) //output index 0 to STDOUT
 $["outln"]=(h,i,j,k,X,Y,Z)=>process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 
-$["e"]=(h,i,j,k,X,Y,Z)=>unshift(Math.E) //Euler's constant
-$["pi"]=(h,i,j,k,X,Y,Z)=>unshift(Math.PI) //π
+$["$E"]=(h,i,j,k,X,Y,Z)=>unshift(Math.E) //Euler's constant
+$["$Pi"]=(h,i,j,k,X,Y,Z)=>unshift(Math.PI) //π
 
 $["E"]=(h,i,j,k,X,Y,Z)=>($.swap(),unshift(shift()*Math.pow(10,shift()))) //`(index 1)*10^(index 0)`
 $["_"]=(h,i,j,k,X,Y,Z)=>unshift(-shift()) //negation
