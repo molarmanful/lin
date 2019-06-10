@@ -10,8 +10,7 @@ $["gi\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(id())) //`gi` but parse escape codes
 $["gl"]=(h,i,j,k,X,Y,Z)=>unshift(loc()) //`gi` but in the local scope
 $["gl\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(loc())) //`gl` but parse escape codes
 $["gs"]=(h,i,j,k,X,Y,Z)=>unshift(form()) //push stack joined by newlines
-$["gn"]=(h,i,j,k,X,Y,Z)=>unshift()
-$["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()])
+$["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0-indexed)
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
 $["sl"]=(h,i,j,k,X,Y,Z)=>stack[st].scope[shift()]=shift() //set local ID at index 0
 $["::"]=(h,i,j,k,X,Y,Z)=>loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
@@ -28,8 +27,8 @@ $["stop"]=(h,i,j,k,X,Y,Z)=>code.shift() //end execution of current call stack fr
 
 $["read"]=(h,i,j,k,X,Y,Z)=>unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
 $["write"]=(h,i,j,k,X,Y,Z)=>fs.writeFileSync(shift(),shift()) //write string at index 1 to file at path given by index 0
-$["in"]=(h,i,j,k,X,Y,Z)=>unshift((''+cp.execSync('read x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input
-$["inh"]=(h,i,j,k,X,Y,Z)=>unshift((''+cp.execSync('read -s x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //pushes user input without echoing
+$["in"]=(h,i,j,k,X,Y,Z)=>unshift((''+cp.execSync('read x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //push user input
+$["inh"]=(h,i,j,k,X,Y,Z)=>unshift((''+cp.execSync('read -s x;echo $x',{stdio:[process.stdin]})).slice(0,-1)) //push user input without echoing
 $["out"]=(h,i,j,k,X,Y,Z)=>process.stdout.write(''+shift()) //output index 0 to STDOUT
 $["outln"]=(h,i,j,k,X,Y,Z)=>process.stdout.write(''+shift()+'\n') //output index 0 as a line to STDOUT
 

@@ -9,6 +9,7 @@
 - <code>gl</code>: `gi` but in the local scope
 - <code>gl\\</code>: `gl` but parse escape codes
 - <code>gs</code>: push stack joined by newlines
+- <code>g@</code>: push line at popped number (0-indexed)
 - <code>si</code>: set global ID at index 0
 - <code>sl</code>: set local ID at index 0
 - <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
@@ -22,8 +23,8 @@
 - <code>stop</code>: end execution of current call stack frame
 - <code>read</code>: read file at path given by index 0
 - <code>write</code>: write string at index 1 to file at path given by index 0
-- <code>in</code>: pushes user input
-- <code>inh</code>: pushes user input without echoing
+- <code>in</code>: push user input
+- <code>inh</code>: push user input without echoing
 - <code>out</code>: output index 0 to STDOUT
 - <code>outln</code>: output index 0 as a line to STDOUT
 - <code>e</code>: Euler's constant
