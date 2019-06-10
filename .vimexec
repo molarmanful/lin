@@ -1,1 +1,1 @@
-autocmd BufWritePost stdlib silent !./csl.js >/dev/null &
+autocmd BufWritePost stdlib !node csl.js

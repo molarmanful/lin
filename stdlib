@@ -17,11 +17,11 @@ sl stack[st].scope[shift()]=shift() //set local ID at index 0
 type (X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 es exec(shift(),1) //execute string at index 0
-e* {X=shift();Y=shift();while(X-->0)exec(Y,1)} //execute string at index 1 for number of times given by index 0
+e* (i=shift(),j=shift(),addf(a=>(i&&(addf(a=>unshift(i-1,j),'e*'),exec(j,1))))) //`es` on index 1 for number of times given by index 0
 e& ($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
 e| ($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 e? ($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
-ew (i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1))
+ew (i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1)) //while `es` on index 1 is truthy, `es` on index 0
 stop code.shift() //end execution of current call stack frame
 
 read unshift(fs.readFileSync(shift())+'') //read file at path given by index 0

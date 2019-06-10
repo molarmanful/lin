@@ -18,11 +18,11 @@ $[":::"]=(h,i,j,k,X,Y,Z)=>id() //`::` but exposes ID's into the global scope
 $["type"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 $["es"]=(h,i,j,k,X,Y,Z)=>exec(shift(),1) //execute string at index 0
-$["e*"]=(h,i,j,k,X,Y,Z)=>{X=shift();Y=shift();while(X-->0)exec(Y,1)} //execute string at index 1 for number of times given by index 0
+$["e*"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),addf(a=>(i&&(addf(a=>unshift(i-1,j),'e*'),exec(j,1))))) //`es` on index 1 for number of times given by index 0
 $["e&"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is truthy
 $["e|"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 $["e?"]=(h,i,j,k,X,Y,Z)=>($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
-$["ew"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1))
+$["ew"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1)) //while `es` on index 1 is truthy, `es` on index 0
 $["stop"]=(h,i,j,k,X,Y,Z)=>code.shift() //end execution of current call stack frame
 
 $["read"]=(h,i,j,k,X,Y,Z)=>unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
