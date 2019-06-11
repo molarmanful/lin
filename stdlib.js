@@ -1,6 +1,8 @@
 module.exports=$={}
 $["("]=(h,i,j,k,X,Y,Z)=>lambda=1
 $[")"]=(h,i,j,k,X,Y,Z)=>{}
+$["["]=(h,i,j,k,X,Y,Z)=>(iter.unshift(st),stack[st=iter[0]+'\n']=[])
+$["]"]=(h,i,j,k,X,Y,Z)=>(X=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
 $["()"]=(h,i,j,k,X,Y,Z)=>unshift('') //push empty string
 $["\\"]=(h,i,j,k,X,Y,Z)=>unshift(' ') //push space
 $["n\\"]=(h,i,j,k,X,Y,Z)=>unshift('\n') //push newline

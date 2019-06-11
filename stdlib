@@ -1,5 +1,7 @@
 ( lambda=1
 ) {}
+[ (iter.unshift(st),stack[st=iter[0]+'\n']=[])
+] (X=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
 () unshift('') //push empty string
 \\ unshift(' ') //push space
 n\\ unshift('\n') //push newline
