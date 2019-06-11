@@ -18,6 +18,7 @@ input=process.argv.filter(a=>a[0]!='-')[2]
 iter=[]
 code=[]
 verbose=0
+lns=[0]
 
 //convenience functions for stdlib
 id=(x=shift())=>ids[x]||(
@@ -43,7 +44,7 @@ Number.prototype.concat=function(x){return (this+'').concat(x)}
 //convenience functions for call stack
 addc=x=>(code.unshift([]),addf(...x))
 addf=(...x)=>code[0]=x.reduceRight((a,b)=>[b,A=>a],code[0])
-getf=x=>[code[0][0],code[0]=code[0][1]()][0]
+getf=x=>(x=code[0][0],code[0]=code[0][1](),x)
 
 //main exec function
 exec=(x,y)=>{

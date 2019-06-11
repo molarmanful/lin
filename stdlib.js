@@ -25,6 +25,8 @@ $["e&"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?$.es():shift()) //`es` if index 1 is 
 $["e|"]=(h,i,j,k,X,Y,Z)=>($.swap(),shift()?shift():$.es()) //`es` if index 1 is falsy
 $["e?"]=(h,i,j,k,X,Y,Z)=>($.rot(),shift()||$.swap(),shift(),$.es()) //`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 $["ew"]=(h,i,j,k,X,Y,Z)=>(i=shift(),j=shift(),addf(a=>(shift()&&(addf(a=>unshift(i,j),'ew'),exec(i,1)))),exec(j,1)) //while `es` on index 1 is truthy, `es` on index 0
+$[";"]=(h,i,j,k,X,Y,Z)=>(lns.unshift(lns[0]+1),code[0].length&&addf(a=>lns.shift()),exec(lines[lns[0]],1)) // `es` next line
+$[";;"]=(h,i,j,k,X,Y,Z)=>(lns.unshift(lns[0]-1),code[0].length&&addf(a=>lns.shift()),exec(lines[lns[0]],1)) // `es` previous line
 $["stop"]=(h,i,j,k,X,Y,Z)=>code.shift() //end execution of current call stack frame
 
 $["read"]=(h,i,j,k,X,Y,Z)=>unshift(fs.readFileSync(shift())+'') //read file at path given by index 0
