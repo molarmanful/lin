@@ -14,6 +14,7 @@ st=0
 lambda=0
 paren=[]
 ids={}
+idls={}
 input=process.argv.filter(a=>a[0]!='-')[2]
 iter=[]
 code=[]
@@ -21,13 +22,19 @@ verbose=0
 lns=[0]
 
 //convenience functions for stdlib
-id=(x=shift())=>ids[x]||(
+id=(x=shift())=>(
   line=lines.find(a=>a.match(`^ *#${x}`)),
-  line&&(ids[x]=line.replace(RegExp(`^ *#${x}`),''))
+  line&&(
+    ids[x]=line.replace(RegExp(`^ *#${x}`),''),
+    idls[x]=lines.findIndex(a=>a.match(`^ *#${x}`))
+  )
 )
-loc=(x=shift())=>stack[st].scope[x]||ids[x]||(
+loc=(x=shift())=>(
   line=lines.find(a=>a.match(`^ *#${x}`)),
-  line&&(stack[st].scope[x]=line.replace(RegExp(`^ *#${x}`),''))
+  line&&(
+    stack[st].scope[x]=line.replace(RegExp(`^ *#${x}`),''),
+    stack[st].scopel[x]=lines.findIndex(a=>a.match(`^ *#${x}`))
+  )
 )
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
@@ -64,6 +71,7 @@ exec=(x,y)=>{
 
       //initialize scope if necessary
       stack[st].scope||(stack[st].scope={})
+      stack[st].scopel||(stack[st].scopel={})
 
       //for internal JS calls from commands
       a.call?
@@ -85,9 +93,16 @@ exec=(x,y)=>{
         0
       //matched functions
       :a.big&&stack[st].scope[a]?
-        exec(stack[st].scope[a],1)
+        (
+          stack[st].scopel[a]!=[]._&&lns.unshift(stack[st].scopel[a]),
+          code[0].length&&addf(a=>lns.shift()),
+          exec(stack[st].scope[a],1))
       :a.big&&ids[a]?
-        exec(ids[a],1)
+        (
+          idls[a]!=[]._&&lns.unshift(idls[a]),
+          code[0].length&&addf(a=>lns.shift()),
+          exec(ids[a],1)
+        )
       :a.big&&sl[a]?
         sl[a]()
       //everything else (numbers)
