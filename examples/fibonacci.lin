@@ -1,16 +1,14 @@
-1 1 50 \dup ( 1- rot_ over outln over over + 2nix rot ) ew
+1 1 ( over outln swap over + ) 50 e*
 
 
 
 # EXPLANATION
 This outputs the first 50 Fibonacci numbers.
 
-- `1 1 50` serves as the initial condition. 50 is the accumulator
-- `\dup (...) ew` executes the lambda while the top item on the stack is not 0.
+- `1 1` serves as the initial condition.
+- `(...) 50 e*` executes the lambda while the top item on the stack is not 0.
 
 Within the lambda:
 
-- `1- rot_` decrements the accumulator and pushes it below the top 2 Fibonacci numbers.
 - `over outln` duplicates the second from top of stack and outputs it.
-- `over over +` adds the top 2 Fibonacci numbers.
-- `2nix rot` removes the third Fibonacci number and restores the accumulator to the top of stack.
+- `swap over +` adds the top 2 Fibonacci numbers. Visualized, this does `[ a b ] => [ b a ] => [ b a b ] => [ b a+b ]`
