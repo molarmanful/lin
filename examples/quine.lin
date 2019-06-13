@@ -1,12 +1,10 @@
-( \( \ ++ out dup out \) \ ++ out out ) \( \ ++ out dup out \) \ ++ out out
+1@g dup outln out
+1@g dup outln out
 
 
 
 # EXPLANATION
 Outputs its own source code.
 
-- `( \( \ ++ out dup out \) \ ++ out out )` pushes the lambda (for our purposes, a string of commands separated by spaces).
-- `\( \ ++ out` outputs an opening parenthesis and a space.
-- `dup out` outputs the lambda's contents.
-- `\) \ ++ out` outputs a closing parenthesis and a space.
-- `out` outputs the lambda's contents.
+- `1@g` gets the second line as a string.
+- `dup outln out` outputs 2 copies of the string separated by a newline.

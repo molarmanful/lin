@@ -65,7 +65,7 @@ exec=(x,y)=>{
     addc(parse(x))
     var a,b
     while(code[0].length){
-      verbose&&['--->',code[0][0],'---',form(),'>---'].map(a=>console.log(a))
+      verbose&&['--->',code[0][0]+`{${lns[0]}}`,'---',form(),'>---'].map(a=>console.log(a))
 
       a=getf()
 
