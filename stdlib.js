@@ -163,5 +163,5 @@ $["find"]=(h,i,j,k,X,Y,Z)=>(addf(a=>stack[st]=[stack[st].find(a=>a)]),$.map()) /
 $["findi"]=(h,i,j,k,X,Y,Z)=>(addf(a=>stack[st]=[stack[st].findIndex(a=>a)]),$.map()) //`find` but returns index (or -1 on fail)
 $["takew"]=(h,i,j,k,X,Y,Z)=>(addf(a=>stack[st]=_.takeWhile(stack[st])),$.map()) //`take` items until `es` returns falsy for an item
 $["dropw"]=(h,i,j,k,X,Y,Z)=>(addf(a=>stack[st]=_.dropWhile(stack[st])),$.map()) //`drop` items until `es` returns falsy for an item
-$["sort"]=(h,i,j,k,X,Y,Z)=>(addf(a=>stack[st]=_.sortBy(stack[st])),$.map()) //sort items in ascending order based on `es`
+$["sort"]=(h,i,j,k,X,Y,Z)=>(addf(a=>stack[st]=_.sortBy(stack[st]).reverse()),$.map()) //sort items in ascending order based on `es`
 $["part"]=(h,i,j,k,X,Y,Z)=>(addf(a=>stack[st]=_.partition(stack[st])),$.map()) //separate items into 2 lists based on whether they return truthy after `es`
