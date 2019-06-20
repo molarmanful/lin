@@ -29,13 +29,6 @@ id=(x=shift())=>(
     idls[x]=lines.findIndex(a=>a.match(`^ *#${x}`))
   )
 )
-loc=(x=shift())=>(
-  line=lines.find(a=>a.match(`^ *#${x}`)),
-  line&&(
-    stack[st].scope[x]=line.replace(RegExp(`^ *#${x}`),''),
-    stack[st].scopel[x]=lines.findIndex(a=>a.match(`^ *#${x}`))
-  )
-)
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
 form=(x=stack[st],y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${form(a,' ')} ]`:a).reverse().join(y)
@@ -69,10 +62,6 @@ exec=(x,y)=>{
 
       a=getf()
 
-      //initialize scope if necessary
-      stack[st].scope||(stack[st].scope={})
-      stack[st].scopel||(stack[st].scopel={})
-
       //for internal JS calls from commands
       a.call?
         a()
@@ -92,11 +81,6 @@ exec=(x,y)=>{
       :a.big&&!a?
         0
       //matched functions
-      :a.big&&stack[st].scope[a]?
-        (
-          stack[st].scopel[a]!=[]._&&lns.unshift(stack[st].scopel[a]),
-          code[0].length&&addf(a=>lns.shift()),
-          exec(stack[st].scope[a],1))
       :a.big&&ids[a]?
         (
           idls[a]!=[]._&&lns.unshift(idls[a]),

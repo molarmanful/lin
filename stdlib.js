@@ -9,14 +9,10 @@ $["n\\"]=(h,i,j,k,X,Y,Z)=>unshift('\n') //push newline
 
 $["gi"]=(h,i,j,k,X,Y,Z)=>unshift(id()) //push string at ID given by index 0
 $["gi\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(id())) //`gi` but parse escape codes
-$["gl"]=(h,i,j,k,X,Y,Z)=>unshift(loc()) //`gi` but in the local scope
-$["gl\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(loc())) //`gl` but parse escape codes
 $["gs"]=(h,i,j,k,X,Y,Z)=>unshift(form()) //push stack joined by newlines
 $["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0-indexed)
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
-$["sl"]=(h,i,j,k,X,Y,Z)=>stack[st].scope[shift()]=shift() //set local ID at index 0
-$["::"]=(h,i,j,k,X,Y,Z)=>loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
-$[":::"]=(h,i,j,k,X,Y,Z)=>id() //`::` but exposes ID's into the global scope
+$["::"]=(h,i,j,k,X,Y,Z)=>id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 $["type"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 $["es"]=(h,i,j,k,X,Y,Z)=>exec(shift(),1) //execute string at index 0

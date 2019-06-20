@@ -1,4 +1,4 @@
-\BIN ::: 2594 BIN out
+\BIN :: 2594 BIN out
 #BIN ( 2/% swap dup ) () ew drop rev () join
 
 
@@ -6,7 +6,7 @@
 # EXPLANATION
 Converts decimal to binary.
 
-- `\BIN :::` pushes the ID of BIN to the global scope. This is a pretty standard way of declaring functions.
+- `\BIN ::` pushes the ID of BIN to the global scope. This is a pretty standard way of declaring functions.
 - `2594 BIN out` pushes a decimal number, executes BIN on the current stack, and outputs the result.
 
 In the declaration of BIN:

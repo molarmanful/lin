@@ -8,14 +8,10 @@ n\\ unshift('\n') //push newline
 
 gi unshift(id()) //push string at ID given by index 0
 gi\\ unshift(unesc(id())) //`gi` but parse escape codes
-gl unshift(loc()) //`gi` but in the local scope
-gl\\ unshift(unesc(loc())) //`gl` but parse escape codes
 gs unshift(form()) //push stack joined by newlines
 g@ unshift(lines[shift()]) //push line at popped number (0-indexed)
 si ids[shift()]=shift() //set global ID at index 0
-sl stack[st].scope[shift()]=shift() //set local ID at index 0
-:: loc() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
-::: id() //`::` but exposes ID's into the global scope
+:: id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 type (X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 es exec(shift(),1) //execute string at index 0
