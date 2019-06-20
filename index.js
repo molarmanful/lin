@@ -65,7 +65,7 @@ exec=(x,y)=>{
     addc(parse(x))
     var a,b
     while(code[0]&&code[0].length){
-      verbose&&['--->',code[0][0]+`{${lns[0]}}`,'---',form(),'>---'].map(a=>console.log(a))
+      verbose&&!lambda&&['--->',code[0][0]+`{${lns[0]}}`,'---'].map(a=>console.log(a))
 
       a=getf()
 
@@ -109,6 +109,8 @@ exec=(x,y)=>{
       :a.toFixed?
         unshift(a)
       :0
+
+      verbose&&!lambda&&[form(),'>---'].map(a=>console.log(a))
     }
     code.shift()
   }
