@@ -22,11 +22,12 @@ verbose=0
 lns=[0]
 
 //convenience functions for stdlib
-id=(x=shift())=>(
-  line=lines.find(a=>a.match(`^ *#${x}`)),
-  line&&(
-    ids[x]=line.replace(RegExp(`^ *#${x}`),''),
-    idls[x]=lines.findIndex(a=>a.match(`^ *#${x}`))
+id=(x=shift(),y,line)=>(
+  y=RegExp(`^ *#${x}`),
+  line=lines.findIndex(a=>a.match(y)),
+  ~line&&(
+    ids[x]=lines[x].replace(y,''),
+    idls[x]=line
   )
 )
 mod=(x,y)=>(x%y+y)%y
