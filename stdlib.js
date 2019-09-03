@@ -7,8 +7,8 @@ $["()"]=(h,i,j,k,X,Y,Z)=>unshift('') //push empty string
 $["\\"]=(h,i,j,k,X,Y,Z)=>unshift(' ') //push space
 $["n\\"]=(h,i,j,k,X,Y,Z)=>unshift('\n') //push newline
 
-$["gi"]=(h,i,j,k,X,Y,Z)=>unshift(id()) //push string at ID given by index 0
-$["gi\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(id())) //`gi` but parse escape codes
+$["gi"]=(h,i,j,k,X,Y,Z)=>unshift(ids[shift()]) //push string at ID given by index 0
+$["gi\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(ids[shift()])) //`gi` but parse escape codes
 $["gs"]=(h,i,j,k,X,Y,Z)=>unshift(form()) //push stack joined by newlines
 $["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0-indexed)
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0

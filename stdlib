@@ -6,8 +6,8 @@
 \\ unshift(' ') //push space
 n\\ unshift('\n') //push newline
 
-gi unshift(id()) //push string at ID given by index 0
-gi\\ unshift(unesc(id())) //`gi` but parse escape codes
+gi unshift(ids[shift()]) //push string at ID given by index 0
+gi\\ unshift(unesc(ids[shift()])) //`gi` but parse escape codes
 gs unshift(form()) //push stack joined by newlines
 g@ unshift(lines[shift()]) //push line at popped number (0-indexed)
 si ids[shift()]=shift() //set global ID at index 0

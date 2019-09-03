@@ -22,14 +22,14 @@ verbose=0
 lns=[0]
 
 //convenience functions for stdlib
-id=(x=shift(),y,line)=>(
-  y=RegExp(`^ *#${x}`),
-  line=lines.findIndex(a=>a.match(y)),
+id=(x=shift(),y,line)=>{
+  y=RegExp(`^ *#${x}`)
+  line=lines.findIndex(a=>a.match(y))
   ~line&&(
-    ids[x]=lines[x].replace(y,''),
+    ids[x]=lines[line].replace(y,''),
     idls[x]=line
   )
-)
+}
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
 form=(x=stack[st],y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${form(a,' ')} ]`:a).reverse().join(y)
