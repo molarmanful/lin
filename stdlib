@@ -1,4 +1,4 @@
-( lambda=1
+( (lambda=1,scope.unshift({}))
 ) {}
 [ (iter.unshift(st),stack[st=iter[0]+'\n']=[])
 ] (X=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
@@ -8,9 +8,12 @@ n\\ unshift('\n') //push newline
 
 gi unshift(ids[shift()]) //push string at ID given by index 0
 gi\\ unshift(unesc(ids[shift()])) //`gi` but parse escape codes
+gl unshift(getscope())
+gl\\ unshift(unesc(getscope()))
 gs unshift(form()) //push stack joined by newlines
 g@ unshift(lines[shift()]) //push line at popped number (0-indexed)
 si ids[shift()]=shift() //set global ID at index 0
+sl (X=shift(),Y=shift(),scope.length?(scope[0][X]=Y):(ids[X]=Y))
 :: id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 type (X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 

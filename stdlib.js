@@ -1,5 +1,5 @@
 module.exports=$={}
-$["("]=(h,i,j,k,X,Y,Z)=>lambda=1
+$["("]=(h,i,j,k,X,Y,Z)=>(lambda=1,scope.unshift({}))
 $[")"]=(h,i,j,k,X,Y,Z)=>{}
 $["["]=(h,i,j,k,X,Y,Z)=>(iter.unshift(st),stack[st=iter[0]+'\n']=[])
 $["]"]=(h,i,j,k,X,Y,Z)=>(X=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
@@ -9,9 +9,12 @@ $["n\\"]=(h,i,j,k,X,Y,Z)=>unshift('\n') //push newline
 
 $["gi"]=(h,i,j,k,X,Y,Z)=>unshift(ids[shift()]) //push string at ID given by index 0
 $["gi\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(ids[shift()])) //`gi` but parse escape codes
+$["gl"]=(h,i,j,k,X,Y,Z)=>unshift(getscope())
+$["gl\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(getscope()))
 $["gs"]=(h,i,j,k,X,Y,Z)=>unshift(form()) //push stack joined by newlines
 $["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0-indexed)
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
+$["sl"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),scope.length?(scope[0][X]=Y):(ids[X]=Y))
 $["::"]=(h,i,j,k,X,Y,Z)=>id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 $["type"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 

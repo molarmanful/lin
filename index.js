@@ -20,6 +20,7 @@ iter=[]
 code=[]
 verbose=0
 lns=[0]
+scope=[]
 
 //convenience functions for stdlib
 id=(x=shift(),y,line)=>{
@@ -30,6 +31,10 @@ id=(x=shift(),y,line)=>{
     idls[x]=line
   )
 }
+getscope=(x=shift(),y)=>(
+  y=scope.find(a=>a[x]),
+  y?y[x]:ids[x]
+)
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
 form=(x=stack[st],y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${form(a,' ')} ]`:a).reverse().join(y)
@@ -69,7 +74,7 @@ exec=(x,y)=>{
       //lambda mode
       :lambda?
         (
-          a=='('?lambda++:a==')'&&lambda--,
+          a=='('?lambda++:a==')'&&(lambda--,scope.shift()),
           lambda?paren.push(a):(unshift(paren.join` `),paren=[])
         )
       //refs
@@ -85,7 +90,8 @@ exec=(x,y)=>{
       :a.big&&ids[a]?
         (
           idls[a]!=[]._&&lns.unshift(idls[a]),
-          code[0].length&&addf(a=>lns.shift()),
+          code[0].length&&addf(a=>(lns.shift(),scope.shift())),
+          scope.unshift({}),
           exec(ids[a],1)
         )
       :a.big&&sl[a]?
