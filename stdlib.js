@@ -17,7 +17,7 @@ $["gl"]=(h,i,j,k,X,Y,Z)=>unshift(getscope())
 $["gl\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(getscope()))
 $["gs"]=(h,i,j,k,X,Y,Z)=>unshift(form()) //push stack joined by newlines
 $["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0-indexed)
-$["g:"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(stack[st][0][X])) //get value for key given by index 0 within object at index 1
+$["g:"]=(h,i,j,k,X,Y,Z)=>unshift(stack[st][1][shift()]) //get value for key given by index 0 within object at index 1
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
 $["sl"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),scope.length?(scope[0][X]=Y):(ids[X]=Y))
 $[":"]=(h,i,j,k,X,Y,Z)=>objs.length?(objs[0][shift()]=shift()):(X=shift(),Y=shift(),stack[st][0][X]=Y) //set a key-value pair in an object, where index 0 is the key and index 1 is the value
@@ -117,7 +117,7 @@ $["dip"]=(h,i,j,k,X,Y,Z)=>($.swap(),i=shift(),addf(a=>unshift(i)),exec(shift(),1
 
 $["split"]=(h,i,j,k,X,Y,Z)=>($.swap(),unshift(...(shift()+'').split(shift()).reverse())) //split string at index 1 over string at index 0
 $["join"]=(h,i,j,k,X,Y,Z)=>(i=shift(),unshift(stack[st].slice(0).reverse().join(i))) //join stack over string at index 0
-$["++"]=(h,i,j,k,X,Y,Z)=>($.swap(),unshift(shift().concat(shift()))) //concatenate top 2 items as strings
+$["++"]=(h,i,j,k,X,Y,Z)=>unshift(shift().concat(shift())) //concatenate top 2 items as strings or lists
 $["len"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.toFixed?(X+'').length:X.length)) //push string length of index 0
 $[">char"]=(h,i,j,k,X,Y,Z)=>unshift(String.fromCodePoint(shift())) //convert number to Unicode
 $["<char"]=(h,i,j,k,X,Y,Z)=>unshift(shift().codePointAt()) //convert Unicode to number
@@ -148,6 +148,7 @@ $["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').
     addf(a=>(Y=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))),exec(X,1))
 $["flat"]=(h,i,j,k,X,Y,Z)=>stack[st]=_.flatten(stack[st]) //`wrap_` all elements
 $["chunk"]=(h,i,j,k,X,Y,Z)=>stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
+$["enum"]=(h,i,j,k,X,Y,Z)=>stack[st]=stack[st].map((a,b)=>[b,a]) //convert each item in stack to a list containing index and item
 
 $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st), //`es` on each individual item in the stack
   addf(a=>(delete stack[iter[0]+' '],st=iter.shift())),

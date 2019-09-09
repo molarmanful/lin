@@ -100,7 +100,7 @@
 - <code>dip</code>: pop index 0, `es`, push popped index 0
 - <code>split</code>: split string at index 1 over string at index 0
 - <code>join</code>: join stack over string at index 0
-- <code>++</code>: concatenate top 2 items as strings
+- <code>++</code>: concatenate top 2 items as strings or lists
 - <code>len</code>: push string length of index 0
 - <code>>char</code>: convert number to Unicode
 - <code><char</code>: convert Unicode to number
@@ -128,6 +128,7 @@
 - <code>'</code>: apply function to list given by index 0
 - <code>flat</code>: `wrap_` all elements
 - <code>chunk</code>: split stack into lists of length given by index 0
+- <code>enum</code>: convert each item in stack to a list containing index and item
 - <code>map</code>: `es` on each individual item in the stack
 - <code>fold</code>: `es` with accumulator and item; result of each `es` becomes the new accumulator
 - <code>filter</code>: remove each item that is falsy after `es`
