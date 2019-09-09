@@ -2,7 +2,11 @@
 ) {}
 [ (iter.unshift(st),stack[st=iter[0]+'\n']=[])
 ] (X=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
+{ objs.unshift({})
+} unshift(objs.shift())
 () unshift('') //push empty string
+[] unshift([]) //initialize empty list
+{} unshift({}) //initialize empty list
 \\ unshift(' ') //push space
 n\\ unshift('\n') //push newline
 
@@ -15,6 +19,7 @@ g@ unshift(lines[shift()]) //push line at popped number (0-indexed)
 si ids[shift()]=shift() //set global ID at index 0
 sl (X=shift(),Y=shift(),scope.length?(scope[0][X]=Y):(ids[X]=Y))
 :: id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
+: objs.length?(objs[0][shift()]=shift()):(X=shift(),Y=shift(),stack[st][0][X]=Y) //set a key-value pair in an object, where index 0 is the key and index 1 is the value
 type (X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 es exec(shift(),1) //execute string at index 0
@@ -132,7 +137,6 @@ merge unshift(...stack[shift()]) //push items of another stack with name given b
 union (i=shift(),stack[st]=_.union(stack[st],stack[i])) //set union with current stack and stack with name given by index 0
 intersection (i=shift(),stack[st]=_.intersection(stack[st],stack[i])) //set intersection with current stack and stack with name given by index 0
 difference (i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set difference with current stack and stack with name given by index 0
-[] unshift([]) //initialize empty list
 wrap unshift([shift()]) //wrap index 0 in a list
 wrap_ (X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
 enclose unshift(stack[st].slice(0)) //push entire stack as a list

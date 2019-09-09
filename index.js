@@ -21,6 +21,7 @@ code=[]
 verbose=0
 lns=[0]
 scope=[]
+objs=[]
 
 //convenience functions for stdlib
 id=(x=shift(),y,line)=>{
@@ -37,7 +38,15 @@ getscope=(x=shift(),y)=>(
 )
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
-form=(x=stack[st],y='\n')=>x.map(a=>a&&a.big?JSON.stringify(a):a&&a.pop?`[ ${form(a,' ')} ]`:a).reverse().join(y)
+form=(x=stack[st],y='\n')=>x.map(form_=a=>
+  a&&a.big?
+    JSON.stringify(a)
+  :a&&a.pop?
+    `[ ${form(a,' ')} ]`
+  :a&&typeof a=='object'?
+    `{ ${Object.keys(a).map(b=>form_(b)+':'+form_(a[b])).join` `} }`
+  :a
+).reverse().join(y)
 parse=x=>parser.parse(x.pop?x.join` `:x+'')
 get=x=>stack[st][mod(x,stack[st].length)]
 splice=(x,y=1,z)=>z==[].$?

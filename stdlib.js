@@ -3,7 +3,11 @@ $["("]=(h,i,j,k,X,Y,Z)=>(lambda=1,scope.unshift({}))
 $[")"]=(h,i,j,k,X,Y,Z)=>{}
 $["["]=(h,i,j,k,X,Y,Z)=>(iter.unshift(st),stack[st=iter[0]+'\n']=[])
 $["]"]=(h,i,j,k,X,Y,Z)=>(X=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
+$["{"]=(h,i,j,k,X,Y,Z)=>objs.unshift({})
+$["}"]=(h,i,j,k,X,Y,Z)=>unshift(objs.shift())
 $["()"]=(h,i,j,k,X,Y,Z)=>unshift('') //push empty string
+$["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
+$["{}"]=(h,i,j,k,X,Y,Z)=>unshift({}) //initialize empty list
 $["\\"]=(h,i,j,k,X,Y,Z)=>unshift(' ') //push space
 $["n\\"]=(h,i,j,k,X,Y,Z)=>unshift('\n') //push newline
 
@@ -16,6 +20,7 @@ $["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
 $["sl"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),scope.length?(scope[0][X]=Y):(ids[X]=Y))
 $["::"]=(h,i,j,k,X,Y,Z)=>id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
+$[":"]=(h,i,j,k,X,Y,Z)=>objs.length?(objs[0][shift()]=shift()):(X=shift(),Y=shift(),stack[st][0][X]=Y) //set a key-value pair in an object, where index 0 is the key and index 1 is the value
 $["type"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 $["es"]=(h,i,j,k,X,Y,Z)=>exec(shift(),1) //execute string at index 0
@@ -133,7 +138,6 @@ $["merge"]=(h,i,j,k,X,Y,Z)=>unshift(...stack[shift()]) //push items of another s
 $["union"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.union(stack[st],stack[i])) //set union with current stack and stack with name given by index 0
 $["intersection"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.intersection(stack[st],stack[i])) //set intersection with current stack and stack with name given by index 0
 $["difference"]=(h,i,j,k,X,Y,Z)=>(i=shift(),stack[st]=_.difference(stack[st],stack[i])) //set difference with current stack and stack with name given by index 0
-$["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
 $["wrap"]=(h,i,j,k,X,Y,Z)=>unshift([shift()]) //wrap index 0 in a list
 $["wrap_"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(...X.pop?X:[X])) //opposite of `wrap`; take all items in list at index 0 and push to parent stack
 $["enclose"]=(h,i,j,k,X,Y,Z)=>unshift(stack[st].slice(0)) //push entire stack as a list

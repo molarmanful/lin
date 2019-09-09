@@ -2,6 +2,8 @@
 **NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.
 
 - <code>()</code>: push empty string
+- <code>[]</code>: initialize empty list
+- <code>{}</code>: initialize empty list
 - <code>\\</code>: push space
 - <code>n\\</code>: push newline
 - <code>gi</code>: push string at ID given by index 0
@@ -10,6 +12,7 @@
 - <code>g@</code>: push line at popped number (0-indexed)
 - <code>si</code>: set global ID at index 0
 - <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
+- <code>:</code>: set a key-value pair in an object, where index 0 is the key and index 1 is the value
 - <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 - <code>es</code>: execute string at index 0
 - <code>e*</code>: `es` on index 1 for number of times given by index 0
@@ -117,7 +120,6 @@
 - <code>union</code>: set union with current stack and stack with name given by index 0
 - <code>intersection</code>: set intersection with current stack and stack with name given by index 0
 - <code>difference</code>: set difference with current stack and stack with name given by index 0
-- <code>[]</code>: initialize empty list
 - <code>wrap</code>: wrap index 0 in a list
 - <code>wrap_</code>: opposite of `wrap`; take all items in list at index 0 and push to parent stack
 - <code>enclose</code>: push entire stack as a list
