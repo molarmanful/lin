@@ -10,9 +10,10 @@
 - <code>gi\\</code>: `gi` but parse escape codes
 - <code>gs</code>: push stack joined by newlines
 - <code>g@</code>: push line at popped number (0-indexed)
+- <code>g:</code>: get value for key given by index 0 within object at index 1
 - <code>si</code>: set global ID at index 0
-- <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
 - <code>:</code>: set a key-value pair in an object, where index 0 is the key and index 1 is the value
+- <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
 - <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 - <code>es</code>: execute string at index 0
 - <code>e*</code>: `es` on index 1 for number of times given by index 0

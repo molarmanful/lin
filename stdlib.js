@@ -3,8 +3,8 @@ $["("]=(h,i,j,k,X,Y,Z)=>(lambda=1,scope.unshift({}))
 $[")"]=(h,i,j,k,X,Y,Z)=>{}
 $["["]=(h,i,j,k,X,Y,Z)=>(iter.unshift(st),stack[st=iter[0]+'\n']=[])
 $["]"]=(h,i,j,k,X,Y,Z)=>(X=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
-$["{"]=(h,i,j,k,X,Y,Z)=>objs.unshift({})
-$["}"]=(h,i,j,k,X,Y,Z)=>unshift(objs.shift())
+$["{"]=(h,i,j,k,X,Y,Z)=>(objs.unshift({}),iter.unshift(st),stack[st=iter[0]+'\n']=[])
+$["}"]=(h,i,j,k,X,Y,Z)=>(X=objs.shift(),delete stack[iter[0]+'\n'],st=iter.shift(),unshift(X))
 $["()"]=(h,i,j,k,X,Y,Z)=>unshift('') //push empty string
 $["[]"]=(h,i,j,k,X,Y,Z)=>unshift([]) //initialize empty list
 $["{}"]=(h,i,j,k,X,Y,Z)=>unshift({}) //initialize empty list
@@ -17,10 +17,11 @@ $["gl"]=(h,i,j,k,X,Y,Z)=>unshift(getscope())
 $["gl\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(getscope()))
 $["gs"]=(h,i,j,k,X,Y,Z)=>unshift(form()) //push stack joined by newlines
 $["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0-indexed)
+$["g:"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(stack[st][0][X])) //get value for key given by index 0 within object at index 1
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
 $["sl"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),scope.length?(scope[0][X]=Y):(ids[X]=Y))
-$["::"]=(h,i,j,k,X,Y,Z)=>id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 $[":"]=(h,i,j,k,X,Y,Z)=>objs.length?(objs[0][shift()]=shift()):(X=shift(),Y=shift(),stack[st][0][X]=Y) //set a key-value pair in an object, where index 0 is the key and index 1 is the value
+$["::"]=(h,i,j,k,X,Y,Z)=>id() //`gi` without pushing anything to stack (used for exposing ID's cleanly)
 $["type"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(X.pop?3:X.big?2:X.toFixed&&!isNaN(X)?1:0)) //pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 
 $["es"]=(h,i,j,k,X,Y,Z)=>exec(shift(),1) //execute string at index 0
