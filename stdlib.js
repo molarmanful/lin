@@ -17,7 +17,8 @@ $["gl"]=(h,i,j,k,X,Y,Z)=>unshift(getscope())
 $["gl\\"]=(h,i,j,k,X,Y,Z)=>unshift(unesc(getscope()))
 $["gs"]=(h,i,j,k,X,Y,Z)=>unshift(form()) //push stack joined by newlines
 $["g@"]=(h,i,j,k,X,Y,Z)=>unshift(lines[shift()]) //push line at popped number (0-indexed)
-$["g:"]=(h,i,j,k,X,Y,Z)=>unshift(stack[st][1][shift()]) //get value for key given by index 0 within object at index 1
+$["g:"]=(h,i,j,k,X,Y,Z)=>(X=shift(),unshift(shift()[X])) //get value for key given by index 0 within object at index 1
+$["form"]=(h,i,j,k,X,Y,Z)=>unshift(form([shift()]))
 $["si"]=(h,i,j,k,X,Y,Z)=>ids[shift()]=shift() //set global ID at index 0
 $["sl"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),scope.length?(scope[0][X]=Y):(ids[X]=Y))
 $[":"]=(h,i,j,k,X,Y,Z)=>objs.length?(objs[0][shift()]=shift()):(X=shift(),Y=shift(),stack[st][0][X]=Y) //set a key-value pair in an object, where index 0 is the key and index 1 is the value
@@ -149,6 +150,7 @@ $["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').
 $["flat"]=(h,i,j,k,X,Y,Z)=>stack[st]=_.flatten(stack[st]) //`wrap_` all elements
 $["chunk"]=(h,i,j,k,X,Y,Z)=>stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
 $["enum"]=(h,i,j,k,X,Y,Z)=>stack[st]=stack[st].map((a,b)=>[b,a]) //convert each item in stack to a list containing index and item
+$["enom"]=(h,i,j,k,X,Y,Z)=>unshift(Object.keys(X=shift()).map(a=>[X[a],a])) //convert each item in stack to a list containing index and item
 
 $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st), //`es` on each individual item in the stack
   addf(a=>(delete stack[iter[0]+' '],st=iter.shift())),

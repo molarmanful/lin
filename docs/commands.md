@@ -129,6 +129,7 @@
 - <code>flat</code>: `wrap_` all elements
 - <code>chunk</code>: split stack into lists of length given by index 0
 - <code>enum</code>: convert each item in stack to a list containing index and item
+- <code>enom</code>: convert each item in stack to a list containing index and item
 - <code>map</code>: `es` on each individual item in the stack
 - <code>fold</code>: `es` with accumulator and item; result of each `es` becomes the new accumulator
 - <code>filter</code>: remove each item that is falsy after `es`
