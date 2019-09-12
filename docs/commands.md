@@ -128,6 +128,8 @@
 - <code>'</code>: apply function to list given by index 0
 - <code>flat</code>: `wrap_` all elements
 - <code>chunk</code>: split stack into lists of length given by index 0
+- <code>keys</code>: get keys of object/list at index 0
+- <code>vals</code>: get values of object/list at index 0
 - <code>enum</code>: convert each item in stack to a list containing index and item
 - <code>enom</code>: convert each item in stack to a list containing index and item
 - <code>map</code>: `es` on each individual item in the stack

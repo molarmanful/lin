@@ -149,8 +149,11 @@ $["'"]=(h,i,j,k,X,Y,Z)=>(X=shift(),Y=shift(),Y=Y.big?Y.split``:Y.toFixed?(Y+'').
     addf(a=>(Y=stack[st],delete stack[iter[0]+'\n'],st=iter.shift(),unshift(Y))),exec(X,1))
 $["flat"]=(h,i,j,k,X,Y,Z)=>stack[st]=_.flatten(stack[st]) //`wrap_` all elements
 $["chunk"]=(h,i,j,k,X,Y,Z)=>stack[st]=(X=shift(),_.chunk(stack[st],X)) //split stack into lists of length given by index 0
+$["keys"]=(h,i,j,k,X,Y,Z)=>unshift(Object.keys(shift())) //get keys of object/list at index 0
+$["vals"]=(h,i,j,k,X,Y,Z)=>unshift(Object.values(shift())) //get values of object/list at index 0
 $["enum"]=(h,i,j,k,X,Y,Z)=>stack[st]=stack[st].map((a,b)=>[b,a]) //convert each item in stack to a list containing index and item
 $["enom"]=(h,i,j,k,X,Y,Z)=>unshift(Object.keys(X=shift()).map(a=>[X[a],a])) //convert each item in stack to a list containing index and item
+$["del"]=(h,i,j,k,X,Y,Z)=>delete stack[st][1][shift()]
 
 $["map"]=(h,i,j,k,X,Y,Z)=>(X=shift(),iter.unshift(st), //`es` on each individual item in the stack
   addf(a=>(delete stack[iter[0]+' '],st=iter.shift())),

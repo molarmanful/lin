@@ -38,13 +38,13 @@ getscope=(x=shift(),y)=>(
 )
 mod=(x,y)=>(x%y+y)%y
 range=(x,y)=>_.range(x,y+Math.sign(y-x),Math.sign(y-x))
-form=(x=stack[st],y='\n')=>x.map(form_=a=>
+form=(x=stack[st],y='\n')=>x.map(a=>
   a&&a.big?
     JSON.stringify(a)
   :a&&a.pop?
     `[ ${form(a,' ')} ]`
   :a&&typeof a=='object'?
-    `{ ${Object.keys(a).map(b=>form_(b)+':'+form_(a[b])).join` `} }`
+  `{ ${Object.keys(a).map(b=>form([b])+':'+form([a[b]])).join` `} }`
   :a
 ).reverse().join(y)
 parse=x=>parser.parse(x.pop?x.join` `:x+'')
