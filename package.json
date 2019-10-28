@@ -2,7 +2,7 @@
   "name": "linlang",
   "version": "0.0.24",
   "description": "A line-based programming language",
-  "main": "src/index.mjs",
+  "main": "src/index.js",
   "bin": {
     "lin": "./run.sh"
   },

@@ -1,5 +1,5 @@
 // modules
-import {_, parser, SL} from './bridge.mjs'
+import {_, parse, SL} from './bridge.js'
 
 let INT = {}
 
@@ -49,7 +49,7 @@ INT.form = (x=INT.stack[INT.st],y='\n')=>
     : a
   ).reverse().join(y)
 
-INT.parse = x=> parser.parse(x.pop ? x.join` ` : x + '')
+INT.parse = x=> parse(x.pop ? x.join` ` : x + '')
 INT.get = x=> INT.stack[INT.st][INT.mod(x, INT.stack[INT.st].length)]
 INT.splice = (x,y=1,z)=> INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length), y)
 INT.shift = x=> INT.stack[INT.st].shift()

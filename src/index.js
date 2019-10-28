@@ -1,5 +1,5 @@
 // modules
-import {unesc, fs, INT} from './bridge.mjs'
+import {fs, INT} from './bridge.js'
 
 // verbose mode
 if(~process.argv.indexOf('-v')) INT.verbose = 1

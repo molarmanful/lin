@@ -1,4 +1,4 @@
-import {fs, cp, unesc, _, INT as I} from './bridge.mjs'
+import {fs, cp, unesc, _, INT as I} from './bridge.js'
 let SL = {}
 
 SL["("]=(h,i,j,k,X,Y,Z)=>(I.lambda=1,I.scope.unshift({}))
