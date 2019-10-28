@@ -69,8 +69,8 @@
 - <code>|</code>: bitwise or
 - <code>$</code>: bitwise xor
 - <code><<</code>: bitwise left shift
-- <code>>></code>: bitwise right shift, sign-propagating
-- <code>>>></code>: bitwise right shift, zero-fill
+- <code>>></code>: bitwise right I.shift, sign-propagating
+- <code>>>></code>: bitwise right I.shift, zero-fill
 - <code>=</code>: equal
 - <code>!=</code>: not equal
 - <code>></code>: greater than

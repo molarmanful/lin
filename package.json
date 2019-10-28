@@ -2,9 +2,9 @@
   "name": "linlang",
   "version": "0.0.24",
   "description": "A line-based programming language",
-  "main": "index.js",
+  "main": "src/index.mjs",
   "bin": {
-    "lin": "./index.js"
+    "lin": "./run.sh"
   },
   "repository": {
     "type": "git",
