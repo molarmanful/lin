@@ -1,7 +1,6 @@
 let parse = x=>
 
   x.split``.reduce((tree,a)=>{
-
     let last = tree[tree.length - 1]
 
     // number
