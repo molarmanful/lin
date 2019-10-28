@@ -3,11 +3,11 @@
 let fs = require('fs')
 let sl = fs.readFileSync('./src/sl') + ''
 let header = `\
-import {fs, cp, unesc, _, INT as I} from './bridge.mjs'
+import {fs, cp, unesc, _, INT as I} from './bridge.js'
 let SL = {}
 `
 
-fs.writeFileSync('./src/stdlib.mjs',
+fs.writeFileSync('./src/stdlib.js',
   header + `\n${
     sl.replace(/^(\S+) (.+)$/gm, 'SL["$1"]=(h,i,j,k,X,Y,Z)=>$2')
   }\nexport {SL}`

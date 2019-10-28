@@ -1,1 +1,1 @@
-node --experimental-modules src/index.mjs $@
+node --experimental-modules --no-warnings src/index.js $@
