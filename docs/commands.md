@@ -1,149 +1,149 @@
 # Commands
 **NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.
 
-- <code>push empty string</code>: ()
-- <code>initialize empty list</code>: []
-- <code>initialize empty list</code>: {}
-- <code>push space</code>: \\
-- <code>push newline</code>: n\\
-- <code>push string at ID given by index 0</code>: gi
-- <code>`gi` but parse escape codes</code>: gi\\
-- <code>`gi` but follow local scoping rules</code>: gl
-- <code>`gl` but parse escape codes</code>: gl\\
-- <code>push stack joined by newlines</code>: gs
-- <code>push line at popped number (0-indexed)</code>: g@
-- <code>get value for key given by index 0 within object at index 1</code>: g:
-- <code>convert index 0 to its string representation</code>: form
-- <code>set global ID at index 0</code>: si
-- <code>`si` but follow local scoping rules</code>: sl
-- <code>set a key-value pair in an object, where index 0 is the key and index 1 is the value</code>: :
-- <code>`gi` without pushing anything to stack (used for exposing ID's cleanly)</code>: ::
-- <code>pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)</code>: type
-- <code>execute string at index 0</code>: es
-- <code>`es` on index 1 for number of times given by index 0</code>: e*
-- <code>`es` if index 1 is truthy</code>: e&
-- <code>`es` if index 1 is falsy</code>: e|
-- <code>`es` on index 1 if index 2 is truthy; otherwise, `es` on index 0</code>: e?
-- <code>while `es` on index 1 is truthy, `es` on index 0</code>: ew
-- <code> `es` next line</code>: ;
-- <code> `es` previous line</code>: ;;
-- <code>end execution of current call stack frame</code>: stop
-- <code>read file at path given by index 0</code>: read
-- <code>write string at index 1 to file at path given by index 0</code>: write
-- <code>push user input</code>: in
-- <code>push user input without echoing</code>: inh
-- <code>output index 0 to STDOUT</code>: out
-- <code>output index 0 as a line to STDOUT</code>: outln
-- <code>Euler's constant</code>: $E
-- <code>Pi</code>: $Pi
-- <code>`(index 1)*10^(index 0)`</code>: E
-- <code>negation</code>: _
-- <code>addition</code>: +
-- <code>subtraction</code>: -
-- <code>multiplication</code>: *
-- <code>division</code>: /
-- <code>integer division</code>: //
-- <code>modulus</code>: %
-- <code>divmod</code>: /%
-- <code>exponentiation</code>: ^
-- <code>absolute value</code>: abs
-- <code>sign function</code>: sign
-- <code>push random number between 0 and 1</code>: rand
-- <code>push milliseconds since January 1, 1970 00:00:00.000</code>: time
-- <code>natural logarithm</code>: ln
-- <code>base-10 logarithm</code>: log
-- <code>sine</code>: sin
-- <code>cosine</code>: cos
-- <code>tangent</code>: tan
-- <code>hyperbolic sine</code>: sinh
-- <code>hyperbolic cosine</code>: cosh
-- <code>hyperbolic tangent</code>: tanh
-- <code>inverse sine</code>: asin
-- <code>inverse cosine</code>: acos
-- <code>inverse tangent</code>: atan
-- <code>inverse hyperbolic sine</code>: asinh
-- <code>inverse hyperbolic cosine</code>: acosh
-- <code>inverse hyperbolic tangent</code>: atanh
-- <code>push max</code>: max
-- <code>push min</code>: min
-- <code>inclusive range</code>: range
-- <code>bitwise not</code>: ~
-- <code>logical not</code>: !
-- <code>bitwise and</code>: &
-- <code>bitwise or</code>: |
-- <code>bitwise xor</code>: $
-- <code>bitwise left shift</code>: <<
-- <code>bitwise right I.shift, sign-propagating</code>: >>
-- <code>bitwise right I.shift, zero-fill</code>: >>>
-- <code>equal</code>: =
-- <code>not equal</code>: !=
-- <code>greater than</code>: >
-- <code>less than</code>: <
-- <code>greater than or equal to</code>: >=
-- <code>less than or equal to</code>: <=
-- <code>comparison function (-1 for less than, 0 for equal, 1 for greater than)</code>: <=>
-- <code>round towards -∞</code>: floor
-- <code>round towards 0</code>: trunc
-- <code>round towards or away from 0 depending on < or >= .5</code>: round
-- <code>round towards ∞</code>: ceil
-- <code>`dup` but with any index</code>: pick
-- <code>`drop` but with any index</code>: nix
-- <code>`rot` but with any index</code>: roll
-- <code>`rot_` but with any index</code>: roll_
-- <code>swap index 1 with index given by index 0</code>: trade
-- <code>push index 0</code>: dup
-- <code>pop index 0</code>: drop
-- <code>bring index 2 to index 0</code>: rot
-- <code>bring index 0 to index 2</code>: rot_
-- <code>bring index 1 to index 0</code>: swap
-- <code>pop index 1</code>: nip
-- <code>push index 0 to index 2</code>: tuck
-- <code>push index 1</code>: over
-- <code>pop all items</code>: clr
-- <code>reverse stack</code>: rev
-- <code>pop index 0, `es`, push popped index 0</code>: dip
-- <code>split string at index 1 over string at index 0</code>: split
-- <code>join stack over string at index 0</code>: join
-- <code>concatenate top 2 items as strings or lists</code>: ++
-- <code>push string length of index 0</code>: len
-- <code>convert number to Unicode</code>: >char
-- <code>convert Unicode to number</code>: <char
-- <code>lowercase</code>: lower
-- <code>uppercase</code>: upper
-- <code>repeat string by index 0</code>: repeat
-- <code>pad string given by index 2 until length given by index 0 with string given by index 1</code>: pad
-- <code>`pad` but only from the left</code>: padr
-- <code>`pad` but only from the right</code>: padr
-- <code>execute string given by index 1 on a stack with name given by index 0</code>: stack
-- <code>push index 1 to another stack with name given by index 0</code>: push
-- <code>push top item of another stack with name given by index 0</code>: pull
-- <code>push stack length</code>: size
-- <code>remove all duplicates in current stack</code>: uniq
-- <code>keep top _n_ items, where _n_ is index 0</code>: take
-- <code>pop top _n_ items, where _n_ is index 0</code>: drop
-- <code>push items of another stack with name given by index 0</code>: merge
-- <code>set union with current stack and stack with name given by index 0</code>: union
-- <code>set intersection with current stack and stack with name given by index 0</code>: intersection
-- <code>set difference with current stack and stack with name given by index 0</code>: difference
-- <code>wrap index 0 in a list</code>: wrap
-- <code>opposite of `wrap`; take all items in list at index 0 and push to parent stack</code>: wrap_
-- <code>push entire stack as a list</code>: enclose
-- <code>set current stack to the list at index 0</code>: usurp
-- <code>apply function to list given by index 0</code>: '
-- <code>`wrap_` all elements</code>: flat
-- <code>split stack into lists of length given by index 0</code>: chunk
-- <code>get keys of object/list at index 0</code>: keys
-- <code>get values of object/list at index 0</code>: vals
-- <code>convert each item in stack to a list containing index and item</code>: enum
-- <code>convert each item in stack to a list containing index and item</code>: enom
-- <code>`es` on each individual item in the stack</code>: map
-- <code>`es` with accumulator and item; result of each `es` becomes the new accumulator</code>: fold
-- <code>remove each item that is falsy after `es`</code>: filter
-- <code>push 1 if any items return truthy after `es`, else push 0</code>: any
-- <code>push 1 if all items return truthy after `es`, else push 0</code>: all
-- <code>find first item that returns truthy after `es` or undefined on failure</code>: find
-- <code>`find` but returns index (or -1 on fail)</code>: findi
-- <code>`take` items until `es` returns falsy for an item</code>: takew
-- <code>`drop` items until `es` returns falsy for an item</code>: dropw
-- <code>sort items in ascending order based on `es`</code>: sort
-- <code>separate items into 2 lists based on whether they return truthy after `es`</code>: part
+- <code>()</code>: push empty string
+- <code>[]</code>: initialize empty list
+- <code>{}</code>: initialize empty list
+- <code>\\</code>: push space
+- <code>n\\</code>: push newline
+- <code>gi</code>: push string at ID given by index 0
+- <code>gi\\</code>: `gi` but parse escape codes
+- <code>gl</code>: `gi` but follow local scoping rules
+- <code>gl\\</code>: `gl` but parse escape codes
+- <code>gs</code>: push stack joined by newlines
+- <code>g@</code>: push line at popped number (0-indexed)
+- <code>g:</code>: get value for key given by index 0 within object at index 1
+- <code>form</code>: convert index 0 to its string representation
+- <code>si</code>: set global ID at index 0
+- <code>sl</code>: `si` but follow local scoping rules
+- <code>:</code>: set a key-value pair in an object, where index 0 is the key and index 1 is the value
+- <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
+- <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
+- <code>es</code>: execute string at index 0
+- <code>e*</code>: `es` on index 1 for number of times given by index 0
+- <code>e&</code>: `es` if index 1 is truthy
+- <code>e|</code>: `es` if index 1 is falsy
+- <code>e?</code>: `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+- <code>ew</code>: while `es` on index 1 is truthy, `es` on index 0
+- <code>;</code>:  `es` next line
+- <code>;;</code>:  `es` previous line
+- <code>stop</code>: end execution of current call stack frame
+- <code>read</code>: read file at path given by index 0
+- <code>write</code>: write string at index 1 to file at path given by index 0
+- <code>in</code>: push user input
+- <code>inh</code>: push user input without echoing
+- <code>out</code>: output index 0 to STDOUT
+- <code>outln</code>: output index 0 as a line to STDOUT
+- <code>$E</code>: Euler's constant
+- <code>$Pi</code>: Pi
+- <code>E</code>: `(index 1)*10^(index 0)`
+- <code>_</code>: negation
+- <code>+</code>: addition
+- <code>-</code>: subtraction
+- <code>*</code>: multiplication
+- <code>/</code>: division
+- <code>//</code>: integer division
+- <code>%</code>: modulus
+- <code>/%</code>: divmod
+- <code>^</code>: exponentiation
+- <code>abs</code>: absolute value
+- <code>sign</code>: sign function
+- <code>rand</code>: push random number between 0 and 1
+- <code>time</code>: push milliseconds since January 1, 1970 00:00:00.000
+- <code>ln</code>: natural logarithm
+- <code>log</code>: base-10 logarithm
+- <code>sin</code>: sine
+- <code>cos</code>: cosine
+- <code>tan</code>: tangent
+- <code>sinh</code>: hyperbolic sine
+- <code>cosh</code>: hyperbolic cosine
+- <code>tanh</code>: hyperbolic tangent
+- <code>asin</code>: inverse sine
+- <code>acos</code>: inverse cosine
+- <code>atan</code>: inverse tangent
+- <code>asinh</code>: inverse hyperbolic sine
+- <code>acosh</code>: inverse hyperbolic cosine
+- <code>atanh</code>: inverse hyperbolic tangent
+- <code>max</code>: push max
+- <code>min</code>: push min
+- <code>range</code>: inclusive range
+- <code>~</code>: bitwise not
+- <code>!</code>: logical not
+- <code>&</code>: bitwise and
+- <code>|</code>: bitwise or
+- <code>$</code>: bitwise xor
+- <code><<</code>: bitwise left shift
+- <code>>></code>: bitwise right I.shift, sign-propagating
+- <code>>>></code>: bitwise right I.shift, zero-fill
+- <code>=</code>: equal
+- <code>!=</code>: not equal
+- <code>></code>: greater than
+- <code><</code>: less than
+- <code>>=</code>: greater than or equal to
+- <code><=</code>: less than or equal to
+- <code><=></code>: comparison function (-1 for less than, 0 for equal, 1 for greater than)
+- <code>floor</code>: round towards -∞
+- <code>trunc</code>: round towards 0
+- <code>round</code>: round towards or away from 0 depending on < or >= .5
+- <code>ceil</code>: round towards ∞
+- <code>pick</code>: `dup` but with any index
+- <code>nix</code>: `drop` but with any index
+- <code>roll</code>: `rot` but with any index
+- <code>roll_</code>: `rot_` but with any index
+- <code>trade</code>: swap index 1 with index given by index 0
+- <code>dup</code>: push index 0
+- <code>drop</code>: pop index 0
+- <code>rot</code>: bring index 2 to index 0
+- <code>rot_</code>: bring index 0 to index 2
+- <code>swap</code>: bring index 1 to index 0
+- <code>nip</code>: pop index 1
+- <code>tuck</code>: push index 0 to index 2
+- <code>over</code>: push index 1
+- <code>clr</code>: pop all items
+- <code>rev</code>: reverse stack
+- <code>dip</code>: pop index 0, `es`, push popped index 0
+- <code>split</code>: split string at index 1 over string at index 0
+- <code>join</code>: join stack over string at index 0
+- <code>++</code>: concatenate top 2 items as strings or lists
+- <code>len</code>: push string length of index 0
+- <code>>char</code>: convert number to Unicode
+- <code><char</code>: convert Unicode to number
+- <code>lower</code>: lowercase
+- <code>upper</code>: uppercase
+- <code>repeat</code>: repeat string by index 0
+- <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
+- <code>padr</code>: `pad` but only from the left
+- <code>padr</code>: `pad` but only from the right
+- <code>stack</code>: execute string given by index 1 on a stack with name given by index 0
+- <code>push</code>: push index 1 to another stack with name given by index 0
+- <code>pull</code>: push top item of another stack with name given by index 0
+- <code>size</code>: push stack length
+- <code>uniq</code>: remove all duplicates in current stack
+- <code>take</code>: keep top _n_ items, where _n_ is index 0
+- <code>drop</code>: pop top _n_ items, where _n_ is index 0
+- <code>merge</code>: push items of another stack with name given by index 0
+- <code>union</code>: set union with current stack and stack with name given by index 0
+- <code>intersection</code>: set intersection with current stack and stack with name given by index 0
+- <code>difference</code>: set difference with current stack and stack with name given by index 0
+- <code>wrap</code>: wrap index 0 in a list
+- <code>wrap_</code>: opposite of `wrap`; take all items in list at index 0 and push to parent stack
+- <code>enclose</code>: push entire stack as a list
+- <code>usurp</code>: set current stack to the list at index 0
+- <code>'</code>: apply function to list given by index 0
+- <code>flat</code>: `wrap_` all elements
+- <code>chunk</code>: split stack into lists of length given by index 0
+- <code>keys</code>: get keys of object/list at index 0
+- <code>vals</code>: get values of object/list at index 0
+- <code>enum</code>: convert each item in stack to a list containing index and item
+- <code>enom</code>: convert each item in stack to a list containing index and item
+- <code>map</code>: `es` on each individual item in the stack
+- <code>fold</code>: `es` with accumulator and item; result of each `es` becomes the new accumulator
+- <code>filter</code>: remove each item that is falsy after `es`
+- <code>any</code>: push 1 if any items return truthy after `es`, else push 0
+- <code>all</code>: push 1 if all items return truthy after `es`, else push 0
+- <code>find</code>: find first item that returns truthy after `es` or undefined on failure
+- <code>findi</code>: `find` but returns index (or -1 on fail)
+- <code>takew</code>: `take` items until `es` returns falsy for an item
+- <code>dropw</code>: `drop` items until `es` returns falsy for an item
+- <code>sort</code>: sort items in ascending order based on `es`
+- <code>part</code>: separate items into 2 lists based on whether they return truthy after `es`
