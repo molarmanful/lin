@@ -135,7 +135,8 @@
 - <code>keys</code>: get keys of object/list at index 0
 - <code>vals</code>: get values of object/list at index 0
 - <code>enum</code>: convert each item in stack to a list containing index and item
-- <code>enom</code>: convert each item in stack to a list containing index and item
+- <code>enom</code>: convert each item in object to a list containing index and item
+- <code>del</code>: remove key at index 0 from object at index 1
 - <code>map</code>: `es` on each individual item in the stack
 - <code>fold</code>: `es` with accumulator and item; result of each `es` becomes the new accumulator
 - <code>filter</code>: remove each item that is falsy after `es`

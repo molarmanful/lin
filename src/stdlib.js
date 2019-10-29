@@ -25,7 +25,7 @@ SL["{"] = $=>{
   I.objs.unshift({})
   I.iter.unshift(I.st)
   I.st = I.iter[0] + '\n'
-  I.stack[st] = []
+  I.stack[I.st] = []
 }
 
 SL["}"] = $=>{
@@ -632,11 +632,13 @@ SL["vals"] = $=> I.unshift(Object.values(I.shift()))
 // convert each item in stack to a list containing index and item
 SL["enum"] = $=> I.stack[I.st] = I.stack[I.st].map((a,b)=> [b, a])
 
-// convert each item in stack to a list containing index and item
+// convert each item in object to a list containing index and item
 SL["enom"] = $=>{
   let X = I.shift()
   I.unshift(Object.keys(X).map(a=> [X[a], a]))
 }
+
+// remove key at index 0 from object at index 1
 SL["del"] = $=> delete I.stack[I.st][1][I.shift()]
 
 // `es` on each individual item in the stack
