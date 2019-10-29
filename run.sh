@@ -1,1 +1,1 @@
-node --experimental-modules --no-warnings src/index.js $@
+node -r esm src/index.js $@

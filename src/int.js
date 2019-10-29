@@ -56,7 +56,7 @@ INT.form = (x=INT.stack[INT.st],y='\n')=>
       `[ ${INT.form(a, ' ')} ]`
     : a && typeof a == 'object' ?
       `{ ${
-        Object.keys(a).map(b=> INT.form([b]) + ':' + INT.form([a[b]])).join` `
+        Object.keys(a).map(b=> INT.form([b]) + ': ' + INT.form([a[b]])).join` `
       } }`
     : a
   ).reverse().join(y)

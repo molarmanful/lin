@@ -166,7 +166,7 @@ SL["ew"] = $=>{
 SL[";"] = $=>{
   I.lns.unshift(I.lns[0] + 1)
   if(I.code[0].length){
-    addf(a=> I.lns.shift())
+    I.addf(a=> I.lns.shift())
     I.exec(I.lines[I.lns[0]], 1)
   }
 }
@@ -175,7 +175,7 @@ SL[";"] = $=>{
 SL[";;"] = $=>{
   I.lns.unshift(I.lns[0] - 1)
   if(I.code[0].length){
-    addf(a=> I.lns.shift())
+    I.addf(a=> I.lns.shift())
     I.exec(I.lines[I.lns[0]], 1)
   }
 }
@@ -464,7 +464,7 @@ SL["rev"] = $=> I.stack[I.st].reverse()
 SL["dip"] = $=>{
   SL.swap()
   let X = I.shift()
-  addf(a=> I.unshift(X))
+  I.addf(a=> I.unshift(X))
   I.exec(I.shift(), 1)
 }
 

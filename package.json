@@ -6,6 +6,9 @@
   "bin": {
     "lin": "./run.sh"
   },
+  "scripts": {
+    "test": "mocha --recursive --require esm"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/molarmanful/lin.git"
@@ -17,6 +20,11 @@
   },
   "homepage": "https://github.com/molarmanful/lin#readme",
   "dependencies": {
+    "esm": "^3.2.25",
     "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
   }
 }
