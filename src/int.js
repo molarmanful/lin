@@ -1,5 +1,5 @@
 // modules
-import {_, parse, SL} from './bridge.js'
+import {parse, SL} from './bridge.js'
 
 let INT = {}
 
@@ -19,6 +19,7 @@ INT.objs = []
 INT.lines = ''
 
 // convenience functions for stdlib
+
 INT.id = (x=INT.shift())=>{
   let y = RegExp(`^ *#${x}`)
   let line = INT.lines.findIndex(a=> a.match(y))
@@ -34,7 +35,18 @@ INT.getscope = (x=INT.shift())=>{
 }
 
 INT.mod = (x,y)=> (x % y + y) % y
-INT.range = (x,y)=> _.range(x, y + Math.sign(y - x), Math.sign(y - x))
+
+INT.range = (x,y)=>{
+  let res = [x]
+  let dir = Math.sign(y - x)
+  let c = Math.abs(y - x) - 1
+  while(c){
+    x += dir
+    res.push(x)
+    c--
+  }
+  return res
+}
 
 INT.form = (x=INT.stack[INT.st],y='\n')=>
   x.map(a=>
@@ -54,10 +66,10 @@ INT.get = x=> INT.stack[INT.st][INT.mod(x, INT.stack[INT.st].length)]
 INT.splice = (x,y=1,z)=> INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length), y)
 INT.shift = x=> INT.stack[INT.st].shift()
 INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
-
 INT.concat = (x, y)=> (x + '').concat(y)
 
 // convenience functions for call stack
+
 INT.addc = x=>{
   INT.code.unshift([])
   INT.addf(...x)

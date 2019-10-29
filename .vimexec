@@ -1,1 +1,1 @@
-autocmd BufWritePost src/sl !node comp/csl.js
+autocmd BufWritePost src/stdlib.js !node comp/csl.js
