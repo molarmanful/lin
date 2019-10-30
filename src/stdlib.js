@@ -98,7 +98,7 @@ SL[":"] = $=>{
   }
 }
 
-// `gi` without pushing anything to stack (used for exposing ID's cleanly)
+// bring ID at index 0 as string into global scope
 SL["::"] = $=> I.id()
 
 // pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
@@ -119,69 +119,68 @@ SL["es"] = $=> I.exec(I.shift(), 1)
 SL["e*"] = $=>{
   let X = I.shift()
   let Y = I.shift()
-  addf(a=>{
+  I.addf(a=>{
     if(X){
-      addf(a=> I.unshift(i - 1, j), 'e*')
-      I.exec(j, 1)
+      I.addf(a=> I.unshift(X - 1, Y), 'e*')
+      I.exec(Y, 1)
     }
   })
 }
 
-// `es` if index 1 is truthy
+// `es` if index 0 is truthy
 SL["e&"] = $=>{
-  SL.swap()
   if(I.shift()) SL.es()
   else I.shift()
 }
 
-// `es` if index 1 is falsy
+// `es` if index 0 is falsy
 SL["e|"] = $=>{
-  SL.swap()
   if(I.shift()) I.shift()
   else SL.es()
 }
 
-// `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+// `es` on index 2 if index 0 is truthy; otherwise, `es` on index 1
 SL["e?"] = $=>{
-  SL.rot()
-  if(!I.shift()) SL.swap()
+  let X = I.shift()
+  if(!X) SL.swap()
   I.shift()
   SL.es()
 }
 
 // while `es` on index 1 is truthy, `es` on index 0
 SL["ew"] = $=>{
-  i=I.shift()
-  j=I.shift()
-  addf(a=>{
+  let X = I.shift()
+  let Y = I.shift()
+  I.addf(a=>{
     if(I.shift()){
-      addf(a=> I.unshift(i, j), 'ew')
-      I.exec(i, 1)
+      I.addf(a=> I.unshift(X, Y), 'ew')
+      I.exec(Y, 1)
     }
   })
-  I.exec(j, 1)
+  I.exec(X, 1)
+}
+
+//  `es` line number at index 0
+SL["e@"] = $=>{
+  I.lns.unshift(I.shift())
+  if(I.code[0].length) I.addf(a=> I.lns.shift())
+  I.exec(I.lines[I.lns[0]], 1)
 }
 
 //  `es` next line
 SL[";"] = $=>{
-  I.lns.unshift(I.lns[0] + 1)
-  if(I.code[0].length){
-    I.addf(a=> I.lns.shift())
-    I.exec(I.lines[I.lns[0]], 1)
-  }
+  I.unshift(I.lns[0] + 1)
+  SL["e@"]()
 }
 
 //  `es` previous line
 SL[";;"] = $=>{
-  I.lns.unshift(I.lns[0] - 1)
-  if(I.code[0].length){
-    I.addf(a=> I.lns.shift())
-    I.exec(I.lines[I.lns[0]], 1)
-  }
+  I.unshift(I.lns[0] - 1)
+  SL["e@"]()
 }
 
 // end execution of current call stack frame
-SL["stop"] = $=> I.code.shift()
+SL["break"] = $=> I.code.shift()
 
 // read file at path given by index 0
 SL["read"] = $=> I.unshift(fs.readFileSync(I.shift()) + '')
@@ -405,15 +404,10 @@ SL["pick"] = $=> I.unshift(I.get(I.shift()))
 SL["nix"] = $=> I.splice(I.shift())
 
 // `rot` but with any index
-SL["roll"] = $=>{
-  let X = I.get(0)
-  SL.pick()
-  I.unshift(X + 1)
-  SL.nix()
-}
+SL["roll"] = $=> I.unshift(I.splice(I.shift())[0])
 
 // `rot_` but with any index
-SL["roll_"] = $=> I.splice(I.shift(), 0, I.shift())
+SL["roll_"] = $=> I.splice(I.shift(), 0, I.shift(), 1)
 
 // swap index 1 with index given by index 0
 SL["trade"] = $=> I.unshift(I.splice(I.shift() - 1, 1, I.shift())[0])
@@ -422,16 +416,13 @@ SL["trade"] = $=> I.unshift(I.splice(I.shift() - 1, 1, I.shift())[0])
 SL["dup"] = $=> I.unshift(I.stack[I.st][0])
 
 // pop index 0
-SL["drop"] = $=> I.shift()
+SL["pop"] = $=> I.shift()
 
 // bring index 2 to index 0
 SL["rot"] = $=> I.unshift(I.splice(2)[0])
 
 // bring index 0 to index 2
-SL["rot_"] = $=>{
-  SL.rot()
-  SL.rot()
-}
+SL["rot_"] = $=> I.splice(2, 0, I.shift())
 
 // bring index 1 to index 0
 SL["swap"] = $=> I.unshift(I.splice(1)[0])
@@ -470,14 +461,14 @@ SL["dip"] = $=>{
 
 // split string at index 1 over string at index 0
 SL["split"] = $=>{
-  SL.swap()
-  I.unshift(...(I.shift() + '').split(I.shift()).reverse())
+  let X = I.shift()
+  I.unshift((I.shift() + '').split(X).reverse())
 }
 
-// join stack over string at index 0
+// join list over string at index 0
 SL["join"] = $=>{
   let X = I.shift()
-  I.unshift(I.stack[I.st].slice(0).reverse().join(X))
+  I.unshift(I.shift().slice(0).reverse().join(X))
 }
 
 // concatenate top 2 items as strings or lists

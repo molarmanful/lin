@@ -1,5 +1,5 @@
 \BIN :: 2594 BIN out
-#BIN ( 2/% swap dup ) () ew drop rev () join
+#BIN ( 2/% swap dup ) () ew pop rev () join
 
 
 

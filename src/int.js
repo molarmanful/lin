@@ -3,21 +3,6 @@ import {parse, SL} from './bridge.js'
 
 let INT = {}
 
-// variables
-INT.stack = {0: []}
-INT.st = 0
-INT.lambda = 0
-INT.paren = []
-INT.ids = {}
-INT.idls = {}
-INT.iter = []
-INT.code = []
-INT.verbose = 0
-INT.lns = [0]
-INT.scope = []
-INT.objs = []
-INT.lines = ''
-
 // convenience functions for stdlib
 
 INT.id = (x=INT.shift())=>{
@@ -63,7 +48,12 @@ INT.form = (x=INT.stack[INT.st],y='\n')=>
 
 INT.parse = x=> parse(x.pop ? x.join` ` : x + '')
 INT.get = x=> INT.stack[INT.st][INT.mod(x, INT.stack[INT.st].length)]
-INT.splice = (x,y=1,z)=> INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length), y)
+
+INT.splice = (x,y=1,z,w=0)=>
+  z != undefined ?
+    INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)
+  : INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y)
+
 INT.shift = x=> INT.stack[INT.st].shift()
 INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
 INT.concat = (x, y)=> (x + '').concat(y)
@@ -156,6 +146,25 @@ INT.exec = (x,y)=>{
 
     INT.code.shift()
   }
+}
+
+//initialize everything
+INT.run = x=>{
+  INT.stack = {0: []}
+  INT.st = 0
+  INT.lambda = 0
+  INT.paren = []
+  INT.ids = {}
+  INT.idls = {}
+  INT.iter = []
+  INT.code = []
+  INT.verbose = INT.verbose || 0
+  INT.lns = [0]
+  INT.scope = []
+  INT.objs = []
+  INT.lines = x.split`\n`
+
+  INT.exec(INT.lines[0])
 }
 
 export {INT}

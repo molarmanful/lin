@@ -17,17 +17,18 @@
 - <code>si</code>: set global ID at index 0
 - <code>sl</code>: `si` but follow local scoping rules
 - <code>:</code>: set a key-value pair in an object, where index 0 is the key and index 1 is the value
-- <code>::</code>: `gi` without pushing anything to stack (used for exposing ID's cleanly)
+- <code>::</code>: bring ID at index 0 as string into global scope
 - <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
 - <code>es</code>: execute string at index 0
 - <code>e*</code>: `es` on index 1 for number of times given by index 0
-- <code>e&</code>: `es` if index 1 is truthy
-- <code>e|</code>: `es` if index 1 is falsy
-- <code>e?</code>: `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+- <code>e&</code>: `es` if index 0 is truthy
+- <code>e|</code>: `es` if index 0 is falsy
+- <code>e?</code>: `es` on index 2 if index 0 is truthy; otherwise, `es` on index 1
 - <code>ew</code>: while `es` on index 1 is truthy, `es` on index 0
+- <code>e@</code>:  `es` line number at index 0
 - <code>;</code>:  `es` next line
 - <code>;;</code>:  `es` previous line
-- <code>stop</code>: end execution of current call stack frame
+- <code>break</code>: end execution of current call stack frame
 - <code>read</code>: read file at path given by index 0
 - <code>write</code>: write string at index 1 to file at path given by index 0
 - <code>in</code>: push user input
@@ -92,7 +93,7 @@
 - <code>roll_</code>: `rot_` but with any index
 - <code>trade</code>: swap index 1 with index given by index 0
 - <code>dup</code>: push index 0
-- <code>drop</code>: pop index 0
+- <code>pop</code>: pop index 0
 - <code>rot</code>: bring index 2 to index 0
 - <code>rot_</code>: bring index 0 to index 2
 - <code>swap</code>: bring index 1 to index 0
@@ -103,7 +104,7 @@
 - <code>rev</code>: reverse stack
 - <code>dip</code>: pop index 0, `es`, push popped index 0
 - <code>split</code>: split string at index 1 over string at index 0
-- <code>join</code>: join stack over string at index 0
+- <code>join</code>: join list over string at index 0
 - <code>++</code>: concatenate top 2 items as strings or lists
 - <code>len</code>: push string length of index 0
 - <code>>char</code>: convert number to Unicode
