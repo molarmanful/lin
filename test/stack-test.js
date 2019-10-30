@@ -89,4 +89,28 @@ describe('STACK', _=>{
     d()
   })
 
+  it('size', d=>{
+    INT.run('1 2 3 4 size')
+    expect(INT.stack).to.eql({0: [4, 4, 3, 2, 1]})
+
+    d()
+  })
+
+  it('uniq', d=>{
+    INT.run('1 2 1 1 3 2 3 4 uniq')
+    expect(INT.stack).to.eql({0: [4, 3, 2, 1]})
+
+    d()
+  })
+
+  it('take drop', d=>{
+    INT.run('1 2 3 4 2 take')
+    expect(INT.stack).to.eql({0: [4, 3]})
+
+    INT.run('1 2 3 4 2 drop')
+    expect(INT.stack).to.eql({0: [2, 1]})
+
+    d()
+  })
+
 })

@@ -534,10 +534,18 @@ SL["stack"] = $=>{
 }
 
 // push index 1 to another stack with name given by index 0
-SL["push"] = $=> I.stack[I.shift()].unshift(I.shift())
+SL["push"] = $=>{
+  let X = I.shift()
+  if(!I.stack[X]) I.stack[X] = []
+  I.stack[X].unshift(I.shift())
+}
 
 // push top item of another stack with name given by index 0
-SL["pull"] = $=> I.unshift(I.stack[I.shift()].shift())
+SL["pull"] = $=>{
+  let X = I.shift()
+  if(!I.stack[X]) I.stack[X] = []
+  I.unshift(I.stack[X].shift())
+}
 
 // push stack length
 SL["size"] = $=> I.unshift(I.stack[I.st].length)
@@ -557,13 +565,13 @@ SL["merge"] = $=> I.unshift(...I.stack[I.shift()])
 // set union with current stack and stack with name given by index 0
 SL["union"] = $=>{
   let X = I.shift()
-  I.stack[I.st] = _.union(I.stack[I.st], I.stack[X])
+  I.stack[I.st] = _.union(I.stack[X], I.stack[I.st])
 }
 
 // set intersection with current stack and stack with name given by index 0
 SL["intersection"] = $=>{
   let X = I.shift()
-  I.stack[I.st] = _.intersection(I.stack[I.st], I.stack[X])
+  I.stack[I.st] = _.intersection(I.stack[X], I.stack[I.st])
 }
 
 // set difference with current stack and stack with name given by index 0
