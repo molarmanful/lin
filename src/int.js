@@ -1,5 +1,5 @@
 // modules
-import {parse, SL} from './bridge.js'
+import {dec, parse, SL} from './bridge.js'
 
 let INT = {}
 
@@ -19,23 +19,27 @@ INT.getscope = (x=INT.shift())=>{
   return y ? y[x] : INT.ids[x]
 }
 
-INT.mod = (x,y)=> (x % y + y) % y
+INT.mod = (x,y)=> dec.mod(dec.add(dec.mod(x, y), y), y)
 
 INT.range = (x,y)=>{
   let res = [x]
-  let dir = Math.sign(y - x)
-  let c = Math.abs(y - x) - 1
-  while(c){
-    x += dir
+  let dir = dec.sign(y - x)
+  let c = dec.abs(y - x) - 1
+  while(c > 0){
+    x -= -dir
     res.push(x)
     c--
   }
   return res
 }
 
+INT.tru = x=> x.toFixed ? x != 0 : x
+
 INT.form = (x=INT.stack[INT.st],y='\n')=>
   x.map(a=>
-    a && a.big ?
+    a.toFixed ?
+      +a
+    : a && a.big ?
       JSON.stringify(a)
     : a && a.pop ?
       `[ ${INT.form(a, ' ')} ]`

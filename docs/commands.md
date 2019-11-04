@@ -52,7 +52,9 @@
 - <code>rand</code>: push random number between 0 and 1
 - <code>time</code>: push milliseconds since January 1, 1970 00:00:00.000
 - <code>ln</code>: natural logarithm
-- <code>log</code>: base-10 logarithm
+- <code>logII</code>: base-2 logarithm
+- <code>logX</code>: base-10 logarithm
+- <code>log</code>: logarithm with base at index 0
 - <code>sin</code>: sine
 - <code>cos</code>: cosine
 - <code>tan</code>: tangent
@@ -62,12 +64,13 @@
 - <code>asin</code>: inverse sine
 - <code>acos</code>: inverse cosine
 - <code>atan</code>: inverse tangent
+- <code>atant</code>: inverse tangent with coordinates (x,y) to (index 1, index 0)
 - <code>asinh</code>: inverse hyperbolic sine
 - <code>acosh</code>: inverse hyperbolic cosine
 - <code>atanh</code>: inverse hyperbolic tangent
 - <code>max</code>: push max
 - <code>min</code>: push min
-- <code>range</code>: inclusive range
+- <code>range</code>: exclusive range
 - <code>~</code>: bitwise not
 - <code>!</code>: logical not
 - <code>&</code>: bitwise and

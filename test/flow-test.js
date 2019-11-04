@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {INT, SL} from '../src/bridge.js'
+import {dec, INT, SL} from '../src/bridge.js'
 
 describe('FLOW', _=>{
 
@@ -19,7 +19,7 @@ describe('FLOW', _=>{
 
   it('e*', d=>{
     INT.run('1 ( 1 + ) 5 e*')
-    expect(INT.stack).to.eql({0: [6]})
+    expect(INT.stack).to.eql({0: [dec(6)]})
 
     d()
   })
@@ -48,7 +48,7 @@ describe('FLOW', _=>{
 
   it('ew', d=>{
     INT.run('4 ( dup 1- ) \\dup ew')
-    expect(INT.stack).to.eql({0: [0, 1, 2, 3, 4]})
+    expect(INT.stack).to.eql({0: [0, 1, 2, 3].map(dec).concat(4)})
 
     INT.run('0 ( dup 1- ) \\dup ew')
     expect(INT.stack).to.eql({0: [0]})

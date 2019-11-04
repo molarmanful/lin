@@ -1,8 +1,8 @@
-import {fs, cp, unesc, _, INT as I} from './bridge.js'
+import {fs, cp, unesc, _, dec, INT as I} from './bridge.js'
 let SL = {}
 
 SL["("] = $=>{
-  I.lambda=1
+  I.lambda = 1
   I.scope.unshift({})
 }
 
@@ -30,7 +30,7 @@ SL["{"] = $=>{
 
 SL["}"] = $=>{
   let X = I.objs.shift()
-  delete I.stack[I.iter[0]+'\n']
+  delete I.stack[I.iter[0] + '\n']
   I.st = I.iter.shift()
   I.unshift(X)
 }
@@ -93,7 +93,7 @@ SL[":"] = $=>{
   if(I.objs.length) I.objs[0][I.shift()] = I.shift()
   else {
     let X = I.shift()
-    let Y=I.shift()
+    let Y = I.shift()
     I.stack[I.st][0][X] = Y
   }
 }
@@ -120,7 +120,7 @@ SL["e*"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   I.addf(a=>{
-    if(X){
+    if(I.tru(X)){
       I.addf(a=> I.unshift(X - 1, Y), 'e*')
       I.exec(Y, 1)
     }
@@ -129,20 +129,20 @@ SL["e*"] = $=>{
 
 // `es` if index 0 is truthy
 SL["e&"] = $=>{
-  if(I.shift()) SL.es()
+  if(I.tru(I.shift())) SL.es()
   else I.shift()
 }
 
 // `es` if index 0 is falsy
 SL["e|"] = $=>{
-  if(I.shift()) I.shift()
+  if(I.tru(I.shift())) I.shift()
   else SL.es()
 }
 
 // `es` on index 2 if index 0 is truthy; otherwise, `es` on index 1
 SL["e?"] = $=>{
   let X = I.shift()
-  if(!X) SL.swap()
+  if(!I.tru(X)) SL.swap()
   I.shift()
   SL.es()
 }
@@ -152,7 +152,7 @@ SL["ew"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   I.addf(a=>{
-    if(I.shift()){
+    if(I.tru(I.shift())){
       I.addf(a=> I.unshift(X, Y), 'ew')
       I.exec(Y, 1)
     }
@@ -169,7 +169,7 @@ SL["e@"] = $=>{
 
 //  `es` next line
 SL[";"] = $=>{
-  I.unshift(I.lns[0] + 1)
+  I.unshift(I.lns[0] - -1)
   SL["e@"]()
 }
 
@@ -201,42 +201,44 @@ SL["out"] = $=> process.stdout.write('' + I.shift())
 SL["outln"] = $=> process.stdout.write('' + I.shift() + '\n')
 
 // Euler's constant
-SL["$E"] = $=> I.unshift(Math.E)
+SL["$E"] = $=> I.unshift(dec.exp(1))
 
 // Pi
-SL["$Pi"] = $=> I.unshift(Math.PI)
+SL["$Pi"] = $=> I.unshift(dec.acos(-1))
 
 // `(index 1)*10^(index 0)`
 SL["E"] = $=>{
+  I.unshift(10)
   SL.swap()
-  I.unshift(I.shift() * 10 ** I.shift())
+  SL["^"]()
+  SL["*"]()
 }
 
 // negation
-SL["_"] = $=> I.unshift(-I.shift())
+SL["_"] = $=> I.unshift(dec.sub(0, I.shift()))
 
 // addition
-SL["+"] = $=> I.unshift(I.shift() - -I.shift())
+SL["+"] = $=> I.unshift(dec.add(I.shift(), I.shift()))
 
 // subtraction
 SL["-"] = $=>{
   SL.swap()
-  I.unshift(I.shift() - I.shift())
+  I.unshift(dec.sub(I.shift(), I.shift()))
 }
 
 // multiplication
-SL["*"] = $=> I.unshift(I.shift() * I.shift())
+SL["*"] = $=> I.unshift(dec.mul(I.shift(), I.shift()))
 
 // division
 SL["/"] = $=>{
   SL.swap()
-  I.unshift(I.shift() / I.shift())
+  I.unshift(dec.div(I.shift(), I.shift()))
 }
 
 // integer division
 SL["//"] = $=>{
-  SL.swap()
-  I.unshift(Math.floor(I.shift() / I.shift()))
+  SL["/"]()
+  SL.trunc()
 }
 
 // modulus
@@ -257,70 +259,85 @@ SL["/%"] = $=>{
 // exponentiation
 SL["^"] = $=>{
   SL.swap()
-  I.unshift(I.shift() ** I.shift())
+  I.unshift(dec.pow(I.shift(), I.shift()))
 }
 
 // absolute value
-SL["abs"] = $=> I.unshift(Math.abs(I.shift()))
+SL["abs"] = $=> I.unshift(dec.abs(I.shift()))
 
 // sign function
-SL["sign"] = $=> I.unshift(Math.sign(I.shift()))
+SL["sign"] = $=> I.unshift(dec.sign(I.shift()))
 
 // push random number between 0 and 1
-SL["rand"] = $=> I.unshift(Math.random())
+SL["rand"] = $=> I.unshift(dec.random())
 
 // push milliseconds since January 1, 1970 00:00:00.000
 SL["time"] = $=> I.unshift(Date.now())
 
 // natural logarithm
-SL["ln"] = $=> I.unshift(Math.log(I.shift()))
+SL["ln"] = $=> I.unshift(dec.ln(I.shift()))
+
+// base-2 logarithm
+SL["logII"] = $=> I.unshift(dec.log2(I.shift()))
 
 // base-10 logarithm
-SL["log"] = $=> I.unshift(Math.log10(I.shift()))
+SL["logX"] = $=> I.unshift(dec.log10(I.shift()))
+
+// logarithm with base at index 0
+SL["log"] = $=>{
+  SL.swap()
+  I.unshift(dec.log(I.shift(), I.shift()))
+}
 
 // sine
-SL["sin"] = $=> I.unshift(Math.sin(I.shift()))
+SL["sin"] = $=> I.unshift(dec.sin(I.shift()))
 
 // cosine
-SL["cos"] = $=> I.unshift(Math.cos(I.shift()))
+SL["cos"] = $=> I.unshift(dec.cos(I.shift()))
 
 // tangent
-SL["tan"] = $=> I.unshift(Math.tan(I.shift()))
+SL["tan"] = $=> I.unshift(dec.tan(I.shift()))
 
 // hyperbolic sine
-SL["sinh"] = $=> I.unshift(Math.sinh(I.shift()))
+SL["sinh"] = $=> I.unshift(dec.sinh(I.shift()))
 
 // hyperbolic cosine
-SL["cosh"] = $=> I.unshift(Math.cosh(I.shift()))
+SL["cosh"] = $=> I.unshift(dec.cosh(I.shift()))
 
 // hyperbolic tangent
-SL["tanh"] = $=> I.unshift(Math.tanh(I.shift()))
+SL["tanh"] = $=> I.unshift(dec.tanh(I.shift()))
 
 // inverse sine
-SL["asin"] = $=> I.unshift(Math.asin(I.shift()))
+SL["asin"] = $=> I.unshift(dec.asin(I.shift()))
 
 // inverse cosine
-SL["acos"] = $=> I.unshift(Math.acos(I.shift()))
+SL["acos"] = $=> I.unshift(dec.acos(I.shift()))
 
 // inverse tangent
-SL["atan"] = $=> I.unshift(Math.atan(I.shift()))
+SL["atan"] = $=> I.unshift(dec.atan(I.shift()))
+
+// inverse tangent with coordinates (x,y) to (index 1, index 0)
+SL["atant"] = $=>{
+  SL.swap()
+  I.unshift(dec.atan(I.shift(), I.shift()))
+}
 
 // inverse hyperbolic sine
-SL["asinh"] = $=> I.unshift(Math.asinh(I.shift()))
+SL["asinh"] = $=> I.unshift(dec.asinh(I.shift()))
 
 // inverse hyperbolic cosine
-SL["acosh"] = $=> I.unshift(Math.acosh(I.shift()))
+SL["acosh"] = $=> I.unshift(dec.acosh(I.shift()))
 
 // inverse hyperbolic tangent
-SL["atanh"] = $=> I.unshift(Math.atanh(I.shift()))
+SL["atanh"] = $=> I.unshift(dec.atanh(I.shift()))
 
 // push max
-SL["max"] = $=> I.unshift(Math.max(...I.stack[I.st]))
+SL["max"] = $=> I.unshift(dec.max(...I.stack[I.st]))
 
 // push min
-SL["min"] = $=> I.unshift(Math.min(...I.stack[I.st]))
+SL["min"] = $=> I.unshift(dec.min(...I.stack[I.st]))
 
-// inclusive range
+// exclusive range
 SL["range"] = $=>{
   let X = I.shift()
   let Y = I.shift()
@@ -380,22 +397,22 @@ SL["<="] = $=> I.unshift(+(I.shift() >= I.shift()))
 
 // comparison function (-1 for less than, 0 for equal, 1 for greater than)
 SL["<=>"] = $=>{
-  let X=I.shift()
-  let Y=I.shift()
+  let X = I.shift()
+  let Y = I.shift()
   I.unshift(X < Y ? 1 : X > Y ? -1 : 0)
 }
 
 // round towards -∞
-SL["floor"] = $=> I.unshift(Math.floor(I.shift()))
+SL["floor"] = $=> I.unshift(dec.floor(I.shift()))
 
 // round towards 0
-SL["trunc"] = $=> I.unshift(Math.trunc(I.shift()))
+SL["trunc"] = $=> I.unshift(dec.trunc(I.shift()))
 
 // round towards or away from 0 depending on < or >= .5
-SL["round"] = $=> I.unshift(Math.round(I.shift()))
+SL["round"] = $=> I.unshift(dec.round(I.shift()))
 
 // round towards ∞
-SL["ceil"] = $=> I.unshift(Math.ceil(I.shift()))
+SL["ceil"] = $=> I.unshift(dec.ceil(I.shift()))
 
 // `dup` but with any index
 SL["pick"] = $=> I.unshift(I.get(I.shift()))
@@ -477,7 +494,7 @@ SL["++"] = $=> I.unshift(I.concat(I.shift(), I.shift()))
 // push string length of index 0
 SL["len"] = $=>{
   let X = I.shift()
-  I.unshift(X.toFixed? (X + '').length : X.length)
+  I.unshift(X.toFixed ? (X + '').length : X.length)
 }
 
 // convert number to Unicode

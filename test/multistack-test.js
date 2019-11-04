@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {INT, SL} from '../src/bridge.js'
+import {dec, INT, SL} from '../src/bridge.js'
 
 describe('MULTI-STACK', _=>{
 
