@@ -1,15 +1,20 @@
-1 100 range ( dup 3% \\Fizz e| over 5% \\Buzz e| over 0+ \++ e| ) map gs out
+\CHECK :: ;
+1 101 range CHECK map
+
+#CHECK ( \Fizz ) over 3% e| ( \Buzz ) 1_ pick 5% e| \++ size 4= e& outln
 
 
 
 # EXPLANATION
+Outputs numbers from 1 to 100, replacing numbers divisible by 3 with Fizz, numbers divisible by 5 with Buzz, and numbers divisible by both 3 and 5 with FizzBuzz.
 
-- `1 100 range` pushes all numbers from 1 to 100.
-- `(...) map` executes the lambda on each item on the stack.
+- `\CHECK ::` exposes the ID of CHECK to the global scope. This is a pretty standard way of declaring functions.
+- `1 101 range` pushes all numbers from 1 to 100.
+- `CHECK map` executes CHECK on each item on the stack.
 
-Within the lambda:
+In CHECK:
 
-- `dup 3% \\Fizz e|` pushes "Fizz" if the item being mapped is divisible by 3.
-- `over 5% \\Buzz e|` pushes "Buzz" if the item being mapped is divisible by 5.
-- `over 0+ \++ e|` concatenates the top 2 stack items if the second from top of stack is not a number.
-- `outln` outputs the result.
+- `( \Fizz ) over 3% e|` pushes "Fizz" if the item is divisible by 3.
+- `( \Buzz ) 1_ pick 5% e|` pushes "Buzz" if the item is divisible by 5.
+- `\++ size 4= e&` pushes "FizzBuzz" if the stack has 4 items (will only happen if "Fizz" and "Buzz" are all on the stack).
+- `outln` prints the result.

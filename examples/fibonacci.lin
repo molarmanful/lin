@@ -6,9 +6,6 @@
 This outputs the first 50 Fibonacci numbers.
 
 - `1 1` serves as the initial condition.
-- `(...) 50 e*` executes the lambda while the top item on the stack is not 0.
-
-Within the lambda:
-
+- `(...) 50 e*` executes the lambda 50 times.
 - `over outln` duplicates the second from top of stack and outputs it.
-- `swap over +` adds the top 2 Fibonacci numbers. Visualized, this does `[ a b ] => [ b a ] => [ b a b ] => [ b a+b ]`
+- `swap over +` adds the top 2 Fibonacci numbers.

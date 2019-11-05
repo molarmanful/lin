@@ -37,7 +37,7 @@ INT.tru = x=> x.toFixed ? x != 0 : x
 
 INT.form = (x=INT.stack[INT.st],y='\n')=>
   x.map(a=>
-    a.toFixed ?
+    a && a.toFixed ?
       +a
     : a && a.big ?
       JSON.stringify(a)

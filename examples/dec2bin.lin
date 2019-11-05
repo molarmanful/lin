@@ -1,5 +1,10 @@
-\BIN :: 2594 BIN out
-#BIN ( 2/% swap dup ) () ew pop rev () join
+\BIN :: ;
+\IN :: \IN gi out in ;
+BIN outln
+
+#INEnter a decimal number: 
+
+#BIN ( 2/% swap ) \dup ew pop rev enclose () join
 
 
 
@@ -7,17 +12,11 @@
 Converts decimal to binary.
 
 - `\BIN ::` pushes the ID of BIN to the global scope. This is a pretty standard way of declaring functions.
-- `2594 BIN out` pushes a decimal number, executes BIN on the current stack, and outputs the result.
+- `\IN :: \IN gi out in` prompts the user for a decimal number.
+- `BIN out` executes BIN and outputs the result.
 
-In the declaration of BIN:
+In BIN:
 
-- `(...) () ew` is a makeshift way of creating a do-while loop.
-
-Within the lambda:
-
-- `2/%` performs both division and modulus on the top 2 items on the stack.
-- `swap dup` exposes the quotient (second from top of stack) as the while loop's condition. The loop stops if this condition is 0.
-
-Back to declaration of BIN:
-
-- `drop rev () join` drops the leftover quotient, reverses the entire stack, and joins the stack.
+- `(...) \dup ew` executes the lambda while the top of the stack is nonzero.
+- `2/% swap` performs both division and modulus on the top 2 items on the stack, keeping the quotient on top.
+- `pop rev enclose () join` drops the leftover quotient, reverses the stack, and joins it.

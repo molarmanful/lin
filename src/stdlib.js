@@ -51,16 +51,18 @@ SL["\\"] = $=> I.unshift(' ')
 SL["n\\"] = $=> I.unshift('\n')
 
 // push string at ID given by index 0
-SL["gi"] = $=> I.unshift(I.ids[I.shift()])
-
-// `gi` but parse escape codes
-SL["gi\\"] = $=> I.unshift(unesc(I.ids[I.shift()]))
+SL["gi"] = $=>{
+  let X = I.shift()
+  if(I.ids[X] == undefined) I.id(X)
+  I.unshift(I.ids[X])
+}
 
 // `gi` but follow local scoping rules
-SL["gl"] = $=> I.unshift(I.getscope())
-
-// `gl` but parse escape codes
-SL["gl\\"] = $=> I.unshift(unesc(I.getscope()))
+SL["gl"] = $=>{
+  let X = I.shift()
+  if(I.getscope(X) == undefined) I.id(X)
+  I.unshift(I.getscope(X))
+}
 
 // push stack joined by newlines
 SL["gs"] = $=> I.unshift(I.form())
@@ -348,7 +350,7 @@ SL["range"] = $=>{
 SL["~"] = $=> I.unshift(~I.shift())
 
 // logical not
-SL["!"] = $=> I.unshift(+!I.shift())
+SL["!"] = $=> I.unshift(+!I.tru(I.shift()))
 
 // bitwise and
 SL["&"] = $=> I.unshift(I.shift() & I.shift())
@@ -439,7 +441,10 @@ SL["pop"] = $=> I.shift()
 SL["rot"] = $=> I.unshift(I.splice(2)[0])
 
 // bring index 0 to index 2
-SL["rot_"] = $=> I.splice(2, 0, I.shift())
+SL["rot_"] = $=>{
+  SL.rot()
+  SL.rot()
+}
 
 // bring index 1 to index 0
 SL["swap"] = $=> I.unshift(I.splice(1)[0])
@@ -452,8 +457,8 @@ SL["nip"] = $=>{
 
 // push index 0 to index 2
 SL["tuck"] = $=>{
-  SL.dup()
-  SL.rot_()
+  let X = I.shift()
+  I.unshift(X, I.shift(), X)
 }
 
 // push index 1
@@ -489,13 +494,19 @@ SL["join"] = $=>{
 }
 
 // concatenate top 2 items as strings or lists
-SL["++"] = $=> I.unshift(I.concat(I.shift(), I.shift()))
+SL["++"] = $=>{
+  let X = I.shift()
+  I.unshift(I.concat(I.shift(), X))
+}
 
 // push string length of index 0
 SL["len"] = $=>{
   let X = I.shift()
   I.unshift(X.toFixed ? (X + '').length : X.length)
 }
+
+// unescape string at index 0
+SL["unesc"] = $=> I.unshift(unesc(I.shift()))
 
 // convert number to Unicode
 SL[">char"] = $=> I.unshift(String.fromCodePoint(I.shift()))
@@ -613,7 +624,7 @@ SL["enclose"] = $=> I.unshift(I.stack[I.st].slice(0))
 SL["usurp"] = $=> I.stack[I.st] = [...shift()]
 
 // apply function to list given by index 0
-SL["'"] = $=> {
+SL["'"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   if(Y.big) Y = Y.split``
@@ -646,7 +657,7 @@ SL["keys"] = $=> I.unshift(Object.keys(I.shift()))
 SL["vals"] = $=> I.unshift(Object.values(I.shift()))
 
 // convert each item in stack to a list containing index and item
-SL["enum"] = $=> I.stack[I.st] = I.stack[I.st].map((a,b)=> [b, a])
+SL["enum"] = $=> I.stack[I.st] = I.stack[I.st].map((a,b)=> [a, b])
 
 // convert each item in object to a list containing index and item
 SL["enom"] = $=>{

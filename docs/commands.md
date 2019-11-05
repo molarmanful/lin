@@ -7,9 +7,7 @@
 - <code>\\</code>: push space
 - <code>n\\</code>: push newline
 - <code>gi</code>: push string at ID given by index 0
-- <code>gi\\</code>: `gi` but parse escape codes
 - <code>gl</code>: `gi` but follow local scoping rules
-- <code>gl\\</code>: `gl` but parse escape codes
 - <code>gs</code>: push stack joined by newlines
 - <code>g@</code>: push line at popped number (0-indexed)
 - <code>g:</code>: get value for key given by index 0 within object at index 1
@@ -110,6 +108,7 @@
 - <code>join</code>: join list over string at index 0
 - <code>++</code>: concatenate top 2 items as strings or lists
 - <code>len</code>: push string length of index 0
+- <code>unesc</code>: unescape string at index 0
 - <code>>char</code>: convert number to Unicode
 - <code><char</code>: convert Unicode to number
 - <code>lower</code>: lowercase
