@@ -51,8 +51,10 @@ INT.form = (x=INT.stack[INT.st],y='\n')=>
   ).reverse().join(y)
 
 INT.parse = x=> parse(x.pop ? x.join` ` : x + '')
-INT.get = x=> INT.stack[INT.st][INT.mod(x, INT.stack[INT.st].length)]
-
+INT.get = x=>{
+  let g = INT.stack[INT.st][INT.mod(x, INT.stack[INT.st].length)]
+  return g.slice ? g.slice() : g
+}
 INT.splice = (x,y=1,z,w=0)=>
   z != undefined ?
     INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)

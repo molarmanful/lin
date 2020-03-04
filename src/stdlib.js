@@ -432,7 +432,7 @@ SL["roll_"] = $=> I.splice(I.shift(), 0, I.shift(), 1)
 SL["trade"] = $=> I.unshift(I.splice(I.shift() - 1, 1, I.shift())[0])
 
 // push index 0
-SL["dup"] = $=> I.unshift(I.stack[I.st][0])
+SL["dup"] = $=> I.unshift(I.get(0))
 
 // pop index 0
 SL["pop"] = $=> I.shift()
@@ -490,7 +490,7 @@ SL["split"] = $=>{
 // join list over string at index 0
 SL["join"] = $=>{
   let X = I.shift()
-  I.unshift(I.shift().slice(0).reverse().join(X))
+  I.unshift(I.shift().slice().reverse().join(X))
 }
 
 // concatenate top 2 items as strings or lists
@@ -618,7 +618,7 @@ SL["wrap_"] = $=>{
 }
 
 // push entire stack as a list
-SL["enclose"] = $=> I.unshift(I.stack[I.st].slice(0))
+SL["enclose"] = $=> I.unshift(I.stack[I.st].slice())
 
 // set current stack to the list at index 0
 SL["usurp"] = $=> I.stack[I.st] = [...shift()]
