@@ -95,6 +95,6 @@ You should be able to see that the stack size bloats because `+` is at the tail 
 In other programming languages that do not implement TCO, recursion could cause a stack overflow. For example, in non-TCO Javascript implementations, the following snippet would cause a stack overflow:
 
 ```
-a=x=>a(x+1)
+a = x=> a(x + 1)
 a(0)
 ```
