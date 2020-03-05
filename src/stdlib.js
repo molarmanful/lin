@@ -669,81 +669,92 @@ SL["enom"] = $=>{
 SL["del"] = $=> delete I.stack[I.st][1][I.shift()]
 
 // `es` on each individual item in the stack
-SL["map"] = $=> {
-  let X = I.shift()
-  I.iter.unshift(I.st)
-  I.addf(a=>{
-    delete I.stack[I.iter[0] + ' ']
-    I.st = I.iter.shift()
+SL["map"] = $=>{
+  I.each((a,i)=>{
+    I.stack[I.iter[0]].unshift(I.shift())
   })
-  I.stack[I.st].map((a,b)=>
-    I.addf(
-      $=>{
-        I.st = I.iter[0] + ' '
-        I.stack[I.st] = [a]
-      },
-      ...I.parse(X),
-      $=> I.stack[I.iter[0]][b] = I.shift()
-    )
-  )
 }
 
 // `es` with accumulator and item; result of each `es` becomes the new accumulator
 SL["fold"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  I.iter.unshift(I.st)
-  I.addf(a=>{
-    delete I.stack[I.iter[0] + ' ']
-    I.st = I.iter.shift()
-    I.stack[I.st] = [Y]
-  })
-  I.stack[I.st].map(a=>
-    I.addf(
-      $=>{
-        I.st = I.iter[0] + ' '
-        I.stack[I.st] = [a,Y]
-      },
-      ...I.parse(X),
-      $=> Y = I.shift()
-    )
+  I.acc(
+    (a, b, i)=> I.shift(),
+    a=>{
+      I.stack[I.st] = [a]
+    }
   )
 }
 
 // remove each item that is falsy after `es`
 SL["filter"] = $=>{
-  I.addf(a=> I.stack[I.st] = I.stack[I.st].filter(a=> a))
-  SL.map()
+  I.each((a,b)=>{
+    let A = I.shift()
+    A && I.stack[I.iter[0]].unshift(A)
+  })
 }
 
 // push 1 if any items return truthy after `es`, else push 0
 SL["any"] = $=>{
-  I.addf(a=> I.stack[I.st] = [+I.stack[I.st].some(a=> a)])
-  SL.map()
+  let X = 0
+  I.each(
+    (a,i)=>{
+      if(!X && I.tru(I.shift())) X = 1
+    },
+    a=>{
+      I.stack[I.st] = [X]
+    }
+  )
 }
 
 // push 1 if all items return truthy after `es`, else push 0
-SL["all"] = $=> {
-  I.addf(a=> I.stack[I.st] = [+I.stack[I.st].every(a=> a)])
-  SL.map()
+SL["all"] = $=>{
+  let X = 1
+  I.each(
+    (a,i)=>{
+      if(X && !I.tru(I.shift())) X = 0
+    },
+    a=>{
+      I.stack[I.st] = [X]
+    }
+  )
 }
 
 // find first item that returns truthy after `es` or undefined on failure
-SL["find"] = $=> {
-  I.addf(a=> I.stack[I.st] = [I.stack[I.st].find(a=> a)])
-  SL.map()
+SL["find"] = $=>{
+  let X
+  I.each(
+    (a,i)=>{
+      let A = I.shift()
+      if(X == undefined && I.tru(A)) X = a
+    },
+    a=>{
+      I.stack[I.st] = [X]
+    }
+  )
 }
 
 // `find` but returns index (or -1 on fail)
 SL["findi"] = $=>{
-  I.addf(a=> I.stack[I.st] = [I.stack[I.st].findIndex(a=> a)])
-  SL.map()
+  let X = -1
+  I.each(
+    (a,i)=>{
+      if(X == undefined && I.tru(I.shift())) X = i
+    },
+    a=>{
+      I.stack[I.st] = [X]
+    }
+  )
 }
 
 // `take` items until `es` returns falsy for an item
 SL["takew"] = $=>{
-  I.addf(a=> I.stack[I.st] = _.takeWhile(I.stack[I.st]))
-  SL.map()
+  let X = 1
+  I.each(
+    (a,i)=>{
+      if(X && I.tru(I.shift())) I.stack[I.iter[0]].unshift(a)
+      else X = 0
+    }
+  )
 }
 
 // `drop` items until `es` returns falsy for an item
@@ -762,6 +773,10 @@ SL["sort"] = $=>{
 SL["part"] = $=>{
   I.addf(a=> I.stack[I.st] = _.partition(I.stack[I.st]))
   SL.map()
+}
+
+SL["zip"] = $=>{
+
 }
 
 export {SL}

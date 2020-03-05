@@ -64,6 +64,51 @@ INT.shift = x=> INT.stack[INT.st].shift()
 INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
 INT.concat = (x, y)=> (x + '').concat(y)
 
+INT.each = (f=$=>{},g=$=>{})=>{
+  let X = INT.shift()
+  let O = INT.stack[INT.st].slice()
+  INT.stack[INT.st] = []
+  INT.iter.unshift(INT.st)
+  INT.addf(a=>{
+    delete INT.stack[INT.iter[0] + ' ']
+    INT.st = INT.iter.shift()
+    g()
+  })
+  O.map((a,i)=>
+    INT.addf(
+      $=>{
+        INT.st = INT.iter[0] + ' '
+        INT.stack[INT.st] = [a]
+      },
+      ...INT.parse(X),
+      $=> f(a, i)
+    )
+  )
+}
+
+INT.acc = (f=$=>{},g=$=>{})=>{
+  let X = INT.shift()
+  let Y = INT.shift()
+  INT.iter.unshift(INT.st)
+  INT.addf(a=>{
+    delete INT.stack[INT.iter[0] + ' ']
+    INT.st = INT.iter.shift()
+    g(Y)
+  })
+  INT.stack[INT.st].map((a,i)=>
+    INT.addf(
+      $=>{
+        INT.st = INT.iter[0] + ' '
+        INT.stack[INT.st] = [a, Y]
+      },
+      ...INT.parse(X),
+      $=>{
+        Y = f(a, Y, i)
+      }
+    )
+  )
+}
+
 // convenience functions for call stack
 
 INT.addc = x=>{
