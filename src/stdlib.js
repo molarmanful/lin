@@ -502,7 +502,7 @@ SL["++"] = $=>{
 // push string length of index 0
 SL["len"] = $=>{
   let X = I.shift()
-  I.unshift(X.toFixed ? (X + '').length : X.length)
+  I.unshift((X.toFixed ? X + '' : X).length)
 }
 
 // unescape string at index 0
@@ -659,10 +659,24 @@ SL["vals"] = $=> I.unshift(Object.values(I.shift()))
 // convert each item in stack to a list containing index and item
 SL["enum"] = $=> I.stack[I.st] = I.stack[I.st].map((a,b)=> [a, b])
 
-// convert each item in object to a list containing index and item
+// convert `enum`-style stack into a normal stack
+SL["denum"] = $=>{
+  let X = _.sortBy(I.stack[I.st].filter(a=> a.length > 1), a=> a[1])
+  I.stack[I.st] = []
+  X.map(a=> I.unshift(a[0]))
+}
+
+// convert object to a list containing each key-value pair
 SL["enom"] = $=>{
   let X = I.shift()
   I.unshift(Object.keys(X).map(a=> [X[a], a]))
+}
+
+// convert `enom`-style list into object
+SL["denom"] = $=>{
+  let X = I.shift()
+  I.unshift({})
+  X.map(a=> I.stack[I.st][0][a[1]] = a[0])
 }
 
 // remove key at index 0 from object at index 1
@@ -700,7 +714,7 @@ SL["any"] = $=>{
     (a,i)=>{
       if(!X && I.tru(I.shift())) X = 1
     },
-    a=>{
+    $=>{
       I.stack[I.st] = [X]
     }
   )
@@ -713,7 +727,7 @@ SL["all"] = $=>{
     (a,i)=>{
       if(X && !I.tru(I.shift())) X = 0
     },
-    a=>{
+    $=>{
       I.stack[I.st] = [X]
     }
   )
@@ -727,7 +741,7 @@ SL["find"] = $=>{
       let A = I.shift()
       if(X == undefined && I.tru(A)) X = a
     },
-    a=>{
+    $=>{
       I.stack[I.st] = [X]
     }
   )
@@ -740,7 +754,7 @@ SL["findi"] = $=>{
     (a,i)=>{
       if(X == undefined && I.tru(I.shift())) X = i
     },
-    a=>{
+    $=>{
       I.stack[I.st] = [X]
     }
   )
@@ -749,34 +763,61 @@ SL["findi"] = $=>{
 // `take` items until `es` returns falsy for an item
 SL["takew"] = $=>{
   let X = 1
-  I.each(
-    (a,i)=>{
-      if(X && I.tru(I.shift())) I.stack[I.iter[0]].unshift(a)
-      else X = 0
-    }
-  )
+  I.each((a,i)=>{
+    if(X && I.tru(I.shift())) I.stack[I.iter[0]].unshift(a)
+    else X = 0
+  })
 }
 
 // `drop` items until `es` returns falsy for an item
 SL["dropw"] = $=>{
-  I.addf(a=> I.stack[I.st] = _.dropWhile(I.stack[I.st]))
-  SL.map()
+  let X = 0
+  I.each((a,i)=>{
+    if(X || I.tru(I.shift())){
+      X = 1
+      I.stack[I.iter[0]].unshift(a)
+    }
+  })
 }
 
 // sort items in ascending order based on `es`
 SL["sort"] = $=>{
-  I.addf(a=> I.stack[I.st] = _.sortBy(I.stack[I.st]).reverse())
-  SL.map()
+  let X = []
+  let Y = []
+  I.each(
+    (a,i)=>{
+      I.stack[I.iter[0]].unshift(a)
+      X.unshift(I.shift())
+      Y.unshift(i)
+    },
+    $=>{
+      I.stack[I.st] = _.sortBy(Y, a=> X[a]).map(a=> I.stack[I.st][a]).reverse()
+    }
+  )
 }
 
-// separate items into 2 lists based on whether they return truthy after `es`
+// separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
 SL["part"] = $=>{
-  I.addf(a=> I.stack[I.st] = _.partition(I.stack[I.st]))
-  SL.map()
+  let X = []
+  let Y = []
+  I.each(
+    (a,i)=>{
+      if(I.tru(I.shift())) X.unshift(a)
+      else Y.unshift(a)
+    },
+    $=>{
+      I.stack[I.st] = [X, Y]
+    }
+  )
 }
 
+// groups multiple arrays' items together by indices
 SL["zip"] = $=>{
-
+  let O = _.sortBy(I.stack[I.st], a=> a.length)
+  I.stack[I.st] = []
+  Array.from(O[0], (_,i)=>{
+    I.stack[I.st].push(O.map(a=> a[i]))
+  })
 }
 
 export {SL}
