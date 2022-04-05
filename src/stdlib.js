@@ -41,7 +41,7 @@ SL["()"] = $=> I.unshift('')
 // initialize empty list
 SL["[]"] = $=> I.unshift([])
 
-// initialize empty list
+// initialize empty object
 SL["{}"] = $=> I.unshift({})
 
 // push space

@@ -3,7 +3,7 @@
 
 - <code>()</code>: push empty string
 - <code>[]</code>: initialize empty list
-- <code>{}</code>: initialize empty list
+- <code>{}</code>: initialize empty object
 - <code>\\</code>: push space
 - <code>n\\</code>: push newline
 - <code>gi</code>: push string at ID given by index 0
