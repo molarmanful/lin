@@ -115,7 +115,7 @@
 - <code>upper</code>: uppercase
 - <code>repeat</code>: repeat string by index 0
 - <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
-- <code>padr</code>: `pad` but only from the left
+- <code>padl</code>: `pad` but only from the left
 - <code>padr</code>: `pad` but only from the right
 - <code>stack</code>: execute string given by index 1 on a stack with name given by index 0
 - <code>push</code>: push index 1 to another stack with name given by index 0
