@@ -535,7 +535,7 @@ SL["pad"] = $=>{
 }
 
 // `pad` but only from the left
-SL["padr"] = $=>{
+SL["padl"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   let Z = I.shift()
