@@ -551,7 +551,7 @@ SL["padr"] = $=>{
 }
 
 // execute string given by index 1 on a stack with name given by index 0
-SL["stack"] = $=>{
+SL["'s"] = $=>{
   I.iter.unshift(I.st)
   let X = I.shift()
   let Y = I.shift()
@@ -568,11 +568,23 @@ SL["push"] = $=>{
   I.stack[X].unshift(I.shift())
 }
 
+// push current stack to another stack with name given by index 0
+SL["pushs"] = $=>{
+  let X = I.shift()
+  I.stack[X] = I.stack[I.st]
+}
+
 // push top item of another stack with name given by index 0
 SL["pull"] = $=>{
   let X = I.shift()
   if(!I.stack[X]) I.stack[X] = []
   I.unshift(I.stack[X].shift())
+}
+
+// pull stack with name given by index 0 to current stack
+SL["pulls"] = $=>{
+  let X = I.shift()
+  I.stack[I.st] = I.stack[X]
 }
 
 // push stack length

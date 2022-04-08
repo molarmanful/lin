@@ -117,9 +117,11 @@
 - <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
 - <code>padl</code>: `pad` but only from the left
 - <code>padr</code>: `pad` but only from the right
-- <code>stack</code>: execute string given by index 1 on a stack with name given by index 0
+- <code>'s</code>: execute string given by index 1 on a stack with name given by index 0
 - <code>push</code>: push index 1 to another stack with name given by index 0
+- <code>pushs</code>: push current stack to another stack with name given by index 0
 - <code>pull</code>: push top item of another stack with name given by index 0
+- <code>pulls</code>: pull stack with name given by index 0 to current stack
 - <code>size</code>: push stack length
 - <code>uniq</code>: remove all duplicates in current stack
 - <code>take</code>: keep top _n_ items, where _n_ is index 0
