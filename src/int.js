@@ -48,7 +48,7 @@ INT.form = (x=INT.stack[INT.st],y='\n')=>
         Object.keys(a).map(b=> INT.form([b]) + ': ' + INT.form([a[b]])).join` `
       } }`
     : a == undefined ?
-      'UNDEF'
+      '$U'
     : a
   ).reverse().join(y)
 

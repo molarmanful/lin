@@ -16,7 +16,7 @@
 - <code>sl</code>: `si` but follow local scoping rules
 - <code>:</code>: set a key-value pair in an object, where index 0 is the key and index 1 is the value
 - <code>::</code>: bring ID at index 0 as string into global scope
-- <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
+- <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
 - <code>es</code>: execute string at index 0
 - <code>e*</code>: `es` on index 1 for number of times given by index 0
 - <code>e&</code>: `es` if index 0 is truthy
@@ -33,6 +33,8 @@
 - <code>inh</code>: push user input without echoing
 - <code>out</code>: output index 0 to STDOUT
 - <code>outln</code>: output index 0 as a line to STDOUT
+- <code>$U</code>: undefined
+- <code>$S</code>: current stack name
 - <code>$E</code>: Euler's constant
 - <code>$Pi</code>: Pi
 - <code>E</code>: `(index 1)*10^(index 0)`
@@ -78,6 +80,7 @@
 - <code>>></code>: bitwise right I.shift, sign-propagating
 - <code>>>></code>: bitwise right I.shift, zero-fill
 - <code>=</code>: equal
+- <code>==</code>: strict equal
 - <code>!=</code>: not equal
 - <code>></code>: greater than
 - <code><</code>: less than
@@ -107,7 +110,8 @@
 - <code>split</code>: split string at index 1 over string at index 0
 - <code>join</code>: join list over string at index 0
 - <code>++</code>: concatenate top 2 items as strings or lists
-- <code>len</code>: push string length of index 0
+- <code>len</code>: push length of index 0
+- <code>dep</code>: push depth of index 0
 - <code>unesc</code>: unescape string at index 0
 - <code>>char</code>: convert number to Unicode
 - <code><char</code>: convert Unicode to number
@@ -126,17 +130,18 @@
 - <code>uniq</code>: remove all duplicates in current stack
 - <code>take</code>: keep top _n_ items, where _n_ is index 0
 - <code>drop</code>: pop top _n_ items, where _n_ is index 0
-- <code>merge</code>: push items of another stack with name given by index 0
-- <code>union</code>: set union with current stack and stack with name given by index 0
-- <code>intersection</code>: set intersection with current stack and stack with name given by index 0
-- <code>difference</code>: set difference with current stack and stack with name given by index 0
+- <code>union</code>: set union of lists at index 0 and index 1
+- <code>inter</code>: set intersection of lists at index 0 and index 1
+- <code>diff</code>: set difference of lists at index 0 and index 1
 - <code>wrap</code>: wrap index 0 in a list
 - <code>wrap_</code>: opposite of `wrap`; take all items in list at index 0 and push to parent stack
-- <code>enclose</code>: push entire stack as a list
+- <code>enclose</code>: enclose entire stack into a list
+- <code>dups</code>: push entire stack as list
 - <code>usurp</code>: set current stack to the list at index 0
 - <code>'</code>: apply function to list given by index 0
 - <code>flat</code>: `wrap_` all elements
 - <code>chunk</code>: split stack into lists of length given by index 0
+- <code>window</code>: split stack into consecutive slices given by index 0
 - <code>keys</code>: get keys of object/list at index 0
 - <code>vals</code>: get values of object/list at index 0
 - <code>enum</code>: convert each item in stack to a list containing index and item
@@ -155,4 +160,4 @@
 - <code>dropw</code>: `drop` items until `es` returns falsy for an item
 - <code>sort</code>: sort items in ascending order based on `es`
 - <code>part</code>: separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
-- <code>zip</code>: groups multiple arrays' items together by indices
+- <code>zip</code>: group multiple arrays' items together by indices

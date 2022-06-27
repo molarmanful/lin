@@ -73,7 +73,7 @@ SL["g@"] = $=> I.unshift(I.lines[I.shift()])
 // get value for key given by index 0 within object at index 1
 SL["g:"] = $=>{
   let X = I.shift()
-  I.unshift(I.shift()[X])
+  I.unshift(_.get(I.shift(), X.toFixed ? +X : X))
 }
 
 // convert index 0 to its string representation
@@ -103,13 +103,14 @@ SL[":"] = $=>{
 // bring ID at index 0 as string into global scope
 SL["::"] = $=> I.id()
 
-// pushes 1 if index 0 is a number, 2 if string, 3 if list, and 0 if anything else (ex.: undefined)
+// pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
 SL["type"] = $=>{
   let X = I.shift()
   I.unshift(
     X.pop ? 3
     : X.big ? 2
     : X.toFixed && !isNaN(X) ? 1
+    : typeof X == 'object' ? 4
     : 0
   )
 }
@@ -201,6 +202,12 @@ SL["out"] = $=> process.stdout.write('' + I.shift())
 
 // output index 0 as a line to STDOUT
 SL["outln"] = $=> process.stdout.write('' + I.shift() + '\n')
+
+// undefined
+SL["$U"] = $=> I.unshift(undefined)
+
+// current stack name
+SL["$S"] = $=> I.unshift(I.st)
 
 // Euler's constant
 SL["$E"] = $=> I.unshift(dec.exp(1))
@@ -382,6 +389,9 @@ SL[">>>"] = $=>{
 // equal
 SL["="] = $=> I.unshift(+(I.shift() == I.shift()))
 
+// strict equal
+SL["=="] = $=> I.unshift(+(I.shift() === I.shift()))
+
 // not equal
 SL["!="] = $=> I.unshift(+(I.shift() != I.shift()))
 
@@ -499,10 +509,26 @@ SL["++"] = $=>{
   I.unshift(I.concat(I.shift(), X))
 }
 
-// push string length of index 0
+// push length of index 0
 SL["len"] = $=>{
   let X = I.shift()
   I.unshift((X.toFixed ? X + '' : X).length)
+}
+
+SL["lens"] = $=>{
+  SL.dups()
+  SL.len()
+}
+
+// push depth of index 0
+SL["dep"] = $=>{
+  let d = x=> Object(x) === x ? 1 + Math.max(0, ..._.map(x, d)) : 0
+  I.unshift(d(I.shift()))
+}
+
+SL["deps"] = $=>{
+  SL.dups()
+  SL.dep()
 }
 
 // unescape string at index 0
@@ -571,7 +597,7 @@ SL["push"] = $=>{
 // push current stack to another stack with name given by index 0
 SL["pushs"] = $=>{
   let X = I.shift()
-  I.stack[X] = I.stack[I.st]
+  I.stack[X].unshift(...I.stack[I.st])
 }
 
 // push top item of another stack with name given by index 0
@@ -584,7 +610,7 @@ SL["pull"] = $=>{
 // pull stack with name given by index 0 to current stack
 SL["pulls"] = $=>{
   let X = I.shift()
-  I.stack[I.st] = I.stack[X]
+  I.unshift(...I.stack[X])
 }
 
 // push stack length
@@ -599,26 +625,14 @@ SL["take"] = $=> I.stack[I.st] = _.take(I.stack[I.st],I.shift())
 // pop top _n_ items, where _n_ is index 0
 SL["drop"] = $=> I.stack[I.st] = _.drop(I.stack[I.st],I.shift())
 
-// push items of another stack with name given by index 0
-SL["merge"] = $=> I.unshift(...I.stack[I.shift()])
+// set union of lists at index 0 and index 1
+SL["union"] = $=> I.unshift(_.union(I.shift(), I.shift()))
 
-// set union with current stack and stack with name given by index 0
-SL["union"] = $=>{
-  let X = I.shift()
-  I.stack[I.st] = _.union(I.stack[X], I.stack[I.st])
-}
+// set intersection of lists at index 0 and index 1
+SL["inter"] = $=> I.unshift(_.intersection(I.shift(), I.shift()))
 
-// set intersection with current stack and stack with name given by index 0
-SL["intersection"] = $=>{
-  let X = I.shift()
-  I.stack[I.st] = _.intersection(I.stack[X], I.stack[I.st])
-}
-
-// set difference with current stack and stack with name given by index 0
-SL["difference"] = $=>{
-  let X = I.shift()
-  I.stack[I.st] = _.difference(I.stack[I.st], I.stack[X])
-}
+// set difference of lists at index 0 and index 1
+SL["diff"] = $=> I.unshift(_.difference(I.shift(), I.shift()))
 
 // wrap index 0 in a list
 SL["wrap"] = $=> I.unshift([I.shift()])
@@ -629,11 +643,14 @@ SL["wrap_"] = $=>{
   I.unshift(...X.pop ? X : [X])
 }
 
-// push entire stack as a list
-SL["enclose"] = $=> I.unshift(I.stack[I.st].slice())
+// enclose entire stack into a list
+SL["enclose"] = $=> I.stack[I.st] = [I.stack[I.st].slice()]
+
+// push entire stack as list
+SL["dups"] = $=> I.unshift(I.stack[I.st].slice())
 
 // set current stack to the list at index 0
-SL["usurp"] = $=> I.stack[I.st] = [...shift()]
+SL["usurp"] = $=> I.stack[I.st] = [...I.shift()]
 
 // apply function to list given by index 0
 SL["'"] = $=>{
@@ -660,6 +677,14 @@ SL["flat"] = $=> I.stack[I.st] = _.flatten(I.stack[I.st])
 SL["chunk"] = $=>{
   let X = I.shift()
   I.stack[I.st] = _.chunk(I.stack[I.st], X)
+}
+
+// split stack into consecutive slices given by index 0
+SL["window"] = $=>{
+  let X = I.shift()
+  I.stack[I.st] = I.stack[I.st].flatMap((a,i,s)=>
+    i > s.length - X ? [] : [s.slice(i, i + X)]
+  )
 }
 
 // get keys of object/list at index 0
@@ -823,9 +848,9 @@ SL["part"] = $=>{
   )
 }
 
-// groups multiple arrays' items together by indices
+// group multiple arrays' items together by indices
 SL["zip"] = $=>{
-  let O = _.sortBy(I.stack[I.st], a=> a.length)
+  let O = I.stack[I.st]
   I.stack[I.st] = []
   Array.from(O[0], (_,i)=>{
     I.stack[I.st].push(O.map(a=> a[i]))
