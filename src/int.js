@@ -1,9 +1,11 @@
 // modules
-import {dec, parse, SL} from './bridge.js'
+import {parse, SL} from './bridge.js'
 
 let INT = {}
 
 // convenience functions for stdlib
+
+INT.print = x=> (console.log(x), x)
 
 INT.id = (x=INT.shift())=>{
   let y = RegExp(`^ *#${x}`)
@@ -19,12 +21,12 @@ INT.getscope = (x=INT.shift())=>{
   return y ? y[x] : INT.ids[x]
 }
 
-INT.mod = (x,y)=> dec.mod(dec.add(dec.mod(x, y), y), y)
+INT.mod = (x, y)=> (x % y + y) % y
 
-INT.range = (x,y)=>{
+INT.range = (x, y)=>{
   let res = [x]
-  let dir = dec.sign(y - x)
-  let c = dec.abs(y - x) - 1
+  let dir = Math.sign(y - x)
+  let c = Math.abs(y - x) - 1
   while(c > 0){
     x -= -dir
     res.push(x)
@@ -35,7 +37,7 @@ INT.range = (x,y)=>{
 
 INT.tru = x=> x.toFixed ? x != 0 : x
 
-INT.form = (x=INT.stack[INT.st],y='\n')=>
+INT.form = (x=INT.stack[INT.st], y='\n')=>
   x.map(a=>
     a && a.toFixed ?
       +a
@@ -57,7 +59,7 @@ INT.get = x=>{
   let g = INT.stack[INT.st][INT.mod(x, INT.stack[INT.st].length)]
   return g.slice ? g.slice() : g
 }
-INT.splice = (x,y=1,z,w=0)=>
+INT.splice = (x, y=1, z, w=0)=>
   z != undefined ?
     INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)
   : INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y)
@@ -66,7 +68,7 @@ INT.shift = x=> INT.stack[INT.st].shift()
 INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
 INT.concat = (x, y)=> (x + '').concat(y)
 
-INT.each = (f=$=>{},g=$=>{})=>{
+INT.each = (f=$=>{}, g=$=>{})=>{
   let X = INT.shift()
   let O = INT.stack[INT.st].slice()
   INT.stack[INT.st] = []
@@ -88,25 +90,23 @@ INT.each = (f=$=>{},g=$=>{})=>{
   )
 }
 
-INT.acc = (f=$=>{},g=$=>{})=>{
+INT.acc = (f=$=>{}, g=$=>{}, a=false)=>{
   let X = INT.shift()
-  let Y = INT.shift()
+  let Y = a ? INT.shift() : INT.stack[INT.st].pop()
   INT.iter.unshift(INT.st)
   INT.addf(a=>{
     delete INT.stack[INT.iter[0] + ' ']
     INT.st = INT.iter.shift()
     g(Y)
   })
-  INT.stack[INT.st].map((a,i)=>
+  INT.stack[INT.st].map((a, i)=>
     INT.addf(
       $=>{
         INT.st = INT.iter[0] + ' '
         INT.stack[INT.st] = [a, Y]
       },
       ...INT.parse(X),
-      $=>{
-        Y = f(a, Y, i)
-      }
+      $=> Y = f(a, Y, i)
     )
   )
 }
@@ -127,7 +127,7 @@ INT.getf = _=>{
 }
 
 // main exec function
-INT.exec = (x,y)=>{
+INT.exec = (x, y)=>{
   x += ''
 
   // reuse stack frame

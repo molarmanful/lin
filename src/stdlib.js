@@ -1,4 +1,4 @@
-import {fs, cp, unesc, _, dec, INT as I} from './bridge.js'
+import {fs, cp, rls, unesc, _, INT as I} from './bridge.js'
 let SL = {}
 
 SL["("] = $=>{
@@ -70,10 +70,20 @@ SL["gs"] = $=> I.unshift(I.form())
 // push line at popped number (0-indexed)
 SL["g@"] = $=> I.unshift(I.lines[I.shift()])
 
+//  push next line
+SL["g;"] = $=>{
+  I.unshift(I.lines[I.lns[0] - -1])
+}
+
+//  push previous line
+SL["g;;"] = $=>{
+  I.unshift(I.lines[I.lns[0] - 1])
+}
+
 // get value for key given by index 0 within object at index 1
 SL["g:"] = $=>{
-  let X = I.shift()
-  I.unshift(_.get(I.shift(), X.toFixed ? +X : X))
+  SL.swap()
+  I.unshift(_.get(I.shift(), I.shift()))
 }
 
 // convert index 0 to its string representation
@@ -118,7 +128,7 @@ SL["type"] = $=>{
 // execute string at index 0
 SL["es"] = $=> I.exec(I.shift(), 1)
 
-// `es` on index 1 for number of times given by index 0
+// `es` for number of times given by index 0
 SL["e*"] = $=>{
   let X = I.shift()
   let Y = I.shift()
@@ -192,10 +202,10 @@ SL["read"] = $=> I.unshift(fs.readFileSync(I.shift()) + '')
 SL["write"] = $=> fs.writeFileSync(I.shift(), I.shift())
 
 // push user input
-SL["in"] = $=> I.unshift(('' + cp.execSync('read x; echo $x', {stdio: [process.stdin]})).slice(0, -1))
+SL["in"] = $=> I.unshift(rls.question(''))
 
 // push user input without echoing
-SL["inh"] = $=> I.unshift(('' + cp.execSync('read -s x; echo $x', {stdio: [process.stdin]})).slice(0, -1))
+SL["inh"] = $=> I.unshift(rls.question('',{hideEchoBack: true, mask: ''}))
 
 // output index 0 to STDOUT
 SL["out"] = $=> process.stdout.write('' + I.shift())
@@ -206,14 +216,17 @@ SL["outln"] = $=> process.stdout.write('' + I.shift() + '\n')
 // undefined
 SL["$U"] = $=> I.unshift(undefined)
 
+// current line number
+SL["$L"] = $=> I.unshift(I.lns[0])
+
 // current stack name
 SL["$S"] = $=> I.unshift(I.st)
 
 // Euler's constant
-SL["$E"] = $=> I.unshift(dec.exp(1))
+SL["$E"] = $=> I.unshift(Math.E)
 
 // Pi
-SL["$Pi"] = $=> I.unshift(dec.acos(-1))
+SL["$Pi"] = $=> I.unshift(Math.PI)
 
 // `(index 1)*10^(index 0)`
 SL["E"] = $=>{
@@ -224,24 +237,24 @@ SL["E"] = $=>{
 }
 
 // negation
-SL["_"] = $=> I.unshift(dec.sub(0, I.shift()))
+SL["_"] = $=> I.unshift(-I.shift())
 
 // addition
-SL["+"] = $=> I.unshift(dec.add(I.shift(), I.shift()))
+SL["+"] = $=> I.unshift(I.shift() - - I.shift())
 
 // subtraction
 SL["-"] = $=>{
   SL.swap()
-  I.unshift(dec.sub(I.shift(), I.shift()))
+  I.unshift(I.shift()-I.shift())
 }
 
 // multiplication
-SL["*"] = $=> I.unshift(dec.mul(I.shift(), I.shift()))
+SL["*"] = $=> I.unshift(I.shift() * I.shift())
 
 // division
 SL["/"] = $=>{
   SL.swap()
-  I.unshift(dec.div(I.shift(), I.shift()))
+  I.unshift(I.shift() / I.shift())
 }
 
 // integer division
@@ -268,83 +281,83 @@ SL["/%"] = $=>{
 // exponentiation
 SL["^"] = $=>{
   SL.swap()
-  I.unshift(dec.pow(I.shift(), I.shift()))
+  I.unshift(I.shift() ** I.shift())
 }
 
 // absolute value
-SL["abs"] = $=> I.unshift(dec.abs(I.shift()))
+SL["abs"] = $=> I.unshift(Math.abs(I.shift()))
 
 // sign function
-SL["sign"] = $=> I.unshift(dec.sign(I.shift()))
+SL["sign"] = $=> I.unshift(Math.sign(I.shift()))
 
 // push random number between 0 and 1
-SL["rand"] = $=> I.unshift(dec.random())
+SL["rand"] = $=> I.unshift(Math.random())
 
 // push milliseconds since January 1, 1970 00:00:00.000
 SL["time"] = $=> I.unshift(Date.now())
 
 // natural logarithm
-SL["ln"] = $=> I.unshift(dec.ln(I.shift()))
+SL["ln"] = $=> I.unshift(Math.ln(I.shift()))
 
 // base-2 logarithm
-SL["logII"] = $=> I.unshift(dec.log2(I.shift()))
+SL["logII"] = $=> I.unshift(Math.log2(I.shift()))
 
 // base-10 logarithm
-SL["logX"] = $=> I.unshift(dec.log10(I.shift()))
+SL["logX"] = $=> I.unshift(Math.log10(I.shift()))
 
 // logarithm with base at index 0
 SL["log"] = $=>{
   SL.swap()
-  I.unshift(dec.log(I.shift(), I.shift()))
+  I.unshift(Math.log(I.shift(), I.shift()))
 }
 
 // sine
-SL["sin"] = $=> I.unshift(dec.sin(I.shift()))
+SL["sin"] = $=> I.unshift(Math.sin(I.shift()))
 
 // cosine
-SL["cos"] = $=> I.unshift(dec.cos(I.shift()))
+SL["cos"] = $=> I.unshift(Math.cos(I.shift()))
 
 // tangent
-SL["tan"] = $=> I.unshift(dec.tan(I.shift()))
+SL["tan"] = $=> I.unshift(Math.tan(I.shift()))
 
 // hyperbolic sine
-SL["sinh"] = $=> I.unshift(dec.sinh(I.shift()))
+SL["sinh"] = $=> I.unshift(Math.sinh(I.shift()))
 
 // hyperbolic cosine
-SL["cosh"] = $=> I.unshift(dec.cosh(I.shift()))
+SL["cosh"] = $=> I.unshift(Math.cosh(I.shift()))
 
 // hyperbolic tangent
-SL["tanh"] = $=> I.unshift(dec.tanh(I.shift()))
+SL["tanh"] = $=> I.unshift(Math.tanh(I.shift()))
 
 // inverse sine
-SL["asin"] = $=> I.unshift(dec.asin(I.shift()))
+SL["asin"] = $=> I.unshift(Math.asin(I.shift()))
 
 // inverse cosine
-SL["acos"] = $=> I.unshift(dec.acos(I.shift()))
+SL["acos"] = $=> I.unshift(Math.acos(I.shift()))
 
 // inverse tangent
-SL["atan"] = $=> I.unshift(dec.atan(I.shift()))
+SL["atan"] = $=> I.unshift(Math.atan(I.shift()))
 
 // inverse tangent with coordinates (x,y) to (index 1, index 0)
 SL["atant"] = $=>{
   SL.swap()
-  I.unshift(dec.atan(I.shift(), I.shift()))
+  I.unshift(Math.atan2(I.shift(), I.shift()))
 }
 
 // inverse hyperbolic sine
-SL["asinh"] = $=> I.unshift(dec.asinh(I.shift()))
+SL["asinh"] = $=> I.unshift(Math.asinh(I.shift()))
 
 // inverse hyperbolic cosine
-SL["acosh"] = $=> I.unshift(dec.acosh(I.shift()))
+SL["acosh"] = $=> I.unshift(Math.acosh(I.shift()))
 
 // inverse hyperbolic tangent
-SL["atanh"] = $=> I.unshift(dec.atanh(I.shift()))
+SL["atanh"] = $=> I.unshift(Math.atanh(I.shift()))
 
 // push max
-SL["max"] = $=> I.unshift(dec.max(...I.stack[I.st]))
+SL["max"] = $=> I.unshift(Math.max(...I.stack[I.st]))
 
 // push min
-SL["min"] = $=> I.unshift(dec.min(...I.stack[I.st]))
+SL["min"] = $=> I.unshift(Math.min(...I.stack[I.st]))
 
 // exclusive range
 SL["range"] = $=>{
@@ -374,13 +387,13 @@ SL["<<"] = $=>{
   I.unshift(I.shift() << I.shift())
 }
 
-// bitwise right I.shift, sign-propagating
+// bitwise right shift, sign-propagating
 SL[">>"] = $=> {
   SL.swap()
   I.unshift(I.shift() >> I.shift())
 }
 
-// bitwise right I.shift, zero-fill
+// bitwise right shift, zero-fill
 SL[">>>"] = $=>{
   SL.swap()
   I.unshift(I.shift() >>> I.shift())
@@ -415,16 +428,16 @@ SL["<=>"] = $=>{
 }
 
 // round towards -∞
-SL["floor"] = $=> I.unshift(dec.floor(I.shift()))
+SL["floor"] = $=> I.unshift(Math.floor(I.shift()))
 
 // round towards 0
-SL["trunc"] = $=> I.unshift(dec.trunc(I.shift()))
+SL["trunc"] = $=> I.unshift(Math.trunc(I.shift()))
 
 // round towards or away from 0 depending on < or >= .5
-SL["round"] = $=> I.unshift(dec.round(I.shift()))
+SL["round"] = $=> I.unshift(Math.round(I.shift()))
 
 // round towards ∞
-SL["ceil"] = $=> I.unshift(dec.ceil(I.shift()))
+SL["ceil"] = $=> I.unshift(Math.ceil(I.shift()))
 
 // `dup` but with any index
 SL["pick"] = $=> I.unshift(I.get(I.shift()))
@@ -512,9 +525,10 @@ SL["++"] = $=>{
 // push length of index 0
 SL["len"] = $=>{
   let X = I.shift()
-  I.unshift((X.toFixed ? X + '' : X).length)
+  I.unshift((X + '').length)
 }
 
+// push stack length
 SL["lens"] = $=>{
   SL.dups()
   SL.len()
@@ -547,9 +561,11 @@ SL["lower"] = $=> I.unshift(I.shift().toLowerCase())
 SL["upper"] = $=> I.unshift(I.shift().toUpperCase())
 
 // repeat string by index 0
-SL["repeat"] = $=>{
-  SL.swap()
-  I.unshift((I.shift() + '').repeat(I.shift()))
+SL["rep"] = $=>{
+  let X = I.shift()
+  let Y = I.shift()
+  if(Y.big || Y.toFixed) I.unshift(_.repeat(Y, X))
+  else I.unshift(_.range(X).flatMap(a=> Y))
 }
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
@@ -620,10 +636,16 @@ SL["size"] = $=> I.unshift(I.stack[I.st].length)
 SL["uniq"] = $=> I.stack[I.st] = _.uniq(I.stack[I.st])
 
 // keep top _n_ items, where _n_ is index 0
-SL["take"] = $=> I.stack[I.st] = _.take(I.stack[I.st],I.shift())
+SL["take"] = $=> {
+  let X = I.shift()
+  I.stack[I.st] = (X < 0 ?_.takeRight : _.take)(I.stack[I.st], Math.abs(X))
+}
 
 // pop top _n_ items, where _n_ is index 0
-SL["drop"] = $=> I.stack[I.st] = _.drop(I.stack[I.st],I.shift())
+SL["drop"] = $=> {
+  let X = I.shift()
+  I.stack[I.st] = (X < 0 ?_.dropRight : _.drop)(I.stack[I.st], Math.abs(X))
+}
 
 // set union of lists at index 0 and index 1
 SL["union"] = $=> I.unshift(_.union(I.shift(), I.shift()))
@@ -636,6 +658,9 @@ SL["diff"] = $=> I.unshift(_.difference(I.shift(), I.shift()))
 
 // wrap index 0 in a list
 SL["wrap"] = $=> I.unshift([I.shift()])
+
+// wrap first _n_ items in a list, where _n_ is index 0
+SL["wraps"] = $=> I.unshift(I.splice(0, I.shift()))
 
 // opposite of `wrap`; take all items in list at index 0 and push to parent stack
 SL["wrap_"] = $=>{
@@ -656,8 +681,7 @@ SL["usurp"] = $=> I.stack[I.st] = [...I.shift()]
 SL["'"] = $=>{
   let X = I.shift()
   let Y = I.shift()
-  if(Y.big) Y = Y.split``
-  else if(Y.toFixed) Y = (Y + '').split``
+  if(Y.big || Y.toFixed) Y = (Y + '').split``
   I.iter.unshift(I.st)
   I.st = I.iter[0]+'\n'
   I.stack[I.st] = Y
@@ -680,7 +704,7 @@ SL["chunk"] = $=>{
 }
 
 // split stack into consecutive slices given by index 0
-SL["window"] = $=>{
+SL["wins"] = $=>{
   let X = I.shift()
   I.stack[I.st] = I.stack[I.st].flatMap((a,i,s)=>
     i > s.length - X ? [] : [s.slice(i, i + X)]
@@ -730,9 +754,39 @@ SL["map"] = $=>{
 SL["fold"] = $=>{
   I.acc(
     (a, b, i)=> I.shift(),
-    a=>{
-      I.stack[I.st] = [a]
-    }
+    a=> I.stack[I.st] = [a]
+  )
+}
+
+// `fold` with initial accumulator
+SL["folda"] = $=>{
+  I.acc(
+    (a, b, i)=> I.shift(),
+    a=> I.stack[I.st] = [a],
+    true
+  )
+}
+
+// `fold` with intermediate values
+SL["scan"] = $=>{
+  let O = []
+  I.acc(
+    (a, b, i)=> (O.unshift(b), I.shift()),
+    a=> I.stack[I.st] = [a, ...O]
+  )
+}
+
+// `scan` with initial accumulator
+SL["scana"] = $=>{
+  let O = []
+  I.acc(
+    (a, b, i)=>{
+      let X = I.shift()
+      O.unshift(X)
+      return X
+    },
+    a=> I.stack[I.st] = O,
+    true
   )
 }
 
@@ -751,9 +805,7 @@ SL["any"] = $=>{
     (a,i)=>{
       if(!X && I.tru(I.shift())) X = 1
     },
-    $=>{
-      I.stack[I.st] = [X]
-    }
+    $=> I.unshift(X)
   )
 }
 
@@ -764,9 +816,7 @@ SL["all"] = $=>{
     (a,i)=>{
       if(X && !I.tru(I.shift())) X = 0
     },
-    $=>{
-      I.stack[I.st] = [X]
-    }
+    $=> I.unshift(X)
   )
 }
 
@@ -856,5 +906,11 @@ SL["zip"] = $=>{
     I.stack[I.st].push(O.map(a=> a[i]))
   })
 }
+
+// re-index the stack using the list at index 0
+SL["at"] = $=> I.stack[I.st] = _.at(I.stack[I.st], I.shift())
+
+// opposite of `at`; remove items from the stack using the list at index 0
+SL["at_"] = $=> _.pullAt(I.stack[I.st], I.shift())
 
 export {SL}

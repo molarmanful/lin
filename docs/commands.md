@@ -10,6 +10,8 @@
 - <code>gl</code>: `gi` but follow local scoping rules
 - <code>gs</code>: push stack joined by newlines
 - <code>g@</code>: push line at popped number (0-indexed)
+- <code>g;</code>:  push next line
+- <code>g;;</code>:  push previous line
 - <code>g:</code>: get value for key given by index 0 within object at index 1
 - <code>form</code>: convert index 0 to its string representation
 - <code>si</code>: set global ID at index 0
@@ -18,7 +20,7 @@
 - <code>::</code>: bring ID at index 0 as string into global scope
 - <code>type</code>: pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
 - <code>es</code>: execute string at index 0
-- <code>e*</code>: `es` on index 1 for number of times given by index 0
+- <code>e*</code>: `es` for number of times given by index 0
 - <code>e&</code>: `es` if index 0 is truthy
 - <code>e|</code>: `es` if index 0 is falsy
 - <code>e?</code>: `es` on index 2 if index 0 is truthy; otherwise, `es` on index 1
@@ -34,6 +36,7 @@
 - <code>out</code>: output index 0 to STDOUT
 - <code>outln</code>: output index 0 as a line to STDOUT
 - <code>$U</code>: undefined
+- <code>$L</code>: current line number
 - <code>$S</code>: current stack name
 - <code>$E</code>: Euler's constant
 - <code>$Pi</code>: Pi
@@ -77,8 +80,8 @@
 - <code>|</code>: bitwise or
 - <code>$</code>: bitwise xor
 - <code><<</code>: bitwise left shift
-- <code>>></code>: bitwise right I.shift, sign-propagating
-- <code>>>></code>: bitwise right I.shift, zero-fill
+- <code>>></code>: bitwise right shift, sign-propagating
+- <code>>>></code>: bitwise right shift, zero-fill
 - <code>=</code>: equal
 - <code>==</code>: strict equal
 - <code>!=</code>: not equal
@@ -111,13 +114,14 @@
 - <code>join</code>: join list over string at index 0
 - <code>++</code>: concatenate top 2 items as strings or lists
 - <code>len</code>: push length of index 0
+- <code>lens</code>: push stack length
 - <code>dep</code>: push depth of index 0
 - <code>unesc</code>: unescape string at index 0
 - <code>>char</code>: convert number to Unicode
 - <code><char</code>: convert Unicode to number
 - <code>lower</code>: lowercase
 - <code>upper</code>: uppercase
-- <code>repeat</code>: repeat string by index 0
+- <code>rep</code>: repeat string by index 0
 - <code>pad</code>: pad string given by index 2 until length given by index 0 with string given by index 1
 - <code>padl</code>: `pad` but only from the left
 - <code>padr</code>: `pad` but only from the right
@@ -134,6 +138,7 @@
 - <code>inter</code>: set intersection of lists at index 0 and index 1
 - <code>diff</code>: set difference of lists at index 0 and index 1
 - <code>wrap</code>: wrap index 0 in a list
+- <code>wraps</code>: wrap first _n_ items in a list, where _n_ is index 0
 - <code>wrap_</code>: opposite of `wrap`; take all items in list at index 0 and push to parent stack
 - <code>enclose</code>: enclose entire stack into a list
 - <code>dups</code>: push entire stack as list
@@ -141,7 +146,7 @@
 - <code>'</code>: apply function to list given by index 0
 - <code>flat</code>: `wrap_` all elements
 - <code>chunk</code>: split stack into lists of length given by index 0
-- <code>window</code>: split stack into consecutive slices given by index 0
+- <code>wins</code>: split stack into consecutive slices given by index 0
 - <code>keys</code>: get keys of object/list at index 0
 - <code>vals</code>: get values of object/list at index 0
 - <code>enum</code>: convert each item in stack to a list containing index and item
@@ -151,6 +156,9 @@
 - <code>del</code>: remove key at index 0 from object at index 1
 - <code>map</code>: `es` on each individual item in the stack
 - <code>fold</code>: `es` with accumulator and item; result of each `es` becomes the new accumulator
+- <code>folda</code>: `fold` with initial accumulator
+- <code>scan</code>: `fold` with intermediate values
+- <code>scana</code>: `scan` with initial accumulator
 - <code>filter</code>: remove each item that is falsy after `es`
 - <code>any</code>: push 1 if any items return truthy after `es`, else push 0
 - <code>all</code>: push 1 if all items return truthy after `es`, else push 0
@@ -161,3 +169,5 @@
 - <code>sort</code>: sort items in ascending order based on `es`
 - <code>part</code>: separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
 - <code>zip</code>: group multiple arrays' items together by indices
+- <code>at</code>: re-index the stack using the list at index 0
+- <code>at_</code>: opposite of `at`; remove items from the stack using the list at index 0
