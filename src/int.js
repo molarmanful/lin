@@ -1,5 +1,5 @@
 // modules
-import {parse, SL} from './bridge.js'
+import {_, parse, SL} from './bridge.js'
 
 let INT = {}
 
@@ -45,7 +45,7 @@ INT.form = (x=INT.stack[INT.st], y='\n')=>
       JSON.stringify(a)
     : a && a.pop ?
       `[ ${INT.form(a, ' ')} ]`
-    : a && typeof a == 'object' ?
+    : _.isObjectLike(a) ?
       `{ ${
         Object.keys(a).map(b=> INT.form([b]) + ': ' + INT.form([a[b]])).join` `
       } }`
@@ -55,10 +55,12 @@ INT.form = (x=INT.stack[INT.st], y='\n')=>
   ).reverse().join(y)
 
 INT.parse = x=> parse(x.pop ? x.join` ` : x + '')
-INT.get = x=>{
-  let g = INT.stack[INT.st][INT.mod(x, INT.stack[INT.st].length)]
-  return g.slice ? g.slice() : g
-}
+INT.gind = (o, x)=>
+  _.cloneDeep(
+    o.length && (x.toFixed || !isNaN(x + '')) ? o.at(x)
+    : _.isObjectLike(o) ? _.map(x, a=> INT.gind(o, a))
+    : o[x])
+INT.get = x=> INT.gind(INT.stack[INT.st], x)
 INT.splice = (x, y=1, z, w=0)=>
   z != undefined ?
     INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)

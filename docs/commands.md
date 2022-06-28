@@ -41,6 +41,7 @@
 - <code>$E</code>: Euler's constant
 - <code>$Pi</code>: Pi
 - <code>E</code>: `(index 1)*10^(index 0)`
+- <code>N</code>: convert to BigInt
 - <code>_</code>: negation
 - <code>+</code>: addition
 - <code>-</code>: subtraction
@@ -84,6 +85,7 @@
 - <code>>>></code>: bitwise right shift, zero-fill
 - <code>=</code>: equal
 - <code>==</code>: strict equal
+- <code>eq</code>: deep equal
 - <code>!=</code>: not equal
 - <code>></code>: greater than
 - <code><</code>: less than
@@ -169,5 +171,3 @@
 - <code>sort</code>: sort items in ascending order based on `es`
 - <code>part</code>: separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
 - <code>zip</code>: group multiple arrays' items together by indices
-- <code>at</code>: re-index the stack using the list at index 0
-- <code>at_</code>: opposite of `at`; remove items from the stack using the list at index 0

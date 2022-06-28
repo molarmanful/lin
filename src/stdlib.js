@@ -83,7 +83,7 @@ SL["g;;"] = $=>{
 // get value for key given by index 0 within object at index 1
 SL["g:"] = $=>{
   SL.swap()
-  I.unshift(_.get(I.shift(), I.shift()))
+  I.unshift(I.gind(I.shift(), I.shift()))
 }
 
 // convert index 0 to its string representation
@@ -120,7 +120,7 @@ SL["type"] = $=>{
     X.pop ? 3
     : X.big ? 2
     : X.toFixed && !isNaN(X) ? 1
-    : typeof X == 'object' ? 4
+    : _.isObjectLike(X) ? 4
     : 0
   )
 }
@@ -234,6 +234,11 @@ SL["E"] = $=>{
   SL.swap()
   SL["^"]()
   SL["*"]()
+}
+
+// convert to BigInt
+SL["N"] = $=>{
+  I.unshift(BigInt(I.shift()))
 }
 
 // negation
@@ -405,6 +410,9 @@ SL["="] = $=> I.unshift(+(I.shift() == I.shift()))
 // strict equal
 SL["=="] = $=> I.unshift(+(I.shift() === I.shift()))
 
+// deep equal
+SL["eq"] = $=> I.unshift(_.isEqual(I.shift(), I.shift()))
+
 // not equal
 SL["!="] = $=> I.unshift(+(I.shift() != I.shift()))
 
@@ -443,7 +451,11 @@ SL["ceil"] = $=> I.unshift(Math.ceil(I.shift()))
 SL["pick"] = $=> I.unshift(I.get(I.shift()))
 
 // `drop` but with any index
-SL["nix"] = $=> I.splice(I.shift())
+SL["nix"] = $=>{
+  let X = I.shift()
+  if(_.isObjectLike(X)) _.map(X, a=> I.splice(a))
+  else I.splice(X)
+}
 
 // `rot` but with any index
 SL["roll"] = $=> I.unshift(I.splice(I.shift())[0])
@@ -906,11 +918,5 @@ SL["zip"] = $=>{
     I.stack[I.st].push(O.map(a=> a[i]))
   })
 }
-
-// re-index the stack using the list at index 0
-SL["at"] = $=> I.stack[I.st] = _.at(I.stack[I.st], I.shift())
-
-// opposite of `at`; remove items from the stack using the list at index 0
-SL["at_"] = $=> _.pullAt(I.stack[I.st], I.shift())
 
 export {SL}

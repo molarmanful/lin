@@ -1,10 +1,10 @@
-1g@ dup outln out
-1g@ dup outln out
+g; dup outln out
+g; dup outln out
 
 
 
 # EXPLANATION
 Outputs its own source code.
 
-- `1g@` gets the second line as a string.
+- `g;` gets the second line as a string.
 - `dup outln out` outputs 2 copies of the string separated by a newline.
