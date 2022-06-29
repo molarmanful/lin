@@ -21,6 +21,7 @@
   "homepage": "https://github.com/molarmanful/lin#readme",
   "dependencies": {
     "esm": "^3.2.25",
+    "iter-tools-es": "^7.4.0",
     "lodash": "^4.17.15",
     "readline-sync": "^1.4.10"
   },

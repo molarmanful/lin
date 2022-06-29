@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
 let fs = require('fs')
-let sl = fs.readFileSync('./src/stdlib.js') + ''
-let exp = /\/\/ (.+)\n+SL\["(.+)"\]/g
+let exp = /\/\/ (.+)\n+[A-Z]+\["(.+)"\]/g
 
 fs.writeFileSync('./docs/commands.md',
-  `# Commands\n**NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.\n\n${
-    sl.match(exp).join`\n`.replace(exp, '- <code>$2</code>: $1')
+  `# Commands\n\n**NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.\n\n${
+    fs.readdirSync('./src/stdlib').map(f=>{
+      let sl = fs.readFileSync('./src/stdlib/' + f) + ''
+      return `## ${
+        f.replace(/\.js/g, '').toUpperCase()
+      }\n\nCommand | Description\n--- | ---\n`
+        + sl.match(exp).join`\n`
+          .replace(exp, (_, d, c)=> `<code>${c.replace(/\|/g, '\\|')}</code> | ${d.replace(/\|/g, '\\|')}`)
+    }).join`\n\n`
   }`
 )

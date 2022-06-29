@@ -56,10 +56,9 @@ INT.form = (x=INT.stack[INT.st], y='\n')=>
 
 INT.parse = x=> parse(x.pop ? x.join` ` : x + '')
 INT.gind = (o, x)=>
-  _.cloneDeep(
-    o.length && (x.toFixed || !isNaN(x + '')) ? o.at(x)
-    : _.isObjectLike(o) ? _.map(x, a=> INT.gind(o, a))
-    : o[x])
+  _.isObjectLike(x) ? _.map(x, a=> INT.gind(o, a))
+  : x.toFixed || !isNaN(x + '') ? o.at(x)
+  : o[x]
 INT.get = x=> INT.gind(INT.stack[INT.st], x)
 INT.splice = (x, y=1, z, w=0)=>
   z != undefined ?
@@ -184,6 +183,7 @@ INT.exec = (x, y)=>{
         // stdlib functions
         else if(SL[a]) SL[a]()
 
+        else throw `unknown function "${a}"`
       }
 
       // numbers
