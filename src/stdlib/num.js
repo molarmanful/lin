@@ -8,7 +8,7 @@ NUM["N"] = $=>{
 }
 
 // convert to number
-NUM["."] = $=>{
+NUM["N_"] = $=>{
   I.unshift(Number(I.shift()))
 }
 
