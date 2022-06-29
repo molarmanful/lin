@@ -1,11 +1,11 @@
-\CHECK :: \DEC :: ;
-\IN :: \IN gi out in ;
+\IN :: \ERR :: \CHECK :: \DEC :: ;
+\IN gi out in ;
 CHECK DEC outln
 
 #INEnter a binary number: 
 #ERRNot a binary number!
 
-#CHECK \ERR :: ( \ERR gi outln break ) over ( ( 1> ) any ) ' wrap_ e&
+#CHECK ( \ERR gi outln break ) over ( ( 1> ) any ) ' wrap_ e&
 #DEC ( rev enum ( wrap_ swap 2 swap ^ * ) map \+ fold ) '
 
 

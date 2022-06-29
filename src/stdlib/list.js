@@ -49,6 +49,14 @@ LIST["++"] = $=>{
   I.unshift(I.concat(I.shift(), X))
 }
 
+// repeat list/string by index 0
+LIST["rep"] = $=>{
+  let X = I.shift()
+  let Y = I.shift()
+  if(Y.big || Y.toFixed) I.unshift(_.repeat(Y, X))
+  else I.unshift(_.range(X).flatMap(a=> Y))
+}
+
 // set union of lists at index 0 and index 1
 LIST["union"] = $=> I.unshift(_.union(I.shift(), I.shift()))
 

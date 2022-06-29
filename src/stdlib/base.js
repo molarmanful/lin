@@ -86,16 +86,6 @@ BASE["sl"] = $=>{
   else I.ids[X] = Y
 }
 
-// set a key-value pair in an object, where index 0 is the key and index 1 is the value
-BASE[":"] = $=>{
-  if(I.objs.length) I.objs[0][I.shift()] = I.shift()
-  else {
-    let X = I.shift()
-    let Y = I.shift()
-    I.stack[I.st][0][X] = Y
-  }
-}
-
 // bring ID at index 0 as string into global scope
 BASE["::"] = $=> I.id()
 

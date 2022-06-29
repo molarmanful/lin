@@ -1,5 +1,5 @@
-\BIN :: ;
-\IN :: \IN gi out in ;
+\IN :: \BIN :: ;
+\IN gi out in ;
 BIN outln
 
 #INEnter a decimal number: 

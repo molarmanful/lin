@@ -1,6 +1,16 @@
-import {_, INT as I, SL} from '../bridge.js'
+import {$C, _, INT as I, SL} from '../bridge.js'
 
 let NUM = {}
+
+// convert to bigint
+NUM["N"] = $=>{
+  I.unshift(BigInt(I.shift()))
+}
+
+// convert to number
+NUM["."] = $=>{
+  I.unshift(Number(I.shift()))
+}
 
 // `(index 1)*10^(index 0)`
 NUM["E"] = $=>{
@@ -10,21 +20,16 @@ NUM["E"] = $=>{
   SL["*"]()
 }
 
-// convert to BigInt
-NUM["N"] = $=>{
-  I.unshift(BigInt(I.shift()))
-}
-
 // negation
 NUM["_"] = $=> I.unshift(-I.shift())
 
 // addition
-NUM["+"] = $=> I.unshift(I.shift() - - I.shift())
+NUM["+"] = $=> I.unshift(I.shift() - -I.shift())
 
 // subtraction
 NUM["-"] = $=>{
   SL.swap()
-  I.unshift(I.shift()-I.shift())
+  I.unshift(I.shift() - I.shift())
 }
 
 // multiplication
@@ -179,5 +184,20 @@ NUM["round"] = $=> I.unshift(Math.round(I.shift()))
 
 // round towards ∞
 NUM["ceil"] = $=> I.unshift(Math.ceil(I.shift()))
+
+// factorial
+NUM["F"] = $=> I.unshift(combs.factorial(I.shift()))
+
+// *n* permute *k*
+NUM["P"] = $=>{
+  SL.swap()
+  I.unshift($C.permutation(I.shift(), I.shift()))
+}
+
+// *n* choose *k*
+NUM["C"] = $=>{
+  SL.swap()
+  I.unshift($C.combination(I.shift(), I.shift()))
+}
 
 export default NUM

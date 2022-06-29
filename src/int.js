@@ -39,7 +39,9 @@ INT.tru = x=> x.toFixed ? x != 0 : x
 
 INT.form = (x=INT.stack[INT.st], y='\n')=>
   x.map(a=>
-    a && a.toFixed ?
+    a && typeof a == 'bigint' ?
+      a + 'N'
+    : a && a.toFixed ?
       +a
     : a && a.big ?
       JSON.stringify(a)
@@ -222,4 +224,4 @@ INT.run = x=>{
   INT.exec(INT.lines[0])
 }
 
-export {INT}
+export default INT

@@ -17,14 +17,6 @@ STR["lower"] = $=> I.unshift(I.shift().toLowerCase())
 // uppercase
 STR["upper"] = $=> I.unshift(I.shift().toUpperCase())
 
-// repeat string by index 0
-STR["rep"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  if(Y.big || Y.toFixed) I.unshift(_.repeat(Y, X))
-  else I.unshift(_.range(X).flatMap(a=> Y))
-}
-
 // pad string given by index 2 until length given by index 0 with string given by index 1
 STR["pad"] = $=>{
   let X = I.shift()

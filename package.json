@@ -3,11 +3,12 @@
   "version": "0.0.24",
   "description": "A line-based programming language",
   "main": "src/index.js",
+  "type": "module",
   "bin": {
     "lin": "./run.sh"
   },
   "scripts": {
-    "test": "mocha --recursive --require esm"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
   },
   "homepage": "https://github.com/molarmanful/lin#readme",
   "dependencies": {
-    "esm": "^3.2.25",
+    "iter-tools": "^7.4.0",
+    "js-combinatorics": "^2.1.0",
     "lodash": "^4.17.15",
     "readline-sync": "^1.4.10"
   },

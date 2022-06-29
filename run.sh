@@ -1,1 +1,1 @@
-node -r esm src/index.js $@
+node src/index.js $@

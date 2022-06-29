@@ -72,6 +72,7 @@ Command | Description
 <code>split</code> | split string at index 1 over string at index 0
 <code>join</code> | join list over string at index 0
 <code>++</code> | concatenate top 2 items as strings or lists
+<code>rep</code> | repeat list/string by index 0
 <code>union</code> | set union of lists at index 0 and index 1
 <code>inter</code> | set intersection of lists at index 0 and index 1
 <code>diff</code> | set difference of lists at index 0 and index 1
@@ -112,8 +113,8 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>E</code> | `(index 1)*10^(index 0)`
 <code>N</code> | convert to BigInt
+<code>E</code> | `(index 1)*10^(index 0)`
 <code>_</code> | negation
 <code>+</code> | addition
 <code>-</code> | subtraction
@@ -157,6 +158,9 @@ Command | Description
 <code>trunc</code> | round towards 0
 <code>round</code> | round towards or away from 0 depending on < or >= .5
 <code>ceil</code> | round towards ∞
+<code>F</code> | factorial
+<code>P</code> | *n* permute *k*
+<code>C</code> | *n* choose *k*
 
 ## OBJ
 
@@ -225,7 +229,6 @@ Command | Description
 <code><char</code> | convert Unicode to number
 <code>lower</code> | lowercase
 <code>upper</code> | uppercase
-<code>rep</code> | repeat string by index 0
 <code>pad</code> | pad string given by index 2 until length given by index 0 with string given by index 1
 <code>padl</code> | `pad` but only from the left
 <code>padr</code> | `pad` but only from the right
