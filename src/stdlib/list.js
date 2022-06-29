@@ -87,14 +87,4 @@ LIST["dups"] = $=> I.unshift(I.stack[I.st].slice())
 // set current stack to the list at index 0
 LIST["usurp"] = $=> I.stack[I.st] = [...I.shift()]
 
-// convert each item in stack to a list containing index and item
-LIST["enum"] = $=> I.stack[I.st] = I.stack[I.st].map((a,b)=> [a, b])
-
-// convert `enum`-style stack into a normal stack
-LIST["denum"] = $=>{
-  let X = _.sortBy(I.stack[I.st].filter(a=> a.length > 1), a=> a[1])
-  I.stack[I.st] = []
-  X.map(a=> I.unshift(a[0]))
-}
-
 export default LIST

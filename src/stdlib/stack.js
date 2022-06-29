@@ -14,6 +14,16 @@ STACK["deps"] = $=>{
   SL.dep()
 }
 
+// convert each item in stack to a list containing index and item
+STACK["enum"] = $=> I.stack[I.st] = I.stack[I.st].map((a,b)=> [a, b])
+
+// convert `enum`-style stack into a normal stack
+STACK["denum"] = $=>{
+  let X = _.sortBy(I.stack[I.st].filter(a=> a.length > 1), a=> a[1])
+  I.stack[I.st] = []
+  X.map(a=> I.unshift(a[0]))
+}
+
 // `dup` but with any index
 STACK["pick"] = $=> I.unshift(I.get(I.shift()))
 
