@@ -13,12 +13,7 @@ NUM["N_"] = $=>{
 }
 
 // `(index 1)*10^(index 0)`
-NUM["E"] = $=>{
-  I.unshift(10)
-  SL.swap()
-  SL["^"]()
-  SL["*"]()
-}
+NUM["E"] = $=> I.exec('10 swap ^ *', 1)
 
 // negation
 NUM["_"] = $=> I.unshift(-I.shift())
@@ -42,10 +37,7 @@ NUM["/"] = $=>{
 }
 
 // integer division
-NUM["//"] = $=>{
-  SL["/"]()
-  SL.trunc()
-}
+NUM["//"] = $=> I.exec('/ trunc', 1)
 
 // modulus
 NUM["%"] = $=>{
@@ -54,13 +46,7 @@ NUM["%"] = $=>{
 }
 
 // divmod
-NUM["/%"] = $=>{
-  SL.over()
-  SL.over()
-  SL['//']()
-  SL.rot_()
-  SL['%']()
-}
+NUM["/%"] = $=> I.exec('over over // rot_ %', 1)
 
 // exponentiation
 NUM["^"] = $=>{

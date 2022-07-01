@@ -1,4 +1,4 @@
-import {_, INT as I} from '../bridge.js'
+import {itr, _, INT as I} from '../bridge.js'
 
 let CONSTANT = {}
 
@@ -32,7 +32,13 @@ CONSTANT["$E"] = $=> I.unshift(Math.E)
 // Pi
 CONSTANT["$Pi"] = $=> I.unshift(Math.PI)
 
+// Infinity
+CONSTANT["$I"] = $=> I.unshift(Infinity)
+
 // milliseconds since January 1, 1970 00:00:00.000
 CONSTANT["time"] = $=> I.unshift(Date.now())
+
+// infinite list of whole numbers
+CONSTANT["$`"] = $=> I.unshift(itr.range())
 
 export default CONSTANT

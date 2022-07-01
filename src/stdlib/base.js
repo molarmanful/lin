@@ -95,7 +95,8 @@ BASE["type"] = $=>{
   I.unshift(
     X.pop ? 3
     : X.big ? 2
-    : X.toFixed && !isNaN(X) ? 1
+    : ['number', 'bigint'].includes(typeof X) ? 1
+    : I.isitr(X) ? 5
     : _.isObjectLike(X) ? 4
     : 0
   )

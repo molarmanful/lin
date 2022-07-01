@@ -1,20 +1,14 @@
-import {_, INT as I, SL} from '../bridge.js'
+import {itr, _, INT as I, SL, INT} from '../bridge.js'
 
 let STACK = {}
 
 // stack length
-STACK["size"] = $=>{
-  SL.dups()
-  SL.len()
-}
+STACK["size"] = $=> I.exec('dups len', 1)
 
 // stack depth
-STACK["deps"] = $=>{
-  SL.dups()
-  SL.dep()
-}
+STACK["deps"] = $=> I.exec('dups dep', 1)
 
-// convert each item in stack to a list containing index and item
+// convert each item in stack to an index-item pair
 STACK["enum"] = $=> I.stack[I.st] = I.stack[I.st].map((a,b)=> [a, b])
 
 // convert `enum`-style stack into a normal stack
@@ -53,10 +47,7 @@ STACK["pop"] = $=> I.shift()
 STACK["rot"] = $=> I.unshift(I.splice(2)[0])
 
 // bring index 0 to index 2
-STACK["rot_"] = $=>{
-  SL.rot()
-  SL.rot()
-}
+STACK["rot_"] = $=> I.exec('rot rot', 1)
 
 // bring index 1 to index 0
 STACK["swap"] = $=> I.unshift(I.splice(1)[0])
@@ -74,10 +65,7 @@ STACK["tuck"] = $=>{
 }
 
 // push index 1
-STACK["over"] = $=>{
-  SL.swap()
-  SL.tuck()
-}
+STACK["over"] = $=> I.exec('swap tuck', 1)
 
 // pop all items
 STACK["clr"] = $=> I.stack[I.st] = []
@@ -122,182 +110,27 @@ STACK["drop"] = $=> {
 }
 
 // `wrap_` all items
-STACK["flat"] = $=> I.stack[I.st] = _.flatten(I.stack[I.st])
+STACK["flat"] = $=> I.stack[I.st] = I.stack[I.st].flat()
 
-// split stack into lists of length given by index 0
-STACK["chunk"] = $=>{
-  let X = I.shift()
-  I.stack[I.st] = _.chunk(I.stack[I.st], X)
+// deshape the stack
+STACK["blob"] = $=> I.stack[I.st] = I.stack[I.st].flat(1 / 0)
+
+// split stack into _n_ lists, where _n_ is index 0
+STACK["rows"] = $=>{
+  let X = I.stack[I.st].length / I.shift()
+  I.stack[I.st] = _.chunk(I.stack[I.st], 0 | X)
+  if(X != 0 | X) I.splice(-2, 2, I.stack[I.st].slice(-2).flat())
 }
 
-// split stack into consecutive slices given by index 0
-STACK["wins"] = $=>{
-  let X = I.shift()
-  I.stack[I.st] = I.stack[I.st].flatMap((a,i,s)=>
-    i > s.length - X ? [] : [s.slice(i, i + X)]
-  )
-}
+// split stack into lists of length _n_, where _n_ is index 0
+STACK["cols"] = $=> I.stack[I.st] = _.chunk(I.stack[I.st], I.shift())
 
-// `es` on each individual item in the stack
-STACK["map"] = $=>{
-  let X = []
-  I.each(
-    (a, i)=> X.unshift(I.shift()),
-    $=> I.stack[I.st] = X
-  )
-}
-
-// `es` with accumulator and item; result of each `es` becomes the new accumulator
-STACK["fold"] = $=>{
-  I.acc(
-    (a, b, i)=> I.shift(),
-    a=> I.stack[I.st] = [a]
-  )
-}
-
-// `fold` with initial accumulator
-STACK["folda"] = $=>{
-  I.acc(
-    (a, b, i)=> I.shift(),
-    a=> I.stack[I.st] = [a],
-    true
-  )
-}
-
-// `fold` with intermediate values
-STACK["scan"] = $=>{
-  let X = []
-  I.acc(
-    (a, b, i)=> (X.unshift(b), I.shift()),
-    a=> I.stack[I.st] = [a, ...X]
-  )
-}
-
-// `scan` with initial accumulator
-STACK["scana"] = $=>{
-  let X = []
-  I.acc(
-    (a, b, i)=>{
-      let A = I.shift()
-      X.unshift(A)
-      return A
-    },
-    a=> I.stack[I.st] = X,
-    true
-  )
-}
-
-// remove each item that is falsy after `es`
-STACK["filter"] = $=>{
-  let X = []
-  I.each(
-    (a, i)=>{
-      let A = I.shift()
-      A && X.unshift(A)
-    },
-    $=> I.stack[I.st] = X
-  )
-}
-
-// push 1 if any items return truthy after `es`, else push 0
-STACK["any"] = $=>{
-  let X = 0
-  I.each(
-    (a, i)=>{
-      if(!X && I.tru(I.shift())) X = 1
-    },
-    $=> I.unshift(X)
-  )
-}
-
-// push 1 if all items return truthy after `es`, else push 0
-STACK["all"] = $=>{
-  let X = 1
-  I.each(
-    (a, i)=>{
-      if(X && !I.tru(I.shift())) X = 0
-    },
-    $=> I.unshift(X)
-  )
-}
-
-// find first item that returns truthy after `es` or undefined on failure
-STACK["find"] = $=>{
-  let X
-  I.each(
-    (a, i)=>{
-      if(X == undefined && I.tru(I.shift())) X = a
-    },
-    $=> I.unshift(X)
-  )
-}
-
-// `find` but returns index
-STACK["findi"] = $=>{
-  let X
-  I.each(
-    (a, i)=>{
-      if(X == undefined && I.tru(I.shift())) X = i
-    },
-    $=> I.unshift(X)
-  )
-}
-
-// `take` items until `es` returns falsy for an item
-STACK["takew"] = $=>{
-  let X = 1
-  let Y = []
-  I.each(
-    (a, i)=>{
-      if(X && I.tru(I.shift())) Y.unshift(a)
-      else X = 0
-    },
-    $=> I.stack[I.st] = Y
-  )
-}
-
-// `drop` items until `es` returns falsy for an item
-STACK["dropw"] = $=>{
-  let X = 0
-  let Y = []
-  I.each(
-    (a, i)=>{
-      if(X || I.tru(I.shift())){
-        X = 1
-        Y.unshift(a)
-      }
-    },
-    $=> I.stack[I.st] = Y
-  )
-}
-
-// sort items in ascending order based on `es`
-STACK["sort"] = $=>{
-  let X = []
-  let O = I.stack[I.st].slice(1)
-  I.each(
-    (a, i)=> X.unshift(I.shift()),
-    $=>{
-      I.stack[I.st] = O
-      I.stack[I.st] =
-        I.get(_.sortBy(I.range(0, X.length), a=> X[a])).reverse()
-    }
-  )
-}
-
-// separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
-STACK["part"] = $=>{
-  let X = []
-  let Y = []
-  I.each(
-    (a, i)=>{
-      if(I.tru(I.shift())) X.unshift(a)
-      else Y.unshift(a)
-    },
-    $=>{
-      I.stack[I.st] = [X, Y]
-    }
-  )
+// reshape the stack using dimensions at index 0
+STACK["shape"] = $=>{
+  let X = I.itrlist(I.listitr(I.shift()))
+  SL.blob()
+  let O = I.itrlist(itr.take(X.reduce((a, b)=> a * b, 1), itr.cycle(I.listitr(I.stack[I.st]))))
+  I.stack[I.st] = X.slice(0, -1).reduce((a, b)=> _.chunk(a, b), O)
 }
 
 // group multiple arrays' items together by indices
@@ -309,19 +142,71 @@ STACK["zip"] = $=>{
   })
 }
 
-// categorize items into keys after `es`ing index 0
-STACK["group"] = $=>{
-  let X = []
-  let O = I.stack[I.st].slice(1)
-  I.each(
-    (a, i)=> X.unshift(I.shift()),
-    $=>{
-      I.stack[I.st] = O
-      I.stack[I.st] = [
-        _.mapValues(_.groupBy(I.range(0, X.length), a=> X[a]), a=> I.get(a))
-      ]
-    }
+// split stack into consecutive slices given by index 0
+STACK["wins"] = $=>{
+  let X = I.shift()
+  I.stack[I.st] = I.stack[I.st].flatMap((a,i,s)=>
+    i > s.length - X ? [] : [s.slice(i, i + X)]
   )
 }
+
+// `es` on each individual item in the stack
+STACK["map"] = $=> I.stack[I.st] = I.each(I.stack[I.st])
+
+// `es` with accumulator and item; result of each `es` becomes the new accumulator
+STACK["fold"] = $=> I.stack[I.st] = [I.acc(I.stack[I.st])]
+
+// `fold` with initial accumulator
+STACK["folda"] = $=> I.stack[I.st] = [I.acc(I.stack[I.st], 1)]
+
+// `fold` with intermediate values
+STACK["scan"] = $=>{
+  let X = []
+  let Y = I.acc(I.stack[I.st], 0, _.reduceRight, (A, a)=> (X.unshift(a), A))
+  I.stack[I.st] = [Y, ...X]
+}
+
+// `scan` with initial accumulator
+STACK["scana"] = $=>{
+  let X = []
+  I.acc(I.stack[I.st], 1, _.reduceRight, (A, a)=> (X.unshift(A), A))
+  I.stack[I.st] = X
+}
+
+// remove each item that is falsy after `es`
+STACK["filter"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.filter)
+
+// push 1 if any items return truthy after `es`, else push 0
+STACK["any"] = $=> I.unshift(+I.each(I.stack[I.st], _.some))
+
+// push 1 if all items return truthy after `es`, else push 0
+STACK["all"] = $=> I.unshift(+I.each(I.stack[I.st], _.every))
+
+// find first item that returns truthy after `es` or undefined on failure
+STACK["find"] = $=> I.unshift(I.each(I.stack[I.st], _.find))
+
+// `find` but returns index
+STACK["findi"] = $=>{
+  let X = I.each(I.stack[I.st], _.findIndex)
+  I.unshift(~X ? X : undefined)
+}
+
+// `take` items until `es` returns falsy for an item
+STACK["takew"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.takeWhile)
+
+// `drop` items until `es` returns falsy for an item
+STACK["dropw"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.dropWhile)
+
+// sort items in ascending order based on `es`
+STACK["sort"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.sortBy).reverse()
+
+// `sort` with comparison function
+STACK["sortc"] = $=> I.stack[I.st] = I.cmp(I.stack[I.st]).reverse()
+
+// separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
+STACK["part"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.partition)
+
+// categorize items into keys after `es`ing index 0
+STACK["group"] = $=> I.stack[I.st] = [I.each(I.stack[I.st], _.groupBy)]
 
 export default STACK

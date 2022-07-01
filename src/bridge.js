@@ -1,8 +1,9 @@
 export * as fs from 'fs'
 export * as cp from 'child_process'
-export * as _ from 'lodash'
+export * as _ from 'lodash-es'
 export * as rls from 'readline-sync'
 export * as $C from 'js-combinatorics'
+export * as itr from 'iter-tools'
 
 export {default as parse} from './parser.js'
 export {default as unesc} from './unesc.js'

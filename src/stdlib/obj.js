@@ -3,7 +3,7 @@ import {_, INT as I} from '../bridge.js'
 let OBJ = {}
 
 // set a key-value pair in an object, where index 0 is the key and index 1 is the value
-BASE[":"] = $=>{
+OBJ[":"] = $=>{
   if(I.objs.length) I.objs[0][I.shift()] = I.shift()
   else {
     let X = I.shift()
