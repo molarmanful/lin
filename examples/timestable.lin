@@ -1,7 +1,11 @@
-[ 1 13 range ] dup \* table ( \ 3 padl ) map 12cols rev ( \ join outln ) map
+[ 1 13 range ] dup \* table ( \ 3padl ) map 12cols rev ( \ join outln ) map
 
 
 
 # EXPLANATION
 
 Outputs the multiplication table from 1 to 12.
+
+- `[ 1 13 range ] dup \* table` creates the table using a Cartesian product.
+- `( \ 3padl ) map` formats each number to length 3 using spaces.
+- `12cols rev ( \ join outln ) map` reshapes the table and prints each row.

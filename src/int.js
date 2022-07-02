@@ -44,7 +44,7 @@ INT.form = (x=INT.stack[INT.st], y='\n')=>
     : a && typeof a == 'bigint' ?
       a + 'N'
     : a?.toFixed ?
-      a
+      a < 0 ? -a + '_' : a + ''
     : a?.big ?
       JSON.stringify(a)
     : a?.pop ?

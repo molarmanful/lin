@@ -8,8 +8,11 @@ NUM["N"] = $=>{
   I.unshift(BigInt(X.pop ? X.reverse().join`` : X))
 }
 
-// convert number to digit list
-NUM["ns"] = $=> I.unshift(_.map(I.shift() + '', a=> +a).reverse())
+// convert to bigint (reversed if list)
+NUM["NN"] = $=>{
+  let X = I.shift()
+  I.unshift(BigInt(X.pop ? X.join`` : X))
+}
 
 // convert to number
 NUM["n_"] = $=>{
@@ -22,6 +25,9 @@ NUM["N_"] = $=>{
   let X = I.shift()
   I.unshift(Number(X.pop ? X.join`` : X))
 }
+
+// convert number to digit list
+NUM["ns"] = $=> I.unshift(_.map(I.shift() + '', a=> +a).reverse())
 
 // `(index 1)*10^(index 0)`
 NUM["E"] = $=> I.exec('10 swap ^ *', 1)

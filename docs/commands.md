@@ -173,9 +173,10 @@ Command | Description
 Command | Description
 --- | ---
 <code>N</code> | convert to bigint
-<code>ns</code> | convert number to digit list
+<code>NN</code> | convert to bigint (reversed if list)
 <code>n_</code> | convert to number
 <code>N_</code> | convert to number (reversed if list)
+<code>ns</code> | convert number to digit list
 <code>E</code> | `(index 1)*10^(index 0)`
 <code>_</code> | negation
 <code>+</code> | addition

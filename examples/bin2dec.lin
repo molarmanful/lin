@@ -14,13 +14,11 @@ CHECK DEC outln
 
 Converts binary to decimal.
 
-- `\CHECK :: \DEC ::` exposes the IDs of DEC and CHECK to the global scope. This is a pretty standard way of declaring functions.
 - `\IN :: \IN gi out in` prompts the user for a binary number.
 - `CHECK DEC outln` runs both CHECK and DEC and outputs the result.
 
 In CHECK:
 
-- `\ERR ::` exposes the ID of ERR to the global scope for later use.
 - `( \ERR gi outln break ) ... e&` will output ERR and end the program if a condition is met.
 - `over ( ( 1> ) any ) ' wrap_` takes the inputted number and checks if any of the digits are greater than 1.
 

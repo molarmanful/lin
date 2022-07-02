@@ -32,13 +32,13 @@ COUNT["`comb"] = $=>{
 COUNT["`pset"] = $=> I.unshift(new $C.PowerSet(iconv(I.shift())))
 
 // generate base-N sequence from digits at index 1 with length at index 0
-COUNT["`/\\"] = $=> {
+COUNT["`/\\"] = $=>{
   SL.swap()
   I.unshift(new $C.BaseN(iconv(I.shift()), I.shift()))
 }
 
 // cartesian product over list of sequences
-COUNT["`'*"] = $=> {
+COUNT["`'*"] = $=>{
   SL.swap()
   I.unshift($C.CartesianProduct.from(_.map(I.shift(), iconv).reverse()))
 }

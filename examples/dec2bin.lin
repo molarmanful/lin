@@ -12,9 +12,8 @@ BIN outln
 
 Converts decimal to binary.
 
-- `\BIN ::` pushes the ID of BIN to the global scope. This is a pretty standard way of declaring functions.
-- `\IN :: \IN gi out in` prompts the user for a decimal number.
-- `BIN out` executes BIN and outputs the result.
+- `\IN gi out in` prompts the user for a decimal number.
+- `BIN outln` executes BIN and outputs the result.
 
 In BIN:
 
