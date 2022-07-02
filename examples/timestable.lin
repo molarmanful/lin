@@ -1,0 +1,7 @@
+[ 1 13 range ] dup \* table ( \ 3 padl ) map 12cols rev ( \ join outln ) map
+
+
+
+# EXPLANATION
+
+Outputs the multiplication table from 1 to 12.
