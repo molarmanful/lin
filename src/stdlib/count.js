@@ -37,7 +37,7 @@ COUNT["`/\\"] = $=> {
   I.unshift(new $C.BaseN(iconv(I.shift()), I.shift()))
 }
 
-// generate base-N sequence from digits at index 1 with length at index 0
+// cartesian product over list of sequence
 COUNT["`'*"] = $=> {
   SL.swap()
   I.unshift($C.CartesianProduct.from(_.map(I.shift(), iconv).reverse()))
