@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {dec, INT, SL} from '../src/bridge.js'
+import {INT} from '../src/bridge.js'
 
 describe('FLOW', _=>{
 

@@ -37,7 +37,7 @@ COUNT["`/\\"] = $=> {
   I.unshift(new $C.BaseN(iconv(I.shift()), I.shift()))
 }
 
-// cartesian product over list of sequence
+// cartesian product over list of sequences
 COUNT["`'*"] = $=> {
   SL.swap()
   I.unshift($C.CartesianProduct.from(_.map(I.shift(), iconv).reverse()))

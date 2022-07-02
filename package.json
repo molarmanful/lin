@@ -30,7 +30,7 @@
     "readline-sync": "^1.4.10"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "chai": "^4.3.6",
+    "mocha": "^6.2.3"
   }
 }

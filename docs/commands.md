@@ -46,7 +46,7 @@ Command | Description
 <code>`comb</code> | combinations of index 1 of length given by index 0
 <code>`pset</code> | powerset of index 0
 <code>`/\\</code> | generate base-N sequence from digits at index 1 with length at index 0
-<code>`'*</code> | cartesian product over list of sequence
+<code>`'*</code> | cartesian product over list of sequences
 
 ## FLOW
 
