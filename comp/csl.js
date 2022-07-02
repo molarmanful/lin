@@ -1,6 +1,4 @@
-#!/usr/bin/env node
-
-let fs = require('fs')
+import fs from 'fs'
 let exp = /\/\/ (.+)\n+[A-Z]+\["(.+)"\]/g
 
 fs.writeFileSync('./docs/commands.md',

@@ -12,11 +12,9 @@ Command | Description
 <code>g@</code> | push line at popped number (0-indexed)
 <code>g;</code> |  push next line
 <code>g;;</code> |  push previous line
-<code>g:</code> | get value for key given by index 0 within object at index 1
 <code>form</code> | convert index 0 to its string representation
 <code>si</code> | set global ID at index 0
 <code>sl</code> | `si` but follow local scoping rules
-<code>:</code> | set a key-value pair in an object, where index 0 is the key and index 1 is the value
 <code>::</code> | bring ID at index 0 as string into global scope
 <code>type</code> | pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
 
@@ -34,7 +32,21 @@ Command | Description
 <code>$S</code> | current stack name
 <code>$E</code> | Euler's constant
 <code>$Pi</code> | Pi
+<code>$I</code> | Infinity
 <code>time</code> | milliseconds since January 1, 1970 00:00:00.000
+<code>$`</code> | infinite list of whole numbers
+
+## COUNT
+
+Command | Description
+--- | ---
+<code>facc</code> | factoradic representation of index 0
+<code>combc</code> | _m_th combinadic digit of _n_ C _k_, where _n_ _k_ _m_ are top 3 items
+<code>`perm</code> | permutations of index 1 of length given by index 0
+<code>`comb</code> | combinations of index 1 of length given by index 0
+<code>`pset</code> | powerset of index 0
+<code>`/\\</code> | generate base-N sequence from digits at index 1 with length at index 0
+<code>`'*</code> | generate base-N sequence from digits at index 1 with length at index 0
 
 ## FLOW
 
@@ -62,6 +74,55 @@ Command | Description
 <code>out</code> | output index 0 to STDOUT
 <code>outln</code> | output index 0 as a line to STDOUT
 
+## ITER
+
+Command | Description
+--- | ---
+<code>`</code> | convert to iterator
+<code>``</code> | convert to iterator recursively
+<code>`_</code> | convert from iterator to list
+<code>`__</code> | convert from iterator to list recursively
+<code>`_`</code> | convert from iterator to string
+<code>`=</code> | check if iterators are equal
+<code>`=*</code> | check if iterators are deeply equal
+<code>?</code> | check if iterator at index 1 has sequence at index 0
+<code>?*</code> | `?` with multiple sequences
+<code>`cyc</code> | create infinite cycle from index 0
+<code>`+</code> | concatenate top 2 items into iterator
+<code>`,</code> | prepend-concatenate index 0 into iterator
+<code>`+></code> | combine top 2 items into partially-sorted iterator via comparison function
+<code>`mask</code> | use index 0 as a bitmask for the iterator at index 1
+<code>`,*</code> | zip all stack items into one iterator
+<code>`size</code> | iterator size (DOES NOT HALT ON INFINITE LISTS) 
+<code>`enum</code> | convert each element to an index-element pair
+<code>`uniq</code> | yield only unique elements
+<code>`rev</code> | reverse iterator
+<code>`flat</code> | flatten iterator
+<code>`melt</code> | flatten iterator by max depth at index 0
+<code>`xp</code> | split iterator into consecutive slices given by index 0
+<code>`chunk</code> | split iterator into chunks of length given by index 0
+<code>`btwn</code> | place index 0 between each element
+<code>`sp</code> | split iterator on sequence at index 0
+<code>`sp*</code> | `\`sp` with multiple sequences
+<code>`^</code> | first element
+<code>`:</code> | _n_th element, where _n_ is index 0
+<code>`t</code> | take first _n_ elements, where _n_ is index 0
+<code>`t></code> | `take` with sort predicate
+<code>`d</code> | drop first _n_ elements, where _n_ is index 0
+<code>`'</code> | `es` index 0 over each element
+<code>`/</code> | fold with `es` of index 0 over each element
+<code>`/a</code> | `\`/` with accumulator
+<code>`\\</code> | `\`/` with intermediate values
+<code>`\\a</code> | `\`\\` with accumulator
+<code>`#</code> | filter truthy results after `es`ing index 0 over each element
+<code>`t'</code> | `take` while `es`ing index 0 over each element is truthy
+<code>`d'</code> | `drop` while `es`ing index 0 over each element is truthy
+<code>`tap</code> | `es` index 0 over each element and return original element
+<code>`part</code> | `es` index 0 over each element and partition based on truthiness
+<code>`&</code> | check if all elements are truthy after `es`ing index 0 over each element
+<code>`\|</code> | check if any elements are truthy after `es`ing index 0 over each element
+<code>`?'</code> | find first element that returns truthy after `es`ing index 0
+
 ## LIST
 
 Command | Description
@@ -82,8 +143,6 @@ Command | Description
 <code>enclose</code> | enclose entire stack into a list
 <code>dups</code> | push entire stack as list
 <code>usurp</code> | set current stack to the list at index 0
-<code>enum</code> | convert each item in stack to a list containing index and item
-<code>denum</code> | convert `enum`-style stack into a normal stack
 
 ## LOGIC
 
@@ -113,7 +172,10 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>N</code> | convert to BigInt
+<code>N</code> | convert to bigint
+<code>ns</code> | convert number to digit list
+<code>n_</code> | convert to number
+<code>N_</code> | convert to number (reversed if list)
 <code>E</code> | `(index 1)*10^(index 0)`
 <code>_</code> | negation
 <code>+</code> | addition
@@ -166,6 +228,8 @@ Command | Description
 
 Command | Description
 --- | ---
+<code>:</code> | set a key-value pair in an object, where index 0 is the key and index 1 is the value
+<code>g:</code> | get value for key given by index 0 within object at index 1
 <code>keys</code> | get keys of object/list at index 0
 <code>vals</code> | get values of object/list at index 0
 <code>del</code> | remove key at index 0 from object at index 1
@@ -178,6 +242,8 @@ Command | Description
 --- | ---
 <code>size</code> | stack length
 <code>deps</code> | stack depth
+<code>enum</code> | convert each item in stack to an index-item pair
+<code>denum</code> | convert `enum`-style stack into a normal stack
 <code>pick</code> | `dup` but with any index
 <code>nix</code> | `drop` but with any index
 <code>roll</code> | `rot` but with any index
@@ -201,7 +267,11 @@ Command | Description
 <code>take</code> | keep top _n_ items, where _n_ is index 0
 <code>drop</code> | pop top _n_ items, where _n_ is index 0
 <code>flat</code> | `wrap_` all items
-<code>chunk</code> | split stack into lists of length given by index 0
+<code>blob</code> | deshape the stack
+<code>rows</code> | split stack into _n_ lists, where _n_ is index 0
+<code>cols</code> | split stack into lists of length _n_, where _n_ is index 0
+<code>shape</code> | reshape the stack using dimensions at index 0
+<code>zip</code> | group multiple arrays' items together by indices
 <code>wins</code> | split stack into consecutive slices given by index 0
 <code>map</code> | `es` on each individual item in the stack
 <code>fold</code> | `es` with accumulator and item; result of each `es` becomes the new accumulator
@@ -216,9 +286,10 @@ Command | Description
 <code>takew</code> | `take` items until `es` returns falsy for an item
 <code>dropw</code> | `drop` items until `es` returns falsy for an item
 <code>sort</code> | sort items in ascending order based on `es`
+<code>sortc</code> | `sort` with comparison function
 <code>part</code> | separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
-<code>zip</code> | group multiple arrays' items together by indices
 <code>group</code> | categorize items into keys after `es`ing index 0
+<code>table</code> | map over cartesian product of stack
 
 ## STR
 
