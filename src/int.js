@@ -1,5 +1,5 @@
 // modules
-import {itr, _, parse, SL} from './bridge.js'
+import {chalk, itr, _, parse, SL} from './bridge.js'
 
 let INT = {}
 
@@ -44,7 +44,7 @@ INT.form = (x=INT.stack[INT.st], y='\n')=>
     : a && typeof a == 'bigint' ?
       a + 'N'
     : a?.toFixed ?
-      +a
+      a
     : a?.big ?
       JSON.stringify(a)
     : a?.pop ?
@@ -68,7 +68,7 @@ INT.parse = x=> parse(x.pop ? x.join` ` : x + '')
 
 INT.gind = (o, x)=>
   _.isObjectLike(x) ? _.map(x, a=> INT.gind(o, a))
-  : x.toFixed || !isNaN(x + '') ? o.at(x)
+  : o.at && !isNaN(+x) ? (o.pop ? a=> a : _.reverse)(o.at(typeof x == 'bigint' ? Number(x) : x))
   : o[x]
 
 INT.get = x=> INT.gind(INT.stack[INT.st], x)
@@ -84,12 +84,12 @@ INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
 
 INT.concat = (x, y)=> (x + '').concat(y)
 
-INT.each = (O, f=_.map, g=x=> x)=>{
+INT.each = (O, f=_.map, s=false, g=x=> x)=>{
   let X = INT.shift()
   return f(O, (a, i)=>{
     INT.iter.unshift(INT.st)
     INT.st = INT.iter[0] + ' '
-    INT.stack[INT.st] = [a]
+    INT.stack[INT.st] = s && itr.isIterable(a) ? [...a] : [a]
     INT.exec(X)
     let A = INT.shift()
     delete INT.stack[INT.iter[0] + ' ']
@@ -128,20 +128,22 @@ INT.cmp = (O, f=(x, f)=> x.sort(f), g=x=> x)=>{
   })
 }
 
-INT.isitr = x=> !x?.pop && itr.isIterable(x)
+INT.isitr = x=> !x?.length && itr.isIterable(x)
 
 INT.listitr = x=>
-  INT.isitr(x) ? x 
-  : itr.reverse(itr.wrap(['number', 'bigint'].includes(typeof x) ? [x] : x))
+  !x?.pop && x?.length ? itr.map(a=> a.reverse(), x)
+  : INT.isitr(x) ? x
+  : (x?.big ? x=> x: itr.reverse)(itr.wrap(['number', 'bigint'].includes(typeof x) ? [x] : x))
 
 INT.listitrs = x=>
-  INT.isitr(x) ? x 
-  : itr.isIterable(x) ? INT.listitr(_.map(x, INT.listitrs))
+  !x?.pop && x?.length ? INT.listitr(x)
+  : INT.isitr(x) || x?.big ? x
+  : x.pop ? INT.listitr(_.map(x, INT.listitrs))
   : x
 
-INT.itrls = x=> itr.toArray(x).reverse()
+INT.itrls = x=> itr.toArray(itr.reverse(x))
 
-INT.itrlist = x=> INT.itrls(itr.map(a=> itr.isIterable(a) ? INT.itrlist(a) : a, INT.listitr(x)))
+INT.itrlist = x => INT.itrls(itr.map(a=> INT.isitr(a) ? INT.itrlist(a) : a, INT.listitr(x)))
 
 // convenience functions for call stack
 
@@ -178,9 +180,9 @@ INT.exec = (x, y)=>{
       // verbose mode
       if(INT.verbose && !INT.lambda){
         [
-          `--->{${INT.lns[0]}}{${(INT.st + '').replace(/\n/g, '\\n')}}`,
-          INT.code[0][0],
-          '---'
+          chalk.gray.dim(`———>{${INT.lns[0]}}{${(INT.st + '').replace(/\n/g, '\\n')}}`),
+          chalk.greenBright(INT.code[0][0]),
+          chalk.gray.dim('———')
         ].map(a=> console.log(a))
       }
 
@@ -200,7 +202,10 @@ INT.exec = (x, y)=>{
         else INT.unshift(INT.paren.join` `), INT.paren = []
       }
 
-      else if(a.big){
+      // numbers
+      else if(!isNaN(+a)) INT.unshift(a > Number.MAX_SAFE_INTEGER ? BigInt(a.replace(/\.\d*$/, '')) : Number(a))
+
+      else {
 
         // brackets/parens only
         if(a.match(/^[()\[\]{}]{2,}$/)) INT.exec(a.split``.join` `,1)
@@ -222,14 +227,11 @@ INT.exec = (x, y)=>{
         else throw `unknown function "${a}"`
       }
 
-      // numbers
-      else if(a.toFixed) INT.unshift(a)
-
       // verbose mode
       if(INT.verbose && !INT.lambda){
         [
           INT.form(),
-          '>---'
+          chalk.gray.dim('>———')
         ].map(a => console.log(a))
       }
 

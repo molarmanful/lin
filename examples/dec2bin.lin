@@ -9,6 +9,7 @@ BIN outln
 
 
 # EXPLANATION
+
 Converts decimal to binary.
 
 - `\BIN ::` pushes the ID of BIN to the global scope. This is a pretty standard way of declaring functions.

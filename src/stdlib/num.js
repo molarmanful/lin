@@ -4,12 +4,23 @@ let NUM = {}
 
 // convert to bigint
 NUM["N"] = $=>{
-  I.unshift(BigInt(I.shift()))
+  let X = I.shift()
+  I.unshift(BigInt(X.pop ? X.reverse().join`` : X))
 }
 
+// convert number to digit list
+NUM["ns"] = $=> I.unshift(_.map(I.shift() + '', a=> +a).reverse())
+
 // convert to number
+NUM["n_"] = $=>{
+  let X = I.shift()
+  I.unshift(Number(X.pop ? X.reverse().join`` : X))
+}
+
+// convert to number (reversed if list)
 NUM["N_"] = $=>{
-  I.unshift(Number(I.shift()))
+  let X = I.shift()
+  I.unshift(Number(X.pop ? X.join`` : X))
 }
 
 // `(index 1)*10^(index 0)`

@@ -1,6 +1,0 @@
-Usage: lin [options] [input]
-
-Options:
-  -h    display this help text
-  -e	parse input as string rather than filename
-  -v    verbose mode; show current command and current stack state

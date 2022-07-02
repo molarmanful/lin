@@ -11,6 +11,7 @@ CHECK DEC outln
 
 
 # EXPLANATION
+
 Converts binary to decimal.
 
 - `\CHECK :: \DEC ::` exposes the IDs of DEC and CHECK to the global scope. This is a pretty standard way of declaring functions.

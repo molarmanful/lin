@@ -1,4 +1,4 @@
-import {_, INT as I} from '../bridge.js'
+import {_, INT as I, SL} from '../bridge.js'
 
 let OBJ = {}
 
@@ -10,6 +10,12 @@ OBJ[":"] = $=>{
     let Y = I.shift()
     I.stack[I.st][0][X] = Y
   }
+}
+
+// get value for key given by index 0 within object at index 1
+OBJ["g:"] = $=>{
+  SL.swap()
+  I.unshift(I.gind(I.shift(), I.shift()))
 }
 
 // get keys of object/list at index 0

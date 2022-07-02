@@ -22,7 +22,7 @@ STR["pad"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   let Z = I.shift()
-  I.unshift(_.pad(Y,Z,X))
+  I.unshift(_.pad(Z, X, Y))
 }
 
 // `pad` but only from the left
@@ -30,7 +30,7 @@ STR["padl"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   let Z = I.shift()
-  I.unshift(_.padStart(Y,Z,X))
+  I.unshift(_.padStart(Z, X, Y))
 }
 
 // `pad` but only from the right
@@ -38,7 +38,7 @@ STR["padr"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   let Z = I.shift()
-  I.unshift(_.padEnd(Y,Z,X))
+  I.unshift(_.padEnd(Z, X, Y))
 }
 
 export default STR

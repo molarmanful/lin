@@ -3,6 +3,7 @@
 
 
 # EXPLANATION
+
 This outputs the first 50 Fibonacci numbers.
 
 - `1 1` serves as the initial condition.

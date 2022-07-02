@@ -66,12 +66,6 @@ BASE["g;;"] = $=>{
   I.unshift(I.lines[I.lns[0] - 1])
 }
 
-// get value for key given by index 0 within object at index 1
-BASE["g:"] = $=>{
-  SL.swap()
-  I.unshift(I.gind(I.shift(), I.shift()))
-}
-
 // convert index 0 to its string representation
 BASE["form"] = $=> I.unshift(I.form([I.shift()]))
 

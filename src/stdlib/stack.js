@@ -1,4 +1,4 @@
-import {itr, _, INT as I, SL, INT} from '../bridge.js'
+import {$C, itr, _, INT as I, SL} from '../bridge.js'
 
 let STACK = {}
 
@@ -117,9 +117,10 @@ STACK["blob"] = $=> I.stack[I.st] = I.stack[I.st].flat(1 / 0)
 
 // split stack into _n_ lists, where _n_ is index 0
 STACK["rows"] = $=>{
-  let X = I.stack[I.st].length / I.shift()
-  I.stack[I.st] = _.chunk(I.stack[I.st], 0 | X)
-  if(X != 0 | X) I.splice(-2, 2, I.stack[I.st].slice(-2).flat())
+  let X = I.shift()
+  let Y = I.stack[I.st].length / X
+  I.stack[I.st] = _.chunk(I.stack[I.st], 0 | Y)
+  if(Y != (0 | Y)) I.splice(-2, 2, I.stack[I.st].slice(-2).flat())
 }
 
 // split stack into lists of length _n_, where _n_ is index 0
@@ -208,5 +209,13 @@ STACK["part"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.partition)
 
 // categorize items into keys after `es`ing index 0
 STACK["group"] = $=> I.stack[I.st] = [I.each(I.stack[I.st], _.groupBy)]
+
+// map over cartesian product of stack
+STACK["table"] = $=>{
+  let X = I.shift()
+  let O = [...$C.CartesianProduct.from(I.stack[I.st])]
+  I.unshift(X)
+  I.stack[I.st] = I.each(O, _.map, true)
+}
 
 export default STACK

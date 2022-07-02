@@ -3,6 +3,7 @@
 
 
 # EXPLANATION
+
 Outputs the Thue-Morse sequence.
 
 - `0` is the initial condition.
