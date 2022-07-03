@@ -6,15 +6,18 @@
 
 Command | Description
 --- | ---
+<code>${</code> | create new scope
+<code>}$</code> | destroy current scope
 <code>gi</code> | push string at ID given by index 0
-<code>gl</code> | `gi` but follow local scoping rules
+<code>gl</code> | `gi` but follow scoping rules
 <code>gs</code> | push stack joined by newlines
 <code>g@</code> | push line at popped number (0-indexed)
 <code>g;</code> |  push next line
 <code>g;;</code> |  push previous line
 <code>form</code> | convert index 0 to its string representation
 <code>si</code> | set global ID at index 0
-<code>sl</code> | `si` but follow local scoping rules
+<code>sl</code> | `si` but follow scoping rules
+<code>sL</code> | `sl` but without overriding existing scoping rules
 <code>::</code> | bring ID at index 0 as string into global scope
 <code>type</code> | pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
 
@@ -56,7 +59,7 @@ Command | Description
 <code>e*</code> | `es` for number of times given by index 0
 <code>e&</code> | `es` if index 0 is truthy
 <code>e\|</code> | `es` if index 0 is falsy
-<code>e?</code> | `es` on index 2 if index 0 is truthy; otherwise, `es` on index 1
+<code>e?</code> | `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 <code>ew</code> | while `es` on index 1 is truthy, `es` on index 0
 <code>e@</code> |  `es` line number at index 0
 <code>;</code> |  `es` next line
@@ -259,7 +262,7 @@ Command | Description
 <code>tuck</code> | push index 0 to index 2
 <code>over</code> | push index 1
 <code>clr</code> | pop all items
-<code>rev</code> | reverse stack
+<code>revs</code> | reverse stack
 <code>dip</code> | pop index 0, `es`, push popped index 0
 <code>range</code> | exclusive range
 <code>rango</code> | `range` from 0 to index 0
@@ -275,6 +278,7 @@ Command | Description
 <code>zip</code> | group multiple arrays' items together by indices
 <code>wins</code> | split stack into consecutive slices given by index 0
 <code>map</code> | `es` on each individual item in the stack
+<code>maps</code> | `map` with list items treated as stacks
 <code>fold</code> | `es` with accumulator and item; result of each `es` becomes the new accumulator
 <code>folda</code> | `fold` with initial accumulator
 <code>scan</code> | `fold` with intermediate values

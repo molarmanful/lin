@@ -19,21 +19,24 @@ FLOW["e*"] = $=>{
 
 // `es` if index 0 is truthy
 FLOW["e&"] = $=>{
-  if(I.tru(I.shift())) SL.es()
-  else I.shift()
+  let X = I.shift()
+  let Y = I.shift()
+  if(I.tru(Y)) I.unshift(X), SL.es()
 }
 
 // `es` if index 0 is falsy
 FLOW["e|"] = $=>{
-  if(I.tru(I.shift())) I.shift()
-  else SL.es()
+  let X = I.shift()
+  let Y = I.shift()
+  if(!I.tru(Y)) I.unshift(X), SL.es()
 }
 
-// `es` on index 2 if index 0 is truthy; otherwise, `es` on index 1
+// `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 FLOW["e?"] = $=>{
   let X = I.shift()
-  if(!I.tru(X)) SL.swap()
-  I.shift()
+  let Y = I.shift()
+  let Z = I.shift()
+  if(I.tru(Z)) I.unshift(I.tru(Z) ? Y : X)
   SL.es()
 }
 
@@ -51,23 +54,13 @@ FLOW["ew"] = $=>{
 }
 
 //  `es` line number at index 0
-FLOW["e@"] = $=>{
-  I.lns.unshift(I.shift())
-  if(I.code[0].length) I.addf(a=> I.lns.shift())
-  I.exec(I.lines[I.lns[0]], 1)
-}
+FLOW["e@"] = $=> I.eline(I.shift())
 
 //  `es` next line
-FLOW[";"] = $=>{
-  I.unshift(I.lns[0] - -1)
-  SL["e@"]()
-}
+FLOW[";"] = $=> I.eline(I.lns[0] - -1)
 
 //  `es` previous line
-FLOW[";;"] = $=>{
-  I.unshift(I.lns[0] - 1)
-  SL["e@"]()
-}
+FLOW[";;"] = $=> I.eline(I.lns[0] - 1)
 
 // end execution of current call stack frame
 FLOW["break"] = $=> I.code.shift()

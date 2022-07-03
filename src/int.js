@@ -1,4 +1,5 @@
 // modules
+import { split } from 'lodash-es'
 import {chalk, itr, _, parse, SL} from './bridge.js'
 
 let INT = {}
@@ -7,7 +8,7 @@ let INT = {}
 
 INT.print = x=> (console.log(x), x)
 
-INT.id = (x=INT.shift())=>{
+INT.id = x=>{
   let y = RegExp(`^ *#${x}`)
   let line = INT.lines.findIndex(a=> a.match(y))
   if(~line){
@@ -16,8 +17,8 @@ INT.id = (x=INT.shift())=>{
   }
 }
 
-INT.getscope = (x=INT.shift())=>{
-  let y = INT.scope.find(a=> a[x])
+INT.getscope = x=>{
+  let y = INT.scope.find(a=> x in a)
   return y ? y[x] : INT.ids[x]
 }
 
@@ -143,7 +144,13 @@ INT.listitrs = x=>
 
 INT.itrls = x=> itr.toArray(itr.reverse(x))
 
-INT.itrlist = x => INT.itrls(itr.map(a=> INT.isitr(a) ? INT.itrlist(a) : a, INT.listitr(x)))
+INT.itrlist = x=> INT.itrls(itr.map(a=> INT.isitr(a) ? INT.itrlist(a) : a, INT.listitr(x)))
+
+INT.eline = x=>{
+  INT.lns.unshift(x)
+  if(INT.code[0].length || INT.code[1]) INT.addf(a=> INT.lns.shift())
+  INT.exec(INT.lines[INT.lns[0]], 1)
+}
 
 // convenience functions for call stack
 
@@ -196,7 +203,7 @@ INT.exec = (x, y)=>{
       // lambda mode
       else if(INT.lambda){
         if(a == '(') INT.lambda++
-        else if(a == ')') INT.lambda--, INT.scope.shift()
+        else if(a == ')') INT.lambda--
 
         if(INT.lambda) INT.paren.push(a)
         else INT.unshift(INT.paren.join` `), INT.paren = []
@@ -207,8 +214,21 @@ INT.exec = (x, y)=>{
 
       else {
 
+        // ignore hashes
+        if(a.match(/^#./)){}
+
+        else if(INT.gl){
+          INT.gl = 0
+          INT.unshift(a)
+          if(a[1] && a[0] == '\\'){
+            INT.unshift(INT.shift().slice(1))
+            SL.sL()
+          }
+          else SL.gl()
+        }
+
         // brackets/parens only
-        if(a.match(/^[()\[\]{}]{2,}$/)) INT.exec(a.split``.join` `,1)
+        else if(a.match(/^[()\[\]{}]{2,}$/)) INT.exec(a.split``.join` `,1)
 
         // refs
         else if(a[1] && a[0] == '\\') INT.unshift(a.slice(1))
@@ -216,8 +236,7 @@ INT.exec = (x, y)=>{
         // matched functions
         else if(INT.ids[a]){
           if(INT.idls[a] !== undefined) INT.lns.unshift(INT.idls[a])
-          if(INT.code[0].length) INT.addf(a=>{INT.lns.shift(); INT.scope.shift()})
-          INT.scope.unshift({})
+          if(INT.code[0].length) INT.addf($=> INT.lns.shift())
           INT.exec(INT.ids[a], 1)
         }
 
@@ -245,6 +264,7 @@ INT.exec = (x, y)=>{
 INT.run = (x, lim=10)=>{
   INT.stack = {0: []}
   INT.st = 0
+  INT.gl = 0
   INT.lambda = 0
   INT.paren = []
   INT.ids = {}

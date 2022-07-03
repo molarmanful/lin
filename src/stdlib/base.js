@@ -4,7 +4,6 @@ let BASE = {}
 
 BASE["("] = $=>{
   I.lambda = 1
-  I.scope.unshift({})
 }
 
 BASE[")"] = $=>{}
@@ -36,19 +35,31 @@ BASE["}"] = $=>{
   I.unshift(X)
 }
 
+// create new scope
+BASE["${"] = $=>{
+  I.scope.unshift({})
+}
+
+// destroy current scope
+BASE["}$"] = $=>{
+  I.scope.shift()
+}
+
 // push string at ID given by index 0
 BASE["gi"] = $=>{
   let X = I.shift()
-  if(I.ids[X] == undefined) I.id(X)
+  if(!(X in I.ids)) I.id(X)
   I.unshift(I.ids[X])
 }
 
-// `gi` but follow local scoping rules
+// `gi` but follow scoping rules
 BASE["gl"] = $=>{
   let X = I.shift()
   if(I.getscope(X) == undefined) I.id(X)
   I.unshift(I.getscope(X))
 }
+
+BASE["."] = $=> I.gl = 1
 
 // push stack joined by newlines
 BASE["gs"] = $=> I.unshift(I.form())
@@ -72,7 +83,7 @@ BASE["form"] = $=> I.unshift(I.form([I.shift()]))
 // set global ID at index 0
 BASE["si"] = $=> I.ids[I.shift()] = I.shift()
 
-// `si` but follow local scoping rules
+// `si` but follow scoping rules
 BASE["sl"] = $=>{
   let X = I.shift()
   let Y = I.shift()
@@ -80,8 +91,21 @@ BASE["sl"] = $=>{
   else I.ids[X] = Y
 }
 
+// `sl` but without overriding existing scoping rules
+BASE["sL"] = $=>{
+  let X = I.shift()
+  let Y = I.shift()
+  if(I.scope.length){
+    let i = I.scope.findIndex(a=> X in a)
+    if(~i) I.scope[i][X] = Y
+    else if(X in I.ids) I.ids[X] = Y
+    else I.scope[0][X] = Y
+  }
+  else I.ids[X] = Y
+}
+
 // bring ID at index 0 as string into global scope
-BASE["::"] = $=> I.id()
+BASE["::"] = $=> I.id(I.shift())
 
 // pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
 BASE["type"] = $=>{

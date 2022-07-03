@@ -71,7 +71,7 @@ STACK["over"] = $=> I.exec('swap tuck', 1)
 STACK["clr"] = $=> I.stack[I.st] = []
 
 // reverse stack
-STACK["rev"] = $=> I.stack[I.st].reverse()
+STACK["revs"] = $=> I.stack[I.st].reverse()
 
 // pop index 0, `es`, push popped index 0
 STACK["dip"] = $=>{
@@ -153,6 +153,9 @@ STACK["wins"] = $=>{
 
 // `es` on each individual item in the stack
 STACK["map"] = $=> I.stack[I.st] = I.each(I.stack[I.st])
+
+// `map` with list items treated as stacks
+STACK["maps"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.map, 1)
 
 // `es` with accumulator and item; result of each `es` becomes the new accumulator
 STACK["fold"] = $=> I.stack[I.st] = [I.acc(I.stack[I.st])]
