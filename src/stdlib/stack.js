@@ -201,10 +201,10 @@ STACK["takew"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.takeWhile)
 // `drop` items until `es` returns falsy for an item
 STACK["dropw"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.dropWhile)
 
-// sort items in ascending order based on `es`
+// sort items based on `es`
 STACK["sort"] = $=> I.stack[I.st] = I.each(I.stack[I.st], _.sortBy).reverse()
 
-// `sort` with comparison function
+// sort items based on comparison function
 STACK["sortc"] = $=> I.stack[I.st] = I.cmp(I.stack[I.st]).reverse()
 
 // separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
@@ -219,6 +219,15 @@ STACK["table"] = $=>{
   let O = [...$C.CartesianProduct.from(I.stack[I.st])]
   I.unshift(X)
   I.stack[I.st] = I.each(O, _.map, true)
+}
+
+// get insert index of index 0 from binary searching over `es` of index 1 on each element in stack
+STACK["bins"] = $=>{
+  let X = I.shift()
+  let Y = I.shift()
+  let O = I.stack[I.st].slice().reverse()
+  I.unshift(X)
+  I.unshift(O.length - I.each(O, (x, f)=> _.sortedIndexBy(x, Y, f)))
 }
 
 export default STACK

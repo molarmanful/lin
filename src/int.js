@@ -83,8 +83,6 @@ INT.shift = x=> _.cloneDeep(INT.stack[INT.st].shift())
 
 INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
 
-INT.concat = (x, y)=> x.concat(y)
-
 INT.each = (O, f=_.map, s=false, g=x=> x)=>{
   let X = INT.shift()
   return f(O, (a, i)=>{

@@ -293,11 +293,12 @@ Command | Description
 <code>findi</code> | `find` but returns index
 <code>takew</code> | `take` items until `es` returns falsy for an item
 <code>dropw</code> | `drop` items until `es` returns falsy for an item
-<code>sort</code> | sort items in ascending order based on `es`
-<code>sortc</code> | `sort` with comparison function
+<code>sort</code> | sort items based on `es`
+<code>sortc</code> | sort items based on comparison function
 <code>part</code> | separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
 <code>group</code> | categorize items into keys after `es`ing index 0
 <code>table</code> | map over cartesian product of stack
+<code>bins</code> | get insert index of index 0 from binary searching over `es` of index 1 on each element in stack
 
 ## STR
 
