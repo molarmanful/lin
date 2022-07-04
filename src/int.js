@@ -147,9 +147,20 @@ INT.itrls = x=> itr.toArray(itr.reverse(x))
 INT.itrlist = x=> INT.itrls(itr.map(a=> INT.isitr(a) ? INT.itrlist(a) : a, INT.listitr(x)))
 
 INT.eline = x=>{
-  INT.lns.unshift(x)
-  if(INT.code[0].length || INT.code[1]) INT.addf(a=> INT.lns.shift())
-  INT.exec(INT.lines[INT.lns[0]], 1)
+  if(INT.lines[x]){
+    INT.tline(x)
+    INT.exec(INT.lines[INT.lns[0]], 1)
+  }
+}
+
+INT.tline = x=>{
+  if(INT.lns.includes(x)){
+    INT.lns = _.dropWhile(INT.lns, a=> a != x)
+  }
+  else {
+    INT.lns.unshift(x)
+    if(INT.code[0].length || INT.code[1]) INT.addf(a=> INT.lns.shift())
+  }
 }
 
 // convenience functions for call stack
@@ -215,7 +226,7 @@ INT.exec = (x, y)=>{
       else {
 
         // ignore hashes
-        if(a.match(/^#./)){}
+        if(a[1] && a[0] == '#'){}
 
         else if(INT.gl){
           INT.gl = 0
@@ -234,14 +245,13 @@ INT.exec = (x, y)=>{
         else if(a[1] && a[0] == '\\') INT.unshift(a.slice(1))
 
         // matched functions
-        else if(INT.ids[a]){
-          if(INT.idls[a] !== undefined) INT.lns.unshift(INT.idls[a])
-          if(INT.code[0].length) INT.addf($=> INT.lns.shift())
+        else if(a in INT.ids){
+          if(a in INT.idls) INT.tline(INT.idls[a])
           INT.exec(INT.ids[a], 1)
         }
 
         // stdlib functions
-        else if(SL[a]) SL[a]()
+        else if(a in SL) SL[a]()
 
         else throw `unknown function "${a}"`
       }

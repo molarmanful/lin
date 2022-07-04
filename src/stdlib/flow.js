@@ -36,7 +36,7 @@ FLOW["e?"] = $=>{
   let X = I.shift()
   let Y = I.shift()
   let Z = I.shift()
-  if(I.tru(Z)) I.unshift(I.tru(Z) ? Y : X)
+  I.unshift(I.tru(Z) ? Y : X)
   SL.es()
 }
 
@@ -53,13 +53,16 @@ FLOW["ew"] = $=>{
   I.exec(X, 1)
 }
 
-//  `es` line number at index 0
+// `es` line number at index 0
 FLOW["e@"] = $=> I.eline(I.shift())
 
-//  `es` next line
+// `es` current line
+FLOW["@"] = $=> I.eline(I.lns[0])
+
+// `es` next line
 FLOW[";"] = $=> I.eline(I.lns[0] - -1)
 
-//  `es` previous line
+// `es` previous line
 FLOW[";;"] = $=> I.eline(I.lns[0] - 1)
 
 // end execution of current call stack frame

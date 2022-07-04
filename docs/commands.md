@@ -61,9 +61,10 @@ Command | Description
 <code>e\|</code> | `es` if index 0 is falsy
 <code>e?</code> | `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 <code>ew</code> | while `es` on index 1 is truthy, `es` on index 0
-<code>e@</code> |  `es` line number at index 0
-<code>;</code> |  `es` next line
-<code>;;</code> |  `es` previous line
+<code>e@</code> | `es` line number at index 0
+<code>@</code> | `es` current line
+<code>;</code> | `es` next line
+<code>;;</code> | `es` previous line
 <code>break</code> | end execution of current call stack frame
 
 ## IO
@@ -88,8 +89,8 @@ Command | Description
 <code>`_`</code> | convert from iterator to string
 <code>`=</code> | check if iterators are equal
 <code>`=*</code> | check if iterators are deeply equal
-<code>?</code> | check if iterator at index 1 has sequence at index 0
-<code>?*</code> | `?` with multiple sequences
+<code>`?</code> | check if iterator at index 1 has sequence at index 0
+<code>`?*</code> | `?` with multiple sequences
 <code>`cyc</code> | create infinite cycle from index 0
 <code>`+</code> | concatenate top 2 items into iterator
 <code>`,</code> | prepend-concatenate index 0 into iterator

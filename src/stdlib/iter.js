@@ -30,10 +30,10 @@ ITER["`="] = $=> I.unshift(itr.equal(itrd(), itrd()))
 ITER["`=*"] = $=> I.unshift(itr.deepEqual(itrd(), itrd()))
 
 // check if iterator at index 1 has sequence at index 0
-ITER["?"] = $=> I.unshift(itr.includesSeq(itrd(), itrd()))
+ITER["`?"] = $=> I.unshift(itr.includesSeq(itrd(), itrd()))
 
 // `?` with multiple sequences
-ITER["?*"] = $=> I.unshift(itr.includesAnySeq(itr.listitrs(I.shift()), itrd()))
+ITER["`?*"] = $=> I.unshift(itr.includesAnySeq(itr.listitrs(I.shift()), itrd()))
 
 // create infinite cycle from index 0
 ITER["`cyc"] = $=> I.unshift(itr.cycle(itrd()))

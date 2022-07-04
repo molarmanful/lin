@@ -9,7 +9,7 @@ LOGIC["="] = $=> I.unshift(+(I.shift() == I.shift()))
 LOGIC["=="] = $=> I.unshift(+(I.shift() === I.shift()))
 
 // deep equal
-LOGIC["eq"] = $=> I.unshift(_.isEqual(I.shift(), I.shift()))
+LOGIC["eq"] = $=> I.unshift(+_.isEqual(I.shift(), I.shift()))
 
 // not equal
 LOGIC["!="] = $=> I.unshift(+(I.shift() != I.shift()))
