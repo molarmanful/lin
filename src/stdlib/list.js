@@ -21,7 +21,7 @@ LIST["'"] = $=>{
   if(Y.big || Y.toFixed) Y = (Y + '').split``
   I.iter.unshift(I.st)
   I.st = I.iter[0]+'\n'
-  I.stack[I.st] = Y
+  I.stack[I.st] = Y.slice()
   I.addf(a=>{
     Y = I.stack[I.st]
     delete I.stack[I.iter[0]+'\n']

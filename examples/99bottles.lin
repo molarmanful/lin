@@ -1,0 +1,26 @@
+\P :: ;
+( of beer ) .\x ( on the wall ) .\y ;
+1 100 range \; map
+.\n .n P .\b ;
+[ .n .b .x ] dup ( .y ) ' ( \ join outln ) 2e* ;
+( Take one down, pass it around ) outln ;
+[ .n 1- dup ( pop ( No more ) ) e| P .x .y n\ ] \ join outln
+
+#P \bottle over 1= ( \s ++ ) e|
+
+
+
+# EXPLANATION
+
+Outputs lyrics for the song "99 Bottles of Beer on the Wall."
+
+- `( of beer ) .\x ( on the wall ) .\y` stores repeated phrases for later.
+- `1 100 range \; map` executes the line 3 for each *n* from 99 to 1.
+
+On line 3:
+
+- `.\n .n P .\b` stores "bottle" or "bottles" depending on whether *n* is 1.
+- `[ .n .b .x ] dup ( .y ) ' ( \ join outln ) 2e* ;` first 2 lines of chorus.
+- `( Take one down, pass it around ) outln ;` third line of chorus.
+- `.n 1- dup ( pop ( No more ) ) e|` decrements *n* and replaces it with "No more" if 0.
+- `[ ... P .x .y n\ ] \ join outln` last line of chorus.

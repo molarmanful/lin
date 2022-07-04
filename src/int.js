@@ -187,7 +187,7 @@ INT.exec = (x, y)=>{
       // verbose mode
       if(INT.verbose && !INT.lambda){
         [
-          chalk.gray.dim(`———>{${INT.lns[0]}}{${(INT.st + '').replace(/\n/g, '\\n')}}`),
+          chalk.gray.dim(`———>{C:${INT.code.map(a=> a.length).join` `}}{L:${INT.lns.join` `}}{S:${(INT.st + '').replace(/\n/g, '\\n')}}`),
           chalk.greenBright(INT.code[0][0]),
           chalk.gray.dim('———')
         ].map(a=> console.log(a))
