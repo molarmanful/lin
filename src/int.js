@@ -1,5 +1,4 @@
 // modules
-import { split } from 'lodash-es'
 import {chalk, itr, _, parse, SL} from './bridge.js'
 
 let INT = {}
@@ -38,30 +37,31 @@ INT.range = (x, y)=>{
 
 INT.tru = x=> x
 
+INT.str = x=>
+  x?.pop ? INT.str(x).reverse().join` `
+  : INT.isitr(x) ? '[...]`'
+  : _.isObjectLike(x) ? _.map((a, i)=> i + str(a)).join` `
+  : x
+
 INT.form = (x=INT.stack[INT.st], y='\n')=>
   x.map(a=>
-    a == Infinity ?
-      '$I'
-    : a && typeof a == 'bigint' ?
-      a + 'N'
+    a == Infinity ? '$I'
+    : a && typeof a == 'bigint' ? a + 'N'
     : a?.toFixed ?
       a < 0 ? -a + '_' : a + ''
-    : a?.big ?
-      JSON.stringify(a)
+    : a?.big ? JSON.stringify(a)
     : a?.pop ?
       a.length ?
         `[ ${INT.form(a, ' ')} ]`
       : '[]'
-    : a && INT.isitr(a)?
-      `[...]\``
+    : a && INT.isitr(a)? '[...]`'
     : _.isObjectLike(a) ?
       _.keys(a).length ?
         `{ ${
           _.keys(a).map(b=> INT.form([b]) + ': ' + INT.form([a[b]])).join` `
         } }`
       : '{}'
-    : a == undefined ?
-      '$U'
+    : a == undefined ? '$U'
     : a
   ).reverse().join(y)
 
@@ -79,11 +79,11 @@ INT.splice = (x, y=1, z, w=0)=>
     INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)
   : INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y)
 
-INT.shift = x=> INT.stack[INT.st].shift()
+INT.shift = x=> _.cloneDeep(INT.stack[INT.st].shift())
 
 INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
 
-INT.concat = (x, y)=> (x + '').concat(y)
+INT.concat = (x, y)=> x.concat(y)
 
 INT.each = (O, f=_.map, s=false, g=x=> x)=>{
   let X = INT.shift()

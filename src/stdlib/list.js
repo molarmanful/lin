@@ -1,4 +1,4 @@
-import {_, INT as I} from '../bridge.js'
+import {_, INT as I, SL} from '../bridge.js'
 
 let LIST = {}
 
@@ -46,7 +46,8 @@ LIST["join"] = $=>{
 // concatenate top 2 items as strings or lists
 LIST["++"] = $=>{
   let X = I.shift()
-  I.unshift(I.concat(I.shift(), X))
+  let Y = I.shift()
+  I.unshift(Y.big ? Y + I.str(X) : _.concat(X, Y))
 }
 
 // repeat list/string by index 0

@@ -2,6 +2,8 @@ import {unesc, _, INT as I} from '../bridge.js'
 
 let STR = {}
 
+STR["str"] = $=> I.unshift(I.str(I.shift()))
+
 // unescape string at index 0
 STR["unesc"] = $=> I.unshift(unesc(I.shift()))
 

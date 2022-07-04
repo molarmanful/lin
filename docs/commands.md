@@ -170,6 +170,7 @@ Command | Description
 <code>push</code> | push index 1 to another stack with name given by index 0
 <code>pushs</code> | push current stack to another stack with name given by index 0
 <code>pull</code> | push top item of another stack with name given by index 0
+<code>pud</code> | `pull` without modifying other stack
 <code>pulls</code> | pull stack with name given by index 0 to current stack
 
 ## NUM
@@ -240,6 +241,7 @@ Command | Description
 <code>del</code> | remove key at index 0 from object at index 1
 <code>enom</code> | convert object to a list containing each key-value pair
 <code>denom</code> | convert `enom`-style list into object
+<code>has</code> | check if index 0 is in list/object at index 1
 
 ## STACK
 

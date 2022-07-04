@@ -23,6 +23,7 @@ MULTISTACK["push"] = $=>{
 // push current stack to another stack with name given by index 0
 MULTISTACK["pushs"] = $=>{
   let X = I.shift()
+  if(!I.stack[X]) I.stack[X] = []
   I.stack[X].unshift(...I.stack[I.st])
 }
 
@@ -33,9 +34,17 @@ MULTISTACK["pull"] = $=>{
   I.unshift(I.stack[X].shift())
 }
 
+// `pull` without modifying other stack
+MULTISTACK["pud"] = $=>{
+  let X = I.shift()
+  if(!I.stack[X]) I.stack[X] = []
+  I.unshift(I.stack[X][0])
+}
+
 // pull stack with name given by index 0 to current stack
 MULTISTACK["pulls"] = $=>{
   let X = I.shift()
+  if(!I.stack[X]) I.stack[X] = []
   I.unshift(...I.stack[X])
 }
 

@@ -40,4 +40,10 @@ OBJ["denom"] = $=>{
   X.map(a=> I.stack[I.st][0][a[1]] = a[0])
 }
 
+// check if index 0 is in list/object at index 1
+OBJ["has"] = $=>{
+  SL.swap()
+  I.unshift(+_.includes(I.shift(), I.shift()))
+}
+
 export default OBJ
