@@ -214,9 +214,10 @@ INT.exec = (x, y)=>{
       else if(INT.lambda){
         if(a == '(') INT.lambda++
         else if(a == ')') INT.lambda--
+        else if(!a.match(/[^)]/g)) INT.lambda -= a.length
 
-        if(INT.lambda) INT.paren.push(a)
-        else INT.unshift(INT.paren.join` `), INT.paren = []
+        if(INT.lambda > 0) INT.paren.push(a)
+        else SL[')']()
       }
 
       // numbers
@@ -283,6 +284,7 @@ INT.run = (x, lim=10)=>{
   INT.verbose = INT.verbose || 0
   INT.lns = [0]
   INT.scope = []
+  INT.scoped = 0
   INT.objs = []
   INT.lines = x.split`\n`
   // INT.max_itr = lim

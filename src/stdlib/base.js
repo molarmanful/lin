@@ -2,11 +2,23 @@ import {_, INT as I, SL} from '../bridge.js'
 
 let BASE = {}
 
-BASE["("] = $=>{
+BASE["("] = $=> I.lambda = 1
+
+BASE["$("] = $=>{
   I.lambda = 1
+  I.scoped = 1
 }
 
-BASE[")"] = $=>{}
+BASE[")"] = $=>{
+  let X = I.paren.join` `
+  I.paren = []
+  if(I.scoped){
+    X = `\${ ${X} }$`
+    I.scoped = 0
+  }
+  I.unshift(X)
+  I.lambda = 0
+}
 
 BASE["["] = $=>{
   I.iter.unshift(I.st)
