@@ -153,10 +153,8 @@ ITER["`\\a"] = $=>{
 
 // filter truthy results after `es`ing index 0 over each element
 ITER["`#"] = $=>{
-  let X = []
   SL.swap()
-  let Y = I.acc(itrd(), 1, (x, f)=> itr.reduce(f, x), (A, a)=> (X.unshift(a), A))
-  I.unshift([Y, ...X])
+  I.unshift(I.each(itrd(), (x, f)=> itr.filter(f, x)))
 }
 
 // `take` while `es`ing index 0 over each element is truthy

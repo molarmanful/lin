@@ -233,7 +233,7 @@ INT.exec = (x, y)=>{
           INT.unshift(a)
           if(a[1] && a[0] == '\\'){
             INT.unshift(INT.shift().slice(1))
-            SL.sL()
+            SL[INT.objs.length ? ':' : 'sL']()
           }
           else SL.gl()
         }

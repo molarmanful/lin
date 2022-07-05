@@ -27,7 +27,7 @@ NUM["N_"] = $=>{
 }
 
 // convert number to digit list
-NUM["ns"] = $=> I.unshift(_.map(I.shift() + '', a=> +a).reverse())
+NUM["ns"] = $=> I.unshift(_.map(I.str(I.shift()), a=> +a).reverse())
 
 // `(index 1)*10^(index 0)`
 NUM["E"] = $=> I.exec('10 swap ^ *', 1)

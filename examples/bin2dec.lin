@@ -7,7 +7,6 @@ dup ( ( 1> ) any ) ' 0g: ( .ERR outln break ) e& ;
 
 
 
-
 # EXPLANATION
 
 Converts binary to decimal.

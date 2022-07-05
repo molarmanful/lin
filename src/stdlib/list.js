@@ -18,7 +18,7 @@ LIST["dep"] = $=>{
 LIST["'"] = $=>{
   let X = I.shift()
   let Y = I.shift()
-  if(Y.big || Y.toFixed) Y = (Y + '').split``
+  if(Y.big || Y.toFixed) Y = I.str(Y).split``
   I.iter.unshift(I.st)
   I.st = I.iter[0]+'\n'
   I.stack[I.st] = Y.slice()
@@ -34,7 +34,7 @@ LIST["'"] = $=>{
 // split string at index 1 over string at index 0
 LIST["split"] = $=>{
   let X = I.shift()
-  I.unshift((I.shift() + '').split(X).reverse())
+  I.unshift(I.str(I.shift()).split(X).reverse())
 }
 
 // join list over string at index 0

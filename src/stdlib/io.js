@@ -12,12 +12,12 @@ IO["write"] = $=> fs.writeFileSync(I.shift(), I.shift())
 IO["in"] = $=> I.unshift(rls.question(''))
 
 // push user input without echoing
-IO["inh"] = $=> I.unshift(rls.question('',{hideEchoBack: true, mask: ''}))
+IO["inh"] = $=> I.unshift(rls.question('', {hideEchoBack: true, mask: ''}))
 
 // output index 0 to STDOUT
-IO["out"] = $=> process.stdout.write('' + I.shift())
+IO["out"] = $=> process.stdout.write(I.str(I.shift()))
 
 // output index 0 as a line to STDOUT
-IO["outln"] = $=> process.stdout.write('' + I.shift() + '\n')
+IO["outln"] = $=> process.stdout.write(I.str(I.shift()) + '\n')
 
 export default IO
