@@ -1,9 +1,10 @@
 # lin
 
-lin is a stack-based programming language that blurs the line between esoteric and practical.
+The little language that could.
 
 ```
-
+1N 1N ;
+over outln swap over + @
 ```
 
 ## Normal Installation
@@ -22,4 +23,4 @@ CLI Usage:
 
 For more options, run `lin -h`.
 
-A basic tutorial can be found on the [wiki](https://github.com/molarmanful/lin/wiki).
+More information can be found on the [wiki](https://github.com/molarmanful/lin/wiki).

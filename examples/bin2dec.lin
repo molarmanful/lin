@@ -1,12 +1,10 @@
-\IN :: \ERR :: \CHECK :: \DEC :: ;
-\IN gi out in ;
-CHECK DEC outln
+.IN out in ;
+dup ( ( 1> ) any ) ' 0g: ( .ERR outln break ) e& ;
+( rev enum ( wrap_ swap 2 swap ^ * ) map \+ fold ) ' outln
 
 #INEnter a binary number: 
 #ERRNot a binary number!
 
-#CHECK ( \ERR gi outln break ) over ( ( 1> ) any ) ' wrap_ e&
-#DEC ( rev enum ( wrap_ swap 2 swap ^ * ) map \+ fold ) '
 
 
 
@@ -14,15 +12,7 @@ CHECK DEC outln
 
 Converts binary to decimal.
 
-- `\IN :: \IN gi out in` prompts the user for a binary number.
-- `CHECK DEC outln` runs both CHECK and DEC and outputs the result.
-
-In CHECK:
-
-- `( \ERR gi outln break ) ... e&` will output ERR and end the program if a condition is met.
-- `over ( ( 1> ) any ) ' wrap_` takes the inputted number and checks if any of the digits are greater than 1.
-
-In DEC:
-
-- `( rev enum ( ... ) map \+ fold ) '` applies the given lambda over each digit and its index, then sums the result.
+- `.N out in` prompts the user for a binary number.
+- `dup ( ( 1> ) any ) ' 0g: ( .ERR outln break ) e& ;` errors if the input is not a binary number.
+- `( rev enum ( ... ) map \+ fold ) ' outln` applies the given lambda over each digit and its index, then sums the result and outputs it.
 - `wrap_ 2 swap ^ *` does `2 ^ (index) * (current digit)`.

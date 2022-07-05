@@ -1,4 +1,5 @@
-1N 1N ( over outln swap over + ) $I e*
+1N 1N ;
+over outln swap over + @
 
 
 
@@ -7,6 +8,6 @@
 This outputs Fibonacci numbers.
 
 - `1N 1N` serves as the initial condition.
-- `(...) $I e*` executes the lambda infinitely.
 - `over outln` duplicates the second from top of stack and outputs it.
 - `swap over +` adds the top 2 Fibonacci numbers.
+- `@` executes the line again.
