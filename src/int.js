@@ -157,7 +157,7 @@ INT.tline = x=>{
   }
   else {
     INT.lns.unshift(x)
-    if(INT.code[0].length || INT.code[1]) INT.addf(a=> INT.lns.shift())
+    if(INT.code[0][0] || INT.code[1]) INT.addf(a=> INT.lns.shift())
   }
 }
 
@@ -169,12 +169,12 @@ INT.addc = x=>{
 }
 
 INT.addf = (...x)=>{
-  INT.code[0] = x.reduceRight((a,b)=> [b, A=> a], INT.code[0])
+  INT.code[0] = x.reduceRight((a,b)=> [b, ...a], INT.code[0])
 }
 
 INT.getf = _=>{
   let x = INT.code[0][0]
-  INT.code[0] = INT.code[0][1]()
+  INT.code[0] = INT.code[0].slice(1)
   return x
 }
 
@@ -195,6 +195,7 @@ INT.exec = (x, y)=>{
 
       // verbose mode
       if(INT.verbose && !INT.lambda){
+        // console.log(INT.code.map(a=> a.map(b=> b+'')));
         [
           chalk.gray.dim(`———>{C:${INT.code.map(a=> a.length).join` `}}{L:${INT.lns.join` `}}{S:${(INT.st + '').replace(/\n/g, '\\n')}}`),
           chalk.greenBright(INT.code[0][0]),

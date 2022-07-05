@@ -265,7 +265,7 @@ Command | Description
 <code>tuck</code> | push index 0 to index 2
 <code>over</code> | push index 1
 <code>clr</code> | pop all items
-<code>revs</code> | reverse stack
+<code>rev</code> | reverse stack
 <code>dip</code> | pop index 0, `es`, push popped index 0
 <code>range</code> | exclusive range
 <code>rango</code> | `range` from 0 to index 0

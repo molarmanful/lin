@@ -71,7 +71,7 @@ STACK["over"] = $=> I.exec('swap tuck', 1)
 STACK["clr"] = $=> I.stack[I.st] = []
 
 // reverse stack
-STACK["revs"] = $=> I.stack[I.st].reverse()
+STACK["rev"] = $=> I.stack[I.st].reverse()
 
 // pop index 0, `es`, push popped index 0
 STACK["dip"] = $=>{
