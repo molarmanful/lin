@@ -1,0 +1,32 @@
+\SIEVE :: ;
+\n: out in 1+ .\n { 1 1: } .\s SIEVE clr ;
+1 .n range ( .s over g: \\X e& \ .n ns len pad ) map ;
+10cols ( \ join ) map enclose n\ join outln
+
+#SIEVE .n .5^ 0| 1 range ( .\a .s .a g: \; e| ) map
+$` ( 2+ .a * ) `' ( .n <= ) `t' ( .s 1 rot : .\s ) `' `_
+
+
+
+# EXPLANATION
+
+Outputs a Sieve of Eratosthenes.
+
+- `\n: out in 1+ .\n` stores input + 1 to *n*.
+- `{ 1 1: } .\s SIEVE clr` initializes the sieve, runs SIEVE, and clears the stack.
+- `1 .n range ( ... ) map` for each item *b* in the range from 1 to *n*...
+  - `.s over g: \\X e&` replaces sieved (i.e. non-prime) numbers with "X."
+  - `\ .n ns len pad` pads each number or X with spaces.
+- `10cols ( \ join ) map enclose n\ join outln` formats and outputs the stack.
+
+In SIEVE:
+
+- `.n .5^ 0| 1 range` creates a range from `floor(sqrt(n))` to 1.
+- `( ... ) map` for each item *a* in the range...
+  - `.\a .s .a g: \; e|` executes line 6 if *a* is found in the sieve.
+
+On line 6:
+
+- `$\` ( 2+ .a * ) \`'` generates an infinite list of multiples of *a*.
+- `( .n <= ) \`t'` takes list elements that are <= *n*.
+- `( .s 1 rot : .\s ) \`' \`_` puts each element into the sieve.

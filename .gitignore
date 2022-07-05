@@ -1,0 +1,4 @@
+node_modules
+*.lin
+!examples/*.lin
+lin.wiki

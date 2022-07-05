@@ -1,0 +1,36 @@
+{
+  "name": "linlang",
+  "version": "0.1.0-0",
+  "description": "A line-based programming language",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "lin": "./run.sh"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/molarmanful/lin.git"
+  },
+  "author": "Benjamin Pang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/molarmanful/lin/issues"
+  },
+  "homepage": "https://github.com/molarmanful/lin#readme",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "command-line-args": "^5.2.1",
+    "command-line-usage": "^6.1.3",
+    "iter-tools-es": "^7.4.0",
+    "js-combinatorics": "^2.1.0",
+    "lodash-es": "^4.17.21",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^6.2.3"
+  }
+}

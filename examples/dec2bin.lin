@@ -1,0 +1,15 @@
+.IN out in ;
+( 2/% swap ) \dup ew pop rev enclose () join outln
+
+#INEnter a decimal number: 
+
+
+
+# EXPLANATION
+
+Converts decimal to binary.
+
+- `.IN out in` prompts the user for a decimal number.
+- `(...) \dup ew` executes the lambda while the top of the stack is nonzero.
+- `2/% swap` performs both division and modulus on the top 2 items on the stack, keeping the quotient on top.
+- `pop rev enclose () join outln` drops the leftover quotient, reverses the stack, joins it, and outputs the result.

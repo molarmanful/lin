@@ -1,0 +1,13 @@
+1N 1N ;
+over outln swap over + @
+
+
+
+# EXPLANATION
+
+This outputs Fibonacci numbers.
+
+- `1N 1N` serves as the initial condition.
+- `over outln` duplicates the second from top of stack and outputs it.
+- `swap over +` adds the top 2 Fibonacci numbers.
+- `@` executes the line again.
