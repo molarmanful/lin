@@ -119,7 +119,7 @@ BASE["sL"] = $=>{
 // bring ID at index 0 as string into global scope
 BASE["::"] = $=> I.id(I.shift())
 
-// pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
+// pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, 5 if iterator, and 0 if anything else (ex.: undefined)
 BASE["type"] = $=>{
   let X = I.shift()
   I.unshift(

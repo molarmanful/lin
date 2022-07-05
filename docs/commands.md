@@ -19,7 +19,7 @@ Command | Description
 <code>sl</code> | `si` but follow scoping rules
 <code>sL</code> | `sl` but without overriding existing scoping rules
 <code>::</code> | bring ID at index 0 as string into global scope
-<code>type</code> | pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, and 0 if anything else (ex.: undefined)
+<code>type</code> | pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, 5 if iterator, and 0 if anything else (ex.: undefined)
 
 ## CONSTANT
 
