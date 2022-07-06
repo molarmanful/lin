@@ -47,10 +47,10 @@ FLOW["ew"] = $=>{
   I.addf(a=>{
     if(I.tru(I.shift())){
       I.addf(a=> I.unshift(X, Y), 'ew')
-      I.exec(Y, 1)
+      I.exec(X, 1)
     }
   })
-  I.exec(X, 1)
+  I.exec(Y, 1)
 }
 
 // `es` line number at index 0
