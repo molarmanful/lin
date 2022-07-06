@@ -225,18 +225,23 @@ INT.exec = (x, y)=>{
 
       else {
 
-        // ignore hashes
-        if(a[1] && a[0] == '#'){}
-
-        else if(INT.gl){
+        // magic dot
+        if(INT.gl){
           INT.gl = 0
           INT.unshift(a)
+          if(a[1] && a[0] == '#'){
+            INT.unshift(INT.shift().slice(1))
+            SL[INT.objs.length ? ':' : 'sl']()
+          }
           if(a[1] && a[0] == '\\'){
             INT.unshift(INT.shift().slice(1))
-            SL[INT.objs.length ? ':' : 'sL']()
+            SL.sL()
           }
           else SL.gl()
         }
+
+        // ignore hashes
+        else if(a[1] && a[0] == '#'){}
 
         // brackets/parens only
         else if(a.match(/^[()\[\]{}]{2,}$/)) INT.exec(a.split``.join` `,1)

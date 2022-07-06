@@ -1,4 +1,4 @@
-0 ( \clr dip ( ( 0+ dup ! ++ ) map ) ' () join ) 10 e* out
+0 ( \clr dip (( 0+ dup ! ++ ) map ) ' () join ) 10 e* out
 
 
 
