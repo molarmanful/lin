@@ -183,7 +183,7 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>'s</code> | execute string given by index 1 on a stack with name given by index 0
+<code>'s</code> | `es` index 1 on a stack with name given by index 0
 <code>push</code> | push index 1 to another stack with name given by index 0
 <code>pushs</code> | push current stack to another stack with name given by index 0
 <code>pull</code> | push top item of another stack with name given by index 0

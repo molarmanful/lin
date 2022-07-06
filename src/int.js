@@ -38,7 +38,7 @@ INT.range = (x, y)=>{
 INT.tru = x=> x
 
 INT.str = x=>
-  x?.pop ? INT.str(x).reverse().join` `
+  x?.pop ? x.reverse().join` `
   : INT.isitr(x) ? '[...]`'
   : _.isObjectLike(x) ? _.map((a, i)=> i + str(a)).join` `
   : x

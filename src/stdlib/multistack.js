@@ -2,7 +2,7 @@ import {_, INT as I, SL} from '../bridge.js'
 
 let MULTISTACK = {}
 
-// execute string given by index 1 on a stack with name given by index 0
+// `es` index 1 on a stack with name given by index 0
 MULTISTACK["'s"] = $=>{
   I.iter.unshift(I.st)
   let X = I.shift()
@@ -24,7 +24,7 @@ MULTISTACK["push"] = $=>{
 MULTISTACK["pushs"] = $=>{
   let X = I.shift()
   if(!I.stack[X]) I.stack[X] = []
-  I.stack[X].unshift(...I.stack[I.st])
+  I.stack[X].unshift(I.stack[I.st])
 }
 
 // push top item of another stack with name given by index 0
@@ -45,7 +45,7 @@ MULTISTACK["pud"] = $=>{
 MULTISTACK["pulls"] = $=>{
   let X = I.shift()
   if(!I.stack[X]) I.stack[X] = []
-  I.unshift(...I.stack[X])
+  I.unshift(I.stack[X])
 }
 
 export default MULTISTACK
