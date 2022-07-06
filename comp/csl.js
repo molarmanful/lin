@@ -2,7 +2,12 @@ import fs from 'fs'
 let exp = /\/\/ (.+)\n+[A-Z]+\["(.+)"\]/g
 
 fs.writeFileSync('./docs/commands.md',
-  `# Commands\n\n**NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.\n\n${
+  `# Commands\n\n**NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.\n\n## Sections\n\n${
+    fs.readdirSync('./src/stdlib').map(f=>{
+      let name = f.replace(/\.js/g, '').toUpperCase()
+      return `- [${name}](#${name})`
+    }).join`\n`
+  }\n\n${
     fs.readdirSync('./src/stdlib').map(f=>{
       let sl = fs.readFileSync('./src/stdlib/' + f) + ''
       return `## ${

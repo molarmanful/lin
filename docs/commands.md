@@ -2,6 +2,22 @@
 
 **NOTE:** Anything with "index [number]" refers to the item at that specific index on the stack. "index 0" refers to the top of the stack, "index 1" refers to the second-from-top of stack, etc.
 
+## Sections
+
+- [BASE](#BASE)
+- [CONSTANT](#CONSTANT)
+- [COUNT](#COUNT)
+- [FLOW](#FLOW)
+- [IO](#IO)
+- [ITER](#ITER)
+- [LIST](#LIST)
+- [LOGIC](#LOGIC)
+- [MULTISTACK](#MULTISTACK)
+- [NUM](#NUM)
+- [OBJ](#OBJ)
+- [STACK](#STACK)
+- [STR](#STR)
+
 ## BASE
 
 Command | Description
