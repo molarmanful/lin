@@ -43,6 +43,9 @@ LIST["join"] = $=>{
   I.unshift(I.shift().slice().reverse().join(X))
 }
 
+// pair top 2 items
+LIST[","] = $=> I.unshift([I.shift(), I.shift()])
+
 // concatenate top 2 items as strings or lists
 LIST["++"] = $=>{
   let X = I.shift()

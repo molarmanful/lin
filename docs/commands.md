@@ -152,6 +152,7 @@ Command | Description
 <code>'</code> | `es` index 0 on list at index 1
 <code>split</code> | split string at index 1 over string at index 0
 <code>join</code> | join list over string at index 0
+<code>,</code> | pair top 2 items
 <code>++</code> | concatenate top 2 items as strings or lists
 <code>rep</code> | repeat list/string by index 0
 <code>union</code> | set union of lists at index 0 and index 1
