@@ -1,13 +1,5 @@
-```
-╔══╗  ╔══════════════╗
-║  ║  ╚══════════════╝
-║  ║  ╔══╗  ╔════════╗
-║  ║  ║  ║  ║  ╔══╗  ║
-║  ║  ║  ║  ║  ║  ║  ║
-║  ║  ╚══╝  ╚══╝  ╚══╝
-║  ╚═════════════════╗
-╚════════════════════╝
-```
+![lin](./logo-dark.png#gh-dark-mode-only)
+![lin](./logo-light.png#gh-light-mode-only)
 
 The little language that could.
 
