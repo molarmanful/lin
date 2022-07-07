@@ -1,4 +1,4 @@
-import {$C, itr, _, INT as I, SL} from '../bridge.js'
+import {$C, itr, _, INT as I, SL, INT} from '../bridge.js'
 
 let STACK = {}
 
@@ -93,6 +93,9 @@ STACK["rango"] = $=> I.unshift(...I.range(0, I.shift()).reverse())
 
 // `range` from index 0 to 0
 STACK["orang"] = $=> I.unshift(...I.range(I.shift(), 0).reverse())
+
+// shuffle stack
+STACK["shuf"] = $=> I.stack[I.st] = _.shuffle(I.stack[I.st])
 
 // remove all duplicates in current stack
 STACK["uniq"] = $=> I.stack[I.st] = _.uniq(I.stack[I.st])

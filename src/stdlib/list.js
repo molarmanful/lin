@@ -53,6 +53,8 @@ LIST["++"] = $=>{
   I.unshift(Y.big ? Y + I.str(X) : _.concat(X, Y))
 }
 
+LIST["r:"] = $=> I.exec('dup len rng * 0| g:', 1)
+
 // repeat list/string by index 0
 LIST["rep"] = $=>{
   let X = I.shift()

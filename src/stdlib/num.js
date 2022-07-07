@@ -78,7 +78,7 @@ NUM["abs"] = $=> I.unshift(Math.abs(I.shift()))
 NUM["sign"] = $=> I.unshift(Math.sign(I.shift()))
 
 // push random number between 0 and 1
-NUM["rand"] = $=> I.unshift(Math.random())
+NUM["rng"] = $=> I.unshift(Math.random())
 
 // natural logarithm
 NUM["ln"] = $=> I.unshift(Math.ln(I.shift()))

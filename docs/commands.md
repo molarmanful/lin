@@ -211,7 +211,7 @@ Command | Description
 <code>^</code> | exponentiation
 <code>abs</code> | absolute value
 <code>sign</code> | sign function
-<code>rand</code> | push random number between 0 and 1
+<code>rng</code> | push random number between 0 and 1
 <code>ln</code> | natural logarithm
 <code>logII</code> | base-2 logarithm
 <code>logX</code> | base-10 logarithm
@@ -287,6 +287,7 @@ Command | Description
 <code>range</code> | exclusive range
 <code>rango</code> | `range` from 0 to index 0
 <code>orang</code> | `range` from index 0 to 0
+<code>shuf</code> | shuffle stack
 <code>uniq</code> | remove all duplicates in current stack
 <code>take</code> | keep top _n_ items, where _n_ is index 0
 <code>drop</code> | pop top _n_ items, where _n_ is index 0
