@@ -1,11 +1,16 @@
-![lin](./logo-dark.png#gh-dark-mode-only)
-![lin](./logo-light.png#gh-light-mode-only)
-
-The little language that could.
-
 ```
-1N 1N ;
-over outln swap over + @
+㍈㌭　　㌙㌡㌫㌕㍖㍌㌟㌟㌇㍌
+㍑㌖　　㍇㌮㌖㌄㍌㍊㌇㍖㍃㍃
+㌶㍖　　　　　　　　　　　　
+㌗㌗　　㌫㌕　　㌗㌄㌕㌶㌫㌗
+㌕㍊　　㌫㌗　　㍃㌡㌟㌕㍔㌂
+㌠㌽　　㍃㌚　　㌫㌠　　㌴㌴
+㍌㍇　　㌙㌄　　㌖㍑　　㌲㌕
+㌟㌶　　㌭㌶　　㍑㌙　　㌠㌫
+㌡㌠　　㌖㌗　　㌮㌡　　㌟㌽
+㌕㌗　　　　　　　　　　　　
+㍈㍖㍊㌽㌚㌟㌂㍖㍖㌠㍈㍃㍖㌡
+㌠㌖㌫㌽㌶㍃㍈㌖㍖㌫㌂㌟㌮㌕
 ```
 
 ## Normal Installation

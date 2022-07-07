@@ -18,3 +18,23 @@ fs.writeFileSync('./docs/commands.md',
     }).join`\n\n`
   }`
 )
+
+let readme = fs.readFileSync('./README.md') + ''
+let txt = `\`\`\`
+㌫㌭　　㌶㌶㌠㌶㌖㌂㌖㍔㍔㌴
+㌟㌭　　㌚㌟㌫㌇㌠㍈㌽㌴㌮㌶
+㌶㌗　　　　　　　　　　　　
+㌄㌕　　㍖㌖　　㌠㌕㌮㌖㌫㍈
+㍌㍖　　㍑㍊　　㌗㌕㌟㌴㌲㍊
+㌫㌙　　㌗㌖　　㍌㍇　　㌭㌲
+㍈㍊　　㌖㍌　　㌽㍖　　㍇㌭
+㌇㍈　　㌭㌟　　㍃㌡　　㍈㍌
+㍌㌮　　㌖㌄　　㌭㌇　　㌫㌫
+㌖㌴　　　　　　　　　　　　
+㍌㌡㍊㌖㍃㌂㍇㍑㍔㌗㌖㌫㌫㌕
+㌙㍖㌡㍈㍈㍔㌗㌂㍇㌡㌄㌡㍇㌮
+\`\`\``
+let chars = `㌂㌄㌇㌕㌖㌗㌙㌚㌟㌠㌡㌫㌭㌮㌲㌴㌶㌽㍃㍇㍈㍊㍌㍑㍔㍖`
+let chars1 = `㋿㍻㍼㍽㍾㍿`
+txt = txt.split``.map(a=> a.match(/\s|　|`/) ? a : chars[0 | Math.random() * chars.length]).join``
+fs.writeFileSync('./README.md',readme.replace(/^```.*```/s, txt))
