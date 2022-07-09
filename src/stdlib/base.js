@@ -1,132 +1,128 @@
-import {_, INT as I, SL} from '../bridge.js'
+import {_, SL} from '../bridge.js'
 
 let BASE = {}
 
-BASE["("] = $=> I.lambda = 1
+BASE["("] = $=> $.lambda = 1
 
 BASE["$("] = $=>{
-  I.lambda = 1
-  I.scoped = 1
+  $.lambda = 1
+  $.scoped = 1
 }
 
 BASE[")"] = $=>{
-  let X = I.paren.join` `
-  I.paren = []
-  if(I.scoped){
+  let X = $.paren.join` `
+  $.paren = []
+  if($.scoped){
     X = `\${ ${X} }$`
-    I.scoped = 0
+    $.scoped = 0
   }
-  I.unshift(X)
-  I.lambda = 0
+  $.unshift(X)
+  $.lambda = 0
 }
 
 BASE["["] = $=>{
-  I.iter.unshift(I.st)
-  I.st = I.iter[0] + '\n'
-  I.stack[I.st] = []
+  $.iter.unshift($.st)
+  $.st = $.iter[0] + '\n'
+  $.stack[$.st] = []
 }
 
 BASE["]"] = $=>{
-  let X = I.stack[I.st]
-  delete I.stack[I.iter[0] + '\n']
-  I.st = I.iter.shift()
-  I.unshift(X)
+  let X = $.stack[$.st]
+  delete $.stack[$.iter[0] + '\n']
+  $.st = $.iter.shift()
+  $.unshift(X)
 }
 
 BASE["{"] = $=>{
-  I.objs.unshift({})
-  I.iter.unshift(I.st)
-  I.st = I.iter[0] + '\n'
-  I.stack[I.st] = []
+  $.objs.unshift({})
+  $.iter.unshift($.st)
+  $.st = $.iter[0] + '\n'
+  $.stack[$.st] = []
 }
 
 BASE["}"] = $=>{
-  let X = I.objs.shift()
-  delete I.stack[I.iter[0] + '\n']
-  I.st = I.iter.shift()
-  I.unshift(X)
+  let X = $.objs.shift()
+  delete $.stack[$.iter[0] + '\n']
+  $.st = $.iter.shift()
+  $.unshift(X)
 }
 
 // create new scope
 BASE["${"] = $=>{
-  I.scope.unshift({})
+  $.scope.unshift({})
 }
 
 // destroy current scope
 BASE["}$"] = $=>{
-  I.scope.shift()
+  $.scope.shift()
 }
 
 // push string at ID given by index 0
 BASE["gi"] = $=>{
-  let X = I.shift()
-  if(!(X in I.ids)) I.id(X)
-  I.unshift(I.ids[X])
+  let X = $.shift()
+  if(!(X in $.ids)) $.id(X)
+  $.unshift($.ids[X])
 }
 
 // `gi` but follow scoping rules
 BASE["gl"] = $=>{
-  let X = I.shift()
-  if(I.getscope(X) == undefined) I.id(X)
-  I.unshift(I.getscope(X))
+  let X = $.shift()
+  if($.getscope(X) == undefined) $.id(X)
+  $.unshift($.getscope(X))
 }
 
-BASE["."] = $=> I.gl = 1
+BASE["."] = $=> $.gl = 1
 
 // push stack joined by newlines
-BASE["gs"] = $=> I.unshift(I.form())
+BASE["gs"] = $=> $.unshift($.form($.stack[$.st]))
 
 // push line at popped number (0-indexed)
-BASE["g@"] = $=> I.unshift(I.lines[I.shift()])
+BASE["g@"] = $=> $.unshift($.gline($.shift()))
 
 //  push next line
-BASE["g;"] = $=>{
-  I.unshift(I.lines[I.lns[0] - -1])
-}
+BASE["g;"] = $=> $.unshift($.lns[0][1] - -1)
 
 //  push previous line
-BASE["g;;"] = $=>{
-  I.unshift(I.lines[I.lns[0] - 1])
-}
+BASE["g;;"] = $=> $.unshift($.lns[0][1] - 1)
 
-// convert index 0 to its string representation
-BASE["form"] = $=> I.unshift(I.form([I.shift()]))
+// convert index 0 to its formatted representation
+BASE["form"] = $=> $.unshift($.form([$.shift()]))
 
 // set global ID at index 0
-BASE["si"] = $=> I.ids[I.shift()] = I.shift()
+BASE["si"] = $=> $.ids[$.shift()] = $.shift()
 
 // `si` but follow scoping rules
 BASE["sl"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  if(I.scope.length) I.scope[0][X] = Y
-  else I.ids[X] = Y
+  let X = $.shift()
+  let Y = $.shift()
+  if($.scope.length) $.scope[0][X] = Y
+  else $.ids[X] = Y
 }
 
 // `sl` but without overriding existing scoping rules
 BASE["sL"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  if(I.scope.length){
-    let i = I.scope.findIndex(a=> X in a)
-    if(~i) I.scope[i][X] = Y
-    else if(X in I.ids) I.ids[X] = Y
-    else I.scope[0][X] = Y
+  let X = $.shift()
+  let Y = $.shift()
+  if($.scope.length){
+    let i = $.scope.findIndex(a=> X in a)
+    if(~i) $.scope[i][X] = Y
+    else if(X in $.ids) $.ids[X] = Y
+    else $.scope[0][X] = Y
   }
-  else I.ids[X] = Y
+  else $.ids[X] = Y
 }
 
 // bring ID at index 0 as string into global scope
-BASE["::"] = $=> I.id(I.shift())
+BASE["::"] = $=> $.id($.shift())
 
 // pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, 5 if iterator, and 0 if anything else (ex.: undefined)
 BASE["type"] = $=>{
-  let X = I.shift()
-  I.unshift(
+  let X = $.shift()
+  $.unshift(
     X.pop ? 3
     : X.big ? 2
     : ['number', 'bigint'].includes(typeof X) ? 1
-    : I.isitr(X) ? 5
+    : $.isitr(X) ? 5
     : _.isObjectLike(X) ? 4
     : 0
   )

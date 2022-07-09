@@ -1,36 +1,36 @@
-import {_, INT as I} from '../bridge.js'
+import {_} from '../bridge.js'
 
 let LOGIC = {}
 
 // equal
-LOGIC["="] = $=> I.unshift(+(I.shift() == I.shift()))
+LOGIC["="] = $=> $.unshift(+($.shift() == $.shift()))
 
 // strict equal
-LOGIC["=="] = $=> I.unshift(+(I.shift() === I.shift()))
+LOGIC["=="] = $=> $.unshift(+($.shift() === $.shift()))
 
 // deep equal
-LOGIC["eq"] = $=> I.unshift(+_.isEqual(I.shift(), I.shift()))
+LOGIC["eq"] = $=> $.unshift(+_.isEqual($.shift(), $.shift()))
 
 // not equal
-LOGIC["!="] = $=> I.unshift(+(I.shift() != I.shift()))
+LOGIC["!="] = $=> $.unshift(+($.shift() != $.shift()))
 
 // greater than
-LOGIC[">"] = $=> I.unshift(+(I.shift() < I.shift()))
+LOGIC[">"] = $=> $.unshift(+($.shift() < $.shift()))
 
 // less than
-LOGIC["<"] = $=> I.unshift(+(I.shift() > I.shift()))
+LOGIC["<"] = $=> $.unshift(+($.shift() > $.shift()))
 
 // greater than or equal to
-LOGIC[">="] = $=> I.unshift(+(I.shift() <= I.shift()))
+LOGIC[">="] = $=> $.unshift(+($.shift() <= $.shift()))
 
 // less than or equal to
-LOGIC["<="] = $=> I.unshift(+(I.shift() >= I.shift()))
+LOGIC["<="] = $=> $.unshift(+($.shift() >= $.shift()))
 
 // comparison function (-1 for less than, 0 for equal, 1 for greater than)
 LOGIC["<=>"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  I.unshift(X < Y ? 1 : X > Y ? -1 : 0)
+  let X = $.shift()
+  let Y = $.shift()
+  $.unshift(X < Y ? 1 : X > Y ? -1 : 0)
 }
 
 export default LOGIC

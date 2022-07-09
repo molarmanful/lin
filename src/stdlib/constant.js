@@ -1,44 +1,44 @@
-import {itr, _, INT as I} from '../bridge.js'
+import {itr, _} from '../bridge.js'
 
 let CONSTANT = {}
 
 // undefined
-CONSTANT["$U"] = $=> I.unshift(undefined)
+CONSTANT["$U"] = $=> $.unshift(undefined)
 
 // empty string
-CONSTANT["()"] = $=> I.unshift('')
+CONSTANT["()"] = $=> $.unshift('')
 
 // empty list
-CONSTANT["[]"] = $=> I.unshift([])
+CONSTANT["[]"] = $=> $.unshift([])
 
 // empty object
-CONSTANT["{}"] = $=> I.unshift({})
+CONSTANT["{}"] = $=> $.unshift({})
 
 // push space
-CONSTANT["\\"] = $=> I.unshift(' ')
+CONSTANT["\\"] = $=> $.unshift(' ')
 
 // push newline
-CONSTANT["n\\"] = $=> I.unshift('\n')
+CONSTANT["n\\"] = $=> $.unshift('\n')
 
 // current line number
-CONSTANT["$L"] = $=> I.unshift(I.lns[0])
+CONSTANT["$L"] = $=> $.unshift($.lns[0])
 
 // current stack name
-CONSTANT["$S"] = $=> I.unshift(I.st)
+CONSTANT["$S"] = $=> $.unshift($.st)
 
 // Euler's constant
-CONSTANT["$E"] = $=> I.unshift(Math.E)
+CONSTANT["$E"] = $=> $.unshift(Math.E)
 
 // Pi
-CONSTANT["$Pi"] = $=> I.unshift(Math.PI)
+CONSTANT["$Pi"] = $=> $.unshift(Math.PI)
 
 // Infinity
-CONSTANT["$I"] = $=> I.unshift(Infinity)
+CONSTANT["$I"] = $=> $.unshift(Infinity)
 
 // milliseconds since January 1, 1970 00:00:00.000
-CONSTANT["time"] = $=> I.unshift(Date.now())
+CONSTANT["time"] = $=> $.unshift(Date.now())
 
 // infinite list of whole numbers
-CONSTANT["$`"] = $=> I.unshift(itr.range())
+CONSTANT["$`"] = $=> $.unshift(itr.range())
 
 export default CONSTANT

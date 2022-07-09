@@ -1,207 +1,207 @@
-import {itr, _, INT as I, SL} from '../bridge.js'
+import {itr, _, SL} from '../bridge.js'
 
 let ITER = {}
 
-let itrd = $=> I.listitr(I.shift())
+let itrd = $=> $.listitr($.shift())
 
 // convert to iterator
-ITER["`"] = $=> I.unshift(itrd())
+ITER["`"] = $=> $.unshift(itrd())
 
-ITER["]`"] = $=> I.exec('] `', 1)
+ITER["]`"] = $=> $.exec('] `', 1)
 
 // convert to iterator recursively
-ITER["``"] = $=> I.unshift(I.listitrs(I.shift()))
+ITER["``"] = $=> $.unshift($.listitrs($.shift()))
 
-ITER["]``"] = $=> I.exec('] ``', 1)
+ITER["]``"] = $=> $.exec('] ``', 1)
 
 // convert from iterator to list
-ITER["`_"] = $=> I.unshift(I.itrls(itrd()))
+ITER["`_"] = $=> $.unshift($.itrls(itrd()))
 
 // convert from iterator to list recursively
-ITER["`__"] = $=> I.unshift(I.itrlist(itrd()))
+ITER["`__"] = $=> $.unshift($.itrlist(itrd()))
 
 // convert from iterator to string
-ITER["`_`"] = $=> I.unshift(itr.str(itrd()))
+ITER["`_`"] = $=> $.unshift(itr.str(itrd()))
 
 // check if iterators are equal
-ITER["`="] = $=> I.unshift(itr.equal(itrd(), itrd()))
+ITER["`="] = $=> $.unshift(itr.equal(itrd(), itrd()))
 
 // check if iterators are deeply equal
-ITER["`=*"] = $=> I.unshift(itr.deepEqual(itrd(), itrd()))
+ITER["`=*"] = $=> $.unshift(itr.deepEqual(itrd(), itrd()))
 
 // check if iterator at index 1 has sequence at index 0
-ITER["`?"] = $=> I.unshift(itr.includesSeq(itrd(), itrd()))
+ITER["`?"] = $=> $.unshift(itr.includesSeq(itrd(), itrd()))
 
 // `?` with multiple sequences
-ITER["`?*"] = $=> I.unshift(itr.includesAnySeq(itr.listitrs(I.shift()), itrd()))
+ITER["`?*"] = $=> $.unshift(itr.includesAnySeq(itr.listitrs($.shift()), itrd()))
 
 // create infinite cycle from index 0
-ITER["`cyc"] = $=> I.unshift(itr.cycle(itrd()))
+ITER["`cyc"] = $=> $.unshift(itr.cycle(itrd()))
 
 // concatenate top 2 items into iterator
 ITER["`+"] = $=>{
-  SL.swap()
-  I.unshift(itr.concat(itrd(), itrd()))
+  SL.swap($)
+  $.unshift(itr.concat(itrd(), itrd()))
 }
 
 // prepend-concatenate index 0 into iterator
-ITER["`,"] = $=> I.unshift(itr.concat(itrd(), itrd()))
+ITER["`,"] = $=> $.unshift(itr.concat(itrd(), itrd()))
 
 // combine top 2 items into partially-sorted iterator via comparison function
 ITER["`+>"] = $=>{
-  let X = I.shift()
+  let X = $.shift()
   let Y = itrd()
   let Z = itrd()
-  I.unshift(X)
-  I.unshift(I.cmp([Z, Y], (x, f)=> itr.collate(f, x)))
+  $.unshift(X)
+  $.unshift($.cmp([Z, Y], (x, f)=> itr.collate(f, x)))
 }
 
 // use index 0 as a bitmask for the iterator at index 1
 ITER["`mask"] = $=>{
-  SL.swap()
-  I.unshift(itr.compress(itrd(), itrd()))
+  SL.swap($)
+  $.unshift(itr.compress(itrd(), itrd()))
 }
 
 // zip all stack items into one iterator
-ITER["`,*"] = $=> I.stack[I.st] = [itr.zip(...itr.reverse(itr.map(I.listitr, itrd())))]
+ITER["`,*"] = $=> $.stack[$.st] = [itr.zip(...itr.reverse(itr.map($.listitr, itrd())))]
 
 // iterator size (DOES NOT HALT ON INFINITE LISTS) 
-ITER["`size"] = $=> I.unshift(itr.size(I.listitr(I.stack[I.st][0])))
+ITER["`size"] = $=> $.unshift(itr.size($.listitr($.stack[$.st][0])))
 
 // convert each element to an index-element pair
-ITER["`enum"] = $=> I.unshift(itr.enumerate(itrd()))
+ITER["`enum"] = $=> $.unshift(itr.enumerate(itrd()))
 
 // yield only unique elements
-ITER["`uniq"] = $=> I.unshift(itr.uniq(itrd()))
+ITER["`uniq"] = $=> $.unshift(itr.uniq(itrd()))
 
 // reverse iterator
-ITER["`rev"] = $=> I.unshift(itr.reverse(itrd()))
+ITER["`rev"] = $=> $.unshift(itr.reverse(itrd()))
 
 // flatten iterator
-ITER["`flat"] = $=> I.unshift(itr.flat(itrd()))
+ITER["`flat"] = $=> $.unshift(itr.flat(itrd()))
 
 // flatten iterator by max depth at index 0
-ITER["`melt"] = $=> I.unshift(itr.flat(I.shift(), itrd()))
+ITER["`melt"] = $=> $.unshift(itr.flat($.shift(), itrd()))
 
 // split iterator into consecutive slices given by index 0
-ITER["`xp"] = $=> I.unshift(itr.window(I.shift(), itrd()))
+ITER["`xp"] = $=> $.unshift(itr.window($.shift(), itrd()))
 
 // split iterator into chunks of length given by index 0
-ITER["`chunk"] = $=> I.unshift(itr.batch(I.shift(), itrd()))
+ITER["`chunk"] = $=> $.unshift(itr.batch($.shift(), itrd()))
 
 // place index 0 between each element
-ITER["`btwn"] = $=> I.unshift(itr.interposeSeq(itrd(), itrd()))
+ITER["`btwn"] = $=> $.unshift(itr.interposeSeq(itrd(), itrd()))
 
 // split iterator on sequence at index 0
-ITER["`sp"] = $=> I.unshift(itr.splitOnSeq(itrd(), itrd()))
+ITER["`sp"] = $=> $.unshift(itr.splitOnSeq(itrd(), itrd()))
 
 // `\`sp` with multiple sequences
-ITER["`sp*"] = $=> I.unshift(itr.splitOnAnySeq(I.listitrs(I.shift(), 2), itrd()))
+ITER["`sp*"] = $=> $.unshift(itr.splitOnAnySeq($.listitrs($.shift(), 2), itrd()))
 
 // first element
-ITER["`^"] = $=> I.unshift(itr.first(itrd()))
+ITER["`^"] = $=> $.unshift(itr.first(itrd()))
 
 // _n_th element, where _n_ is index 0
-ITER["`:"] = $=> I.exec('`d `^', 1)
+ITER["`:"] = $=> $.exec('`d `^', 1)
 
 // take first _n_ elements, where _n_ is index 0
-ITER["`t"] = $=> I.unshift(itr.take(I.shift(), itrd()))
+ITER["`t"] = $=> $.unshift(itr.take($.shift(), itrd()))
 
 // `take` with sort predicate
 ITER["`t>"] = $=>{
-  let X = I.shift()
-  SL.swap()
-  I.unshift(I.cmp(itrd(), (x, f)=> itr.takeSorted(X, f, x)))
+  let X = $.shift()
+  SL.swap($)
+  $.unshift($.cmp(itrd(), (x, f)=> itr.takeSorted(X, f, x)))
 }
 
 // drop first _n_ elements, where _n_ is index 0
-ITER["`d"] = $=> I.unshift(itr.drop(I.shift(), itrd()))
+ITER["`d"] = $=> $.unshift(itr.drop($.shift(), itrd()))
 
 // `es` index 0 over each element
 ITER["`'"] = $=>{
-  SL.swap()
-  I.unshift(I.each(itrd(), (x, f)=> itr.map(f, x)))
+  SL.swap($)
+  $.unshift($.each(itrd(), (x, f)=> itr.map(f, x)))
 }
 
 // fold with `es` of index 0 over each element
 ITER["`/"] = $=>{
-  SL.swap()
-  I.unshift(I.acc(itrd(), 0, (x, f)=> itr.reduce(f, x)))
+  SL.swap($)
+  $.unshift($.acc(itrd(), 0, (x, f)=> itr.reduce(f, x)))
 }
 
 // `\`/` with accumulator
 ITER["`/a"] = $=>{
-  SL.rot()
-  I.unshift(I.acc(itrd(), 1, (x, f)=> itr.reduce(f, x)))
+  SL.rot($)
+  $.unshift($.acc(itrd(), 1, (x, f)=> itr.reduce(f, x)))
 }
 
 // `\`/` with intermediate values
 ITER["`\\"] = $=>{
   let X = []
-  SL.swap()
-  let Y = I.acc(itrd(), 0, (x, f)=> itr.reduce(f, x), (A, a)=> (X.unshift(a), A))
-  I.unshift([Y, ...X])
+  SL.swap($)
+  let Y = $.acc(itrd(), 0, (x, f)=> itr.reduce(f, x), (A, a)=> (X.unshift(a), A))
+  $.unshift([Y, ...X])
 }
 
 // `\`\\` with accumulator
 ITER["`\\a"] = $=>{
   let X = []
-  SL.rot()
-  let Y = I.acc(itrd(), 1, (x, f)=> itr.reduce(f, x), (A, a)=> (X.unshift(A), A))
-  I.unshift(X)
+  SL.rot($)
+  let Y = $.acc(itrd(), 1, (x, f)=> itr.reduce(f, x), (A, a)=> (X.unshift(A), A))
+  $.unshift(X)
 }
 
 // filter truthy results after `es`ing index 0 over each element
 ITER["`#"] = $=>{
-  SL.swap()
-  I.unshift(I.each(itrd(), (x, f)=> itr.filter(f, x)))
+  SL.swap($)
+  $.unshift($.each(itrd(), (x, f)=> itr.filter(f, x)))
 }
 
 // `take` while `es`ing index 0 over each element is truthy
 ITER["`t'"] = $=>{
-  SL.swap()
-  I.unshift(I.each(itrd(), (x, f)=> itr.takeWhile(f, x)))
+  SL.swap($)
+  $.unshift($.each(itrd(), (x, f)=> itr.takeWhile(f, x)))
 }
 
 // `drop` while `es`ing index 0 over each element is truthy
 ITER["`d'"] = $=>{
-  SL.swap()
-  I.unshift(I.each(itrd(), (x, f)=> itr.dropWhile(f, x)))
+  SL.swap($)
+  $.unshift($.each(itrd(), (x, f)=> itr.dropWhile(f, x)))
 }
 
 // `es` index 0 over each element and return original element
 ITER["`tap"] = $=>{
-  SL.swap()
-  I.unshift(I.each(itrd(), (x, f)=> itr.tap(f, x)))
+  SL.swap($)
+  $.unshift($.each(itrd(), (x, f)=> itr.tap(f, x)))
 }
 
 // `es` index 0 over each element and partition based on truthiness
 ITER["`part"] = $=>{
-  let X = I.shift()
+  let X = $.shift()
   let Y = itrd()
-  I.unshift(X)
-  let A = I.each(Y, (x, f)=> itr.filter(f, x))
-  I.unshift(X)
-  let B = I.each(Y, (x, f)=> itr.filter(a=> !f(a), x))
-  I.unshift([A, B])
+  $.unshift(X)
+  let A = $.each(Y, (x, f)=> itr.filter(f, x))
+  $.unshift(X)
+  let B = $.each(Y, (x, f)=> itr.filter(a=> !f(a), x))
+  $.unshift([A, B])
 }
 
 // check if all elements are truthy after `es`ing index 0 over each element
 ITER["`&"] = $=>{
-  SL.swap()
-  I.unshift(+I.each(itrd(), (x, f)=> itr.every(f, x)))
+  SL.swap($)
+  $.unshift(+$.each(itrd(), (x, f)=> itr.every(f, x)))
 }
 
 // check if any elements are truthy after `es`ing index 0 over each element
 ITER["`|"] = $=>{
-  SL.swap()
-  I.unshift(+I.each(itrd(), (x, f)=> itr.some(f, x)))
+  SL.swap($)
+  $.unshift(+$.each(itrd(), (x, f)=> itr.some(f, x)))
 }
 
 // find first element that returns truthy after `es`ing index 0
 ITER["`?'"] = $=>{
-  SL.swap()
-  I.unshift(+I.each(itrd(), (x, f)=> itr.find(f, x)))
+  SL.swap($)
+  $.unshift(+$.each(itrd(), (x, f)=> itr.find(f, x)))
 }
 
 export default ITER

@@ -6,6 +6,7 @@ import IO from './stdlib/io.js'
 import ITER from './stdlib/iter.js'
 import LIST from './stdlib/list.js'
 import LOGIC from './stdlib/logic.js'
+import MODULE from './stdlib/module.js'
 import MULTISTACK from './stdlib/multistack.js'
 import NUM from './stdlib/num.js'
 import OBJ from './stdlib/obj.js'
@@ -21,6 +22,7 @@ let SL = {
   ...ITER,
   ...LIST,
   ...LOGIC,
+  ...MODULE,
   ...MULTISTACK,
   ...NUM,
   ...OBJ,

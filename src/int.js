@@ -1,300 +1,343 @@
-// modules
-import {chalk, itr, _, parse, SL} from './bridge.js'
+import {chalk, itr, _, path, parse, SL} from './bridge.js'
 
-let INT = {}
-
-// convenience functions for stdlib
-
-INT.print = x=> (console.log(x), x)
-
-INT.id = x=>{
-  let y = RegExp(`^ *#${x}`)
-  let line = INT.lines.findIndex(a=> a.match(y))
-  if(~line){
-    INT.ids[x] = INT.lines[line].replace(y, '')
-    INT.idls[x] = line
+class PKG {
+  constructor(n, f){
+    this.name = n
+    this.file = f
+    this.ids = {}
+    this.idls = {}
+    this.lines = []
   }
 }
 
-INT.getscope = x=>{
-  let y = INT.scope.find(a=> x in a)
-  return y ? y[x] : INT.ids[x]
-}
+class INTRP {
 
-INT.mod = (x, y)=> (x % y + y) % y
+  constructor(x, file, opts={}){
+    this.stack = {0: []}
+    this.st = 0
+    this.gl = 0
+    this.lambda = 0
+    this.paren = []
+    this.ids = {}
+    this.idls = {}
+    this.lines = x.split`\n`
+    this.lns = [[0, 0]]
+    this.iter = []
+    this.code = []
+    this.verbose = opts.verbose || 0
+    this.scope = []
+    this.scoped = 0
+    this.objs = []
+    this.dir = this.mresolve(file)
+    this.PKG = PKG
+    this.pkg = 0
+    this.pkf = []
 
-INT.range = (x, y)=>{
-  let res = [x]
-  let dir = Math.sign(y - x)
-  let c = Math.abs(y - x) - 1
-  while(c > 0){
-    x -= -dir
-    res.push(x)
-    c--
-  }
-  return res
-}
-
-INT.tru = x=> x
-
-INT.str = x=>
-  x?.pop ? x.reverse().join` `
-  : INT.isitr(x) ? '[...]`'
-  : _.isObjectLike(x) ? _.map((a, i)=> i + str(a)).join` `
-  : x
-
-INT.form = (x=INT.stack[INT.st], y='\n')=>
-  x.map(a=>
-    a == Infinity ? '$I'
-    : a && typeof a == 'bigint' ? a + 'N'
-    : a?.toFixed ?
-      a < 0 ? -a + '_' : a + ''
-    : a?.big ? JSON.stringify(a)
-    : a?.pop ?
-      a.length ?
-        `[ ${INT.form(a, ' ')} ]`
-      : '[]'
-    : a && INT.isitr(a)? '[...]`'
-    : _.isObjectLike(a) ?
-      _.keys(a).length ?
-        `{ ${
-          _.keys(a).map(b=> INT.form([b]) + ': ' + INT.form([a[b]])).join` `
-        } }`
-      : '{}'
-    : a == undefined ? '$U'
-    : a
-  ).reverse().join(y)
-
-INT.parse = x=> parse(x.pop ? x.join` ` : x + '')
-
-INT.gind = (o, x)=>
-  _.isObjectLike(x) ? _.map(x, a=> INT.gind(o, a))
-  : o.at && !isNaN(+x) ? (o.pop ? a=> a : _.reverse)(o.at(typeof x == 'bigint' ? Number(x) : x))
-  : o[x]
-
-INT.get = x=> INT.gind(INT.stack[INT.st], x)
-
-INT.splice = (x, y=1, z, w=0)=>
-  z != undefined ?
-    INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)
-  : INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y)
-
-INT.shift = x=> _.cloneDeep(INT.stack[INT.st].shift())
-
-INT.unshift = (...x)=> INT.stack[INT.st].unshift(...x)
-
-INT.each = (O, f=_.map, s=false, g=x=> x)=>{
-  let X = INT.shift()
-  return f(O, (a, i)=>{
-    INT.iter.unshift(INT.st)
-    INT.st = INT.iter[0] + ' '
-    INT.stack[INT.st] = s && itr.isIterable(a) ? [...a] : [a]
-    INT.exec(X)
-    let A = INT.shift()
-    delete INT.stack[INT.iter[0] + ' ']
-    INT.st = INT.iter.shift()
-    return g(A)
-  })
-}
-
-INT.acc = (O, ac=false, f=_.reduceRight, g=x=> x)=>{
-  let X = INT.shift()
-  let Y = ac && INT.shift()
-  let F = (a, b)=>{
-    INT.iter.unshift(INT.st)
-    INT.st = INT.iter[0] + ' '
-    INT.stack[INT.st] = [b, a]
-    INT.exec(X)
-    let A = INT.shift()
-    delete INT.stack[INT.iter[0] + ' ']
-    INT.st = INT.iter.shift()
-    return g(A, a)
-  }
-  return ac ? f(O, F, Y) : f(O, F)
-}
-
-INT.cmp = (O, f=(x, f)=> x.sort(f), g=x=> x)=>{
-  let X = INT.shift()
-  return f(O, (a, b)=>{
-    INT.iter.unshift(INT.st)
-    INT.st = INT.iter[0] + ' '
-    INT.stack[INT.st] = [b, a]
-    INT.exec(X)
-    let A = INT.shift()
-    delete INT.stack[INT.iter[0] + ' ']
-    INT.st = INT.iter.shift()
-    return g(A)
-  })
-}
-
-INT.isitr = x=> !x?.length && itr.isIterable(x)
-
-INT.listitr = x=>
-  !x?.pop && x?.length ? itr.map(a=> a.reverse(), x)
-  : INT.isitr(x) ? x
-  : (x?.big ? x=> x: itr.reverse)(itr.wrap(['number', 'bigint'].includes(typeof x) ? [x] : x))
-
-INT.listitrs = x=>
-  !x?.pop && x?.length ? INT.listitr(x)
-  : INT.isitr(x) || x?.big ? x
-  : x.pop ? INT.listitr(_.map(x, INT.listitrs))
-  : x
-
-INT.itrls = x=> itr.toArray(itr.reverse(x))
-
-INT.itrlist = x=> INT.itrls(itr.map(a=> INT.isitr(a) ? INT.itrlist(a) : a, INT.listitr(x)))
-
-INT.eline = x=>{
-  if(INT.lines[x]){
-    INT.tline(x)
-    INT.exec(INT.lines[INT.lns[0]], 1)
-  }
-}
-
-INT.tline = x=>{
-  if(INT.lns.includes(x)){
-    INT.lns = _.dropWhile(INT.lns, a=> a != x)
-  }
-  else {
-    INT.lns.unshift(x)
-    if(INT.code[0][0] || INT.code[1]) INT.addf(a=> INT.lns.shift())
-  }
-}
-
-// convenience functions for call stack
-
-INT.addc = x=>{
-  INT.code.unshift([])
-  INT.addf(...x)
-}
-
-INT.addf = (...x)=>{
-  INT.code[0] = x.reduceRight((a,b)=> [b, ...a], INT.code[0])
-}
-
-INT.getf = _=>{
-  let x = INT.code[0][0]
-  INT.code[0] = INT.code[0].slice(1)
-  return x
-}
-
-// main exec function
-INT.exec = (x, y)=>{
-  x += ''
-
-  // reuse stack frame
-  if(y){
-    INT.addf(...INT.parse(x))
+    this.exec(this.lines[0])
   }
 
-  // new stack frame
-  else {
-    INT.addc(INT.parse(x))
+  exec(x, y){
+    x += ''
 
-    while(INT.code[0]?.length){
-
-      // verbose mode
-      if(INT.verbose && !INT.lambda){
-        // console.log(INT.code.map(a=> a.map(b=> b+'')));
-        [
-          chalk.gray.dim(`———>{C:${INT.code.map(a=> a.length).join` `}}{L:${INT.lns.join` `}}{S:${(INT.st + '').replace(/\n/g, '\\n')}}`),
-          chalk.greenBright(INT.code[0][0]),
-          chalk.gray.dim('———')
-        ].map(a=> console.log(a))
-      }
-
-      let a = INT.getf()
-
-      // for internal JS calls from commands
-      if(a.call){
-        a()
-      }
-
-      // lambda mode
-      else if(INT.lambda){
-        if(a == '(') INT.lambda++
-        else if(a == ')') INT.lambda--
-        else if(!a.match(/[^)]/g)) INT.lambda -= a.length
-
-        if(INT.lambda > 0) INT.paren.push(a)
-        else SL[')']()
-      }
-
-      // numbers
-      else if(!isNaN(+a)) INT.unshift(a > Number.MAX_SAFE_INTEGER ? BigInt(a.replace(/\.\d*$/, '')) : Number(a))
-
-      else {
-
-        // magic dot
-        if(INT.gl){
-          INT.gl = 0
-          INT.unshift(a)
-          if(a[1] && a[0] == '#'){
-            INT.unshift(INT.shift().slice(1))
-            SL[INT.objs.length ? ':' : 'sl']()
-          }
-          if(a[1] && a[0] == '\\'){
-            INT.unshift(INT.shift().slice(1))
-            SL.sL()
-          }
-          else SL.gl()
-        }
-
-        // ignore hashes
-        else if(a[1] && a[0] == '#'){}
-
-        // brackets/parens only
-        else if(a.match(/^[()\[\]{}]{2,}$/)) INT.exec(a.split``.join` `,1)
-
-        // refs
-        else if(a[1] && a[0] == '\\') INT.unshift(a.slice(1))
-
-        // matched functions
-        else if(a in INT.ids){
-          if(a in INT.idls) INT.tline(INT.idls[a])
-          INT.exec(INT.ids[a], 1)
-        }
-
-        // stdlib functions
-        else if(a in SL) SL[a]()
-
-        else throw `unknown function "${a}"`
-      }
-
-      // verbose mode
-      if(INT.verbose && !INT.lambda){
-        [
-          INT.form(),
-          chalk.gray.dim('>———')
-        ].map(a => console.log(a))
-      }
-
+    // reuse stack frame
+    if(y){
+      this.addf(...this.parse(x))
     }
 
-    INT.code.shift()
+    // new stack frame
+    else {
+      this.addc(this.parse(x))
+
+      while(this.code[0]?.length){
+
+        // verbose mode
+        if(this.verbose && !this.lambda){
+          // console.log(this.code.map(a=> a.map(b=> b+'')));
+          [
+            chalk.gray.dim(`———>{C:${this.code.map(a=> a.length).join` `}}{L:${this.lns.map(([a, b])=> this.mname(a) + ' ' + b).join`;`}}{S:${(this.st + '').replace(/\n/g, '\\n')}}`),
+            chalk.greenBright(this.code[0][0]),
+            chalk.gray.dim('———')
+          ].map(a=> console.log(a))
+        }
+
+        let a = this.getf()
+
+        // for internal JS calls from commands
+        if(a.call){
+          a()
+        }
+
+        // lambda mode
+        else if(this.lambda){
+          if(a == '(') this.lambda++
+          else if(a == ')') this.lambda--
+          else if(!a.match(/[^)]/g)) this.lambda -= a.length
+
+          if(this.lambda > 0) this.paren.push(a)
+          else SL[')'](this)
+        }
+
+        // numbers
+        else if(!isNaN(+a)) this.unshift(a > Number.MAX_SAFE_thisEGER ? BigInt(a.replace(/\.\d*$/, '')) : Number(a))
+
+        else {
+          // pkg call
+          if(this.pkg){
+            let {name, file, ids, idls} = this.pkg
+            if(!(a in ids)) throw `unknown pkg fn "${name} ${a}"`
+            this.addf($=> this.pkf.shift())
+            this.pkf.unshift(this.pkg)
+            this.pkg = 0
+            if(a in idls) this.tline(idls[a])
+            if(ids[a].constructor == PKG){
+              this.pkg = ids[a]
+            }
+            else this.exec(ids[a], 1)
+          }
+
+          // magic dot
+          else if(this.gl){
+            this.gl = 0
+            this.unshift(a)
+            if(a[1] && a[0] == '#'){
+              this.unshift(this.shift().slice(1))
+              SL[this.objs.length ? ':' : 'sl'](this)
+            }
+            if(a[1] && a[0] == '\\'){
+              this.unshift(this.shift().slice(1))
+              SL.sL(this)
+            }
+            else SL.gl(this)
+          }
+
+          // ignore hashes
+          else if(a[1] && a[0] == '#'){}
+
+          // brackets/parens only
+          else if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `,1)
+
+          // refs
+          else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
+
+          // matched pkg functions
+          else if(this.pkf[0] && a in this.pkf[0].ids){
+            if(a in this.pkf[0].idls) this.tline(this.pkf[0].idls[a])
+            this.exec(this.pkf[0].ids[a], 1)
+          }
+
+          // matched functions
+          else if(a in this.ids){
+            if(this.ids[a].constructor == PKG){
+              this.pkg = this.ids[a]
+            }
+            else {
+              if(a in this.idls) this.tline(this.idls[a])
+              this.exec(this.ids[a], 1)
+            }
+          }
+
+          // stdlib functions
+          else if(a in SL) SL[a](this)
+
+          else throw `unknown function "${a}"`
+        }
+
+        // verbose mode
+        if(this.verbose && !this.lambda){
+          [
+            this.form(this.stack[this.st]),
+            chalk.gray.dim('>———')
+          ].map(a => console.log(a))
+        }
+
+      }
+
+      this.code.shift()
+    }
+  }
+
+  print(x){ console.log(x); return x }
+
+  id(x){
+    let y = RegExp(`^ *#${x}`)
+    let line = this.lines.findIndex(a=> a.match(y))
+    if(~line){
+      this.ids[x] = this.lines[line].replace(y, '')
+      this.idls[x] = line
+    }
+  }
+
+  getscope(x, m=0){
+    let y = this.scope.find(a=> x in a)
+    return y ? y[x] : INT.ids[x]
+  }
+
+  mod(x, y){ return (x % y + y) % y }
+
+  range(x, y){
+    let res = [x]
+    let dir = Math.sign(y - x)
+    let c = Math.abs(y - x) - 1
+    while(c > 0){
+      x -= -dir
+      res.push(x)
+      c--
+    }
+    return res
+  }
+
+  tru(x){ return x }
+
+  str(x){
+    return x?.pop ? x.reverse().join` `
+      : this.isitr(x) ? '[...]`'
+      : _.isObjectLike(x) ? _.map((a, i)=> i + str(a)).join` `
+      : x
+  }
+
+  form(x, y='\n'){
+    return x.map(a=>
+      a == Infinity ? '$I'
+      : a && typeof a == 'bigint' ? a + 'N'
+      : a?.toFixed ?
+        a < 0 ? -a + '_' : a + ''
+      : a?.big ? JSON.stringify(a)
+      : a?.pop ?
+        a.length ?
+          `[ ${this.form(a, ' ')} ]`
+        : '[]'
+      : a && this.isitr(a)? '[...]`'
+      : _.isObjectLike(a) ?
+        _.keys(a).length ?
+          `{ ${
+            _.keys(a).map(b=> this.form([b]) + ': ' + this.form([a[b]])).join` `
+          } }`
+        : '{}'
+      : a == undefined ? '$U'
+      : a
+    ).reverse().join(y)
+  }
+
+  parse(x){ return parse(x.pop ? x.join` ` : x + '') }
+
+  gind(o, x){
+    return _.isObjectLike(x) ? _.map(x, a=> INT.gind(o, a))
+      : o.at && !isNaN(+x) ? (o.pop ? a=> a : _.reverse)(o.at(typeof x == 'bigint' ? Number(x) : x))
+      : o[x]
+  }
+
+  get(x){ return this.gind(this.stack[this.st], x) }
+
+  splice(x, y=1, z, w=0){
+    return z != undefined ? INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)
+      : INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y)
+  }
+
+  shift(x){ return _.cloneDeep(this.stack[this.st].shift()) }
+
+  unshift(...x){ return this.stack[this.st].unshift(...x) }
+
+  each(O, f=_.map, s=false, g=x=> x){
+    let X = this.shift()
+    return f(O, (a, i)=>{
+      this.iter.unshift(this.st)
+      this.st = this.iter[0] + ' '
+      this.stack[this.st] = s && itr.isIterable(a) ? [...a] : [a]
+      this.exec(X)
+      let A = this.shift()
+      delete this.stack[this.iter[0] + ' ']
+      this.st = this.iter.shift()
+      return g(A)
+    })
+  }
+
+  acc(O, ac=false, f=_.reduceRight, g=x=> x){
+    let X = this.shift()
+    let Y = ac && this.shift()
+    let F = (a, b)=>{
+      this.iter.unshift(this.st)
+      this.st = this.iter[0] + ' '
+      this.stack[this.st] = [b, a]
+      this.exec(X)
+      let A = this.shift()
+      delete this.stack[this.iter[0] + ' ']
+      this.st = this.iter.shift()
+      return g(A, a)
+    }
+    return ac ? f(O, F, Y) : f(O, F)
+  }
+
+  cmp(O, f=(x, f)=> x.sort(f), g=x=> x){
+    let X = this.shift()
+    return f(O, (a, b)=>{
+      this.iter.unshift(this.st)
+      this.st = this.iter[0] + ' '
+      this.stack[this.st] = [b, a]
+      this.exec(X)
+      let A = this.shift()
+      delete this.stack[this.iter[0] + ' ']
+      this.st = this.iter.shift()
+      return g(A)
+    })
+  }
+
+  isitr(x){ return !x?.length && itr.isIterable(x) }
+
+  listitr(x){
+    return !x?.pop && x?.length ? itr.map(a=> a.reverse(), x)
+      : this.isitr(x) ? x
+      : (x?.big ? x=> x: itr.reverse)(itr.wrap(['number', 'bigint'].includes(typeof x) ? [x] : x))
+  }
+
+  listitrs(x){
+    return !x?.pop && x?.length ? this.listitr(x)
+      : this.isitr(x) || x?.big ? x
+      : x.pop ? this.listitr(_.map(x, this.listitrs))
+      : x
+  }
+
+  itrls(x){ return itr.toArray(itr.reverse(x)) }
+
+  itrlist(x){ return this.itrls(itr.map(a=> this.isitr(a) ? this.itrlist(a) : a, this.listitr(x))) }
+
+  mresolve(x){ return path.resolve(process.cwd(), x) }
+
+  mname(x){ try { return path.basename(x, path.extname(x)) } catch(e){ return x } }
+
+  gline(x){ return this.pkf[0] ? this.pkf[0].lines[x] : this.lines[x] }
+
+  eline(x){
+    let l = this.lns[0][1] - -x
+    if(this.gline(l)){
+      this.tline(l)
+      this.exec(this.gline(l), 1)
+    }
+  }
+
+  tline(l){
+    console.log(this.pkf)
+    let x = [this.pkf[0].file, l]
+    if(this.lns.some(a=> _.isEqual(l, a))){
+      this.lns = _.dropWhile(this.lns, a=> !_.isEqual(l, a))
+    }
+    else {
+      if(this.code[0][0] || this.code[1]) this.addf($=> this.lns.shift())
+      this.lns.unshift(x)
+    }
+  }
+
+  addc(x){
+    this.code.unshift([])
+    this.addf(...x)
+  }
+
+  addf(...x){ this.code[0] = x.reduceRight((a,b)=> [b, ...a], this.code[0]) }
+
+  getf(){
+    let x = this.code[0][0]
+    this.code[0] = this.code[0].slice(1)
+    return x
   }
 }
 
-//initialize everything
-INT.run = (x, lim=10)=>{
-  INT.stack = {0: []}
-  INT.st = 0
-  INT.gl = 0
-  INT.lambda = 0
-  INT.paren = []
-  INT.ids = {}
-  INT.idls = {}
-  INT.iter = []
-  INT.code = []
-  INT.verbose = INT.verbose || 0
-  INT.lns = [0]
-  INT.scope = []
-  INT.scoped = 0
-  INT.objs = []
-  INT.lines = x.split`\n`
-  // INT.max_itr = lim
-
-  INT.exec(INT.lines[0])
-}
-
-export default INT
+export default INTRP

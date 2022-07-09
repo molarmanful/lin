@@ -1,206 +1,206 @@
-import {$C, _, INT as I, SL} from '../bridge.js'
+import {$C, _, SL} from '../bridge.js'
 
 let NUM = {}
 
 // convert to bigint
 NUM["N"] = $=>{
-  let X = I.shift()
-  I.unshift(BigInt(X.pop ? X.reverse().join`` : X))
+  let X = $.shift()
+  $.unshift(BigInt(X.pop ? X.reverse().join`` : X))
 }
 
 // convert to bigint (reversed if list)
 NUM["NN"] = $=>{
-  let X = I.shift()
-  I.unshift(BigInt(X.pop ? X.join`` : X))
+  let X = $.shift()
+  $.unshift(BigInt(X.pop ? X.join`` : X))
 }
 
 // convert to number
 NUM["n_"] = $=>{
-  let X = I.shift()
-  I.unshift(Number(X.pop ? X.reverse().join`` : X))
+  let X = $.shift()
+  $.unshift(Number(X.pop ? X.reverse().join`` : X))
 }
 
 // convert to number (reversed if list)
 NUM["N_"] = $=>{
-  let X = I.shift()
-  I.unshift(Number(X.pop ? X.join`` : X))
+  let X = $.shift()
+  $.unshift(Number(X.pop ? X.join`` : X))
 }
 
 // convert number to digit list
-NUM["ns"] = $=> I.unshift(_.map(I.str(I.shift()), a=> +a).reverse())
+NUM["ns"] = $=> $.unshift(_.map($.str($.shift()), a=> +a).reverse())
 
 // `(index 1)*10^(index 0)`
-NUM["E"] = $=> I.exec('10 swap ^ *', 1)
+NUM["E"] = $=> $.exec('10 swap ^ *', 1)
 
 // negation
-NUM["_"] = $=> I.unshift(-I.shift())
+NUM["_"] = $=> $.unshift(-$.shift())
 
 // addition
-NUM["+"] = $=> I.unshift(I.shift() - -I.shift())
+NUM["+"] = $=> $.unshift($.shift() - -$.shift())
 
 // subtraction
 NUM["-"] = $=>{
-  SL.swap()
-  I.unshift(I.shift() - I.shift())
+  SL.swap($)
+  $.unshift($.shift() - $.shift())
 }
 
 // multiplication
-NUM["*"] = $=> I.unshift(I.shift() * I.shift())
+NUM["*"] = $=> $.unshift($.shift() * $.shift())
 
 // division
 NUM["/"] = $=>{
-  SL.swap()
-  I.unshift(I.shift() / I.shift())
+  SL.swap($)
+  $.unshift($.shift() / $.shift())
 }
 
 // integer division
-NUM["//"] = $=> I.exec('/ trunc', 1)
+NUM["//"] = $=> $.exec('/ trunc', 1)
 
 // modulus
 NUM["%"] = $=>{
-  SL.swap()
-  I.unshift(I.mod(I.shift(), I.shift()))
+  SL.swap($)
+  $.unshift($.mod($.shift(), $.shift()))
 }
 
 // divmod
-NUM["/%"] = $=> I.exec('over over // rot_ %', 1)
+NUM["/%"] = $=> $.exec('over over // rot_ %', 1)
 
 // exponentiation
 NUM["^"] = $=>{
-  SL.swap()
-  I.unshift(I.shift() ** I.shift())
+  SL.swap($)
+  $.unshift($.shift() ** $.shift())
 }
 
 // absolute value
-NUM["abs"] = $=> I.unshift(Math.abs(I.shift()))
+NUM["abs"] = $=> $.unshift(Math.abs($.shift()))
 
 // sign function
-NUM["sign"] = $=> I.unshift(Math.sign(I.shift()))
+NUM["sign"] = $=> $.unshift(Math.sign($.shift()))
 
 // push random number between 0 and 1
-NUM["rng"] = $=> I.unshift(Math.random())
+NUM["rng"] = $=> $.unshift(Math.random())
 
 // natural logarithm
-NUM["ln"] = $=> I.unshift(Math.ln(I.shift()))
+NUM["ln"] = $=> $.unshift(Math.ln($.shift()))
 
 // base-2 logarithm
-NUM["logII"] = $=> I.unshift(Math.log2(I.shift()))
+NUM["logII"] = $=> $.unshift(Math.log2($.shift()))
 
 // base-10 logarithm
-NUM["logX"] = $=> I.unshift(Math.log10(I.shift()))
+NUM["logX"] = $=> $.unshift(Math.log10($.shift()))
 
 // logarithm with base at index 0
 NUM["log"] = $=>{
-  SL.swap()
-  I.unshift(Math.log(I.shift(), I.shift()))
+  SL.swap($)
+  $.unshift(Math.log($.shift(), $.shift()))
 }
 
 // sine
-NUM["sin"] = $=> I.unshift(Math.sin(I.shift()))
+NUM["sin"] = $=> $.unshift(Math.sin($.shift()))
 
 // cosine
-NUM["cos"] = $=> I.unshift(Math.cos(I.shift()))
+NUM["cos"] = $=> $.unshift(Math.cos($.shift()))
 
 // tangent
-NUM["tan"] = $=> I.unshift(Math.tan(I.shift()))
+NUM["tan"] = $=> $.unshift(Math.tan($.shift()))
 
 // hyperbolic sine
-NUM["sinh"] = $=> I.unshift(Math.sinh(I.shift()))
+NUM["sinh"] = $=> $.unshift(Math.sinh($.shift()))
 
 // hyperbolic cosine
-NUM["cosh"] = $=> I.unshift(Math.cosh(I.shift()))
+NUM["cosh"] = $=> $.unshift(Math.cosh($.shift()))
 
 // hyperbolic tangent
-NUM["tanh"] = $=> I.unshift(Math.tanh(I.shift()))
+NUM["tanh"] = $=> $.unshift(Math.tanh($.shift()))
 
 // inverse sine
-NUM["asin"] = $=> I.unshift(Math.asin(I.shift()))
+NUM["asin"] = $=> $.unshift(Math.asin($.shift()))
 
 // inverse cosine
-NUM["acos"] = $=> I.unshift(Math.acos(I.shift()))
+NUM["acos"] = $=> $.unshift(Math.acos($.shift()))
 
 // inverse tangent
-NUM["atan"] = $=> I.unshift(Math.atan(I.shift()))
+NUM["atan"] = $=> $.unshift(Math.atan($.shift()))
 
 // inverse tangent with coordinates (x,y) to (index 1, index 0)
 NUM["atant"] = $=>{
-  SL.swap()
-  I.unshift(Math.atan2(I.shift(), I.shift()))
+  SL.swap($)
+  $.unshift(Math.atan2($.shift(), $.shift()))
 }
 
 // inverse hyperbolic sine
-NUM["asinh"] = $=> I.unshift(Math.asinh(I.shift()))
+NUM["asinh"] = $=> $.unshift(Math.asinh($.shift()))
 
 // inverse hyperbolic cosine
-NUM["acosh"] = $=> I.unshift(Math.acosh(I.shift()))
+NUM["acosh"] = $=> $.unshift(Math.acosh($.shift()))
 
 // inverse hyperbolic tangent
-NUM["atanh"] = $=> I.unshift(Math.atanh(I.shift()))
+NUM["atanh"] = $=> $.unshift(Math.atanh($.shift()))
 
 // push max
-NUM["max"] = $=> I.unshift(Math.max(...I.stack[I.st]))
+NUM["max"] = $=> $.unshift(Math.max(...$.stack[$.st]))
 
 // push min
-NUM["min"] = $=> I.unshift(Math.min(...I.stack[I.st]))
+NUM["min"] = $=> $.unshift(Math.min(...$.stack[$.st]))
 
 // bitwise not
-NUM["~"] = $=> I.unshift(~I.shift())
+NUM["~"] = $=> $.unshift(~$.shift())
 
 // logical not
-NUM["!"] = $=> I.unshift(+!I.tru(I.shift()))
+NUM["!"] = $=> $.unshift(+!$.tru($.shift()))
 
 // bitwise and
-NUM["&"] = $=> I.unshift(I.shift() & I.shift())
+NUM["&"] = $=> $.unshift($.shift() & $.shift())
 
 // bitwise or
-NUM["|"] = $=> I.unshift(I.shift() | I.shift())
+NUM["|"] = $=> $.unshift($.shift() | $.shift())
 
 // bitwise xor
-NUM["$"] = $=> I.unshift(I.shift() ^ I.shift())
+NUM["$"] = $=> $.unshift($.shift() ^ $.shift())
 
 // bitwise left shift
 NUM["<<"] = $=>{
-  SL.swap()
-  I.unshift(I.shift() << I.shift())
+  SL.swap($)
+  $.unshift($.shift() << $.shift())
 }
 
 // bitwise right shift, sign-propagating
 NUM[">>"] = $=> {
-  SL.swap()
-  I.unshift(I.shift() >> I.shift())
+  SL.swap($)
+  $.unshift($.shift() >> $.shift())
 }
 
 // bitwise right shift, zero-fill
 NUM[">>>"] = $=>{
-  SL.swap()
-  I.unshift(I.shift() >>> I.shift())
+  SL.swap($)
+  $.unshift($.shift() >>> $.shift())
 }
 
 // round towards -∞
-NUM["floor"] = $=> I.unshift(Math.floor(I.shift()))
+NUM["floor"] = $=> $.unshift(Math.floor($.shift()))
 
 // round towards 0
-NUM["trunc"] = $=> I.unshift(Math.trunc(I.shift()))
+NUM["trunc"] = $=> $.unshift(Math.trunc($.shift()))
 
 // round towards or away from 0 depending on < or >= .5
-NUM["round"] = $=> I.unshift(Math.round(I.shift()))
+NUM["round"] = $=> $.unshift(Math.round($.shift()))
 
 // round towards ∞
-NUM["ceil"] = $=> I.unshift(Math.ceil(I.shift()))
+NUM["ceil"] = $=> $.unshift(Math.ceil($.shift()))
 
 // factorial
-NUM["F"] = $=> I.unshift(combs.factorial(I.shift()))
+NUM["F"] = $=> $.unshift(combs.factorial($.shift()))
 
 // *n* permute *k*
 NUM["P"] = $=>{
-  SL.swap()
-  I.unshift($C.permutation(I.shift(), I.shift()))
+  SL.swap($)
+  $.unshift($C.permutation($.shift(), $.shift()))
 }
 
 // *n* choose *k*
 NUM["C"] = $=>{
-  SL.swap()
-  I.unshift($C.combination(I.shift(), I.shift()))
+  SL.swap($)
+  $.unshift($C.combination($.shift(), $.shift()))
 }
 
 export default NUM

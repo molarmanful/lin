@@ -12,6 +12,7 @@
 - [ITER](#ITER)
 - [LIST](#LIST)
 - [LOGIC](#LOGIC)
+- [MODULE](#MODULE)
 - [MULTISTACK](#MULTISTACK)
 - [NUM](#NUM)
 - [OBJ](#OBJ)
@@ -178,6 +179,13 @@ Command | Description
 <code>>=</code> | greater than or equal to
 <code><=</code> | less than or equal to
 <code><=></code> | comparison function (-1 for less than, 0 for equal, 1 for greater than)
+
+## MODULE
+
+Command | Description
+--- | ---
+<code>::i</code> | import module
+<code>::e</code> | export module
 
 ## MULTISTACK
 

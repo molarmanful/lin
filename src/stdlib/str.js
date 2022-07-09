@@ -1,46 +1,46 @@
-import {unesc, _, INT as I} from '../bridge.js'
+import {unesc, _} from '../bridge.js'
 
 let STR = {}
 
-STR["str"] = $=> I.unshift(I.str(I.shift()))
+STR["str"] = $=> $.unshift($.str($.shift()))
 
 // unescape string at index 0
-STR["unesc"] = $=> I.unshift(unesc(I.shift()))
+STR["unesc"] = $=> $.unshift(unesc($.shift()))
 
 // convert number to Unicode
-STR[">char"] = $=> I.unshift(String.fromCodePoint(I.shift()))
+STR[">char"] = $=> $.unshift(String.fromCodePoint($.shift()))
 
 // convert Unicode to number
-STR["<char"] = $=> I.unshift(I.shift().codePointAt())
+STR["<char"] = $=> $.unshift($.shift().codePointAt())
 
 // lowercase
-STR["lower"] = $=> I.unshift(I.shift().toLowerCase())
+STR["lower"] = $=> $.unshift($.shift().toLowerCase())
 
 // uppercase
-STR["upper"] = $=> I.unshift(I.shift().toUpperCase())
+STR["upper"] = $=> $.unshift($.shift().toUpperCase())
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
 STR["pad"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  let Z = I.shift()
-  I.unshift(_.pad(Z, X, Y))
+  let X = $.shift()
+  let Y = $.shift()
+  let Z = $.shift()
+  $.unshift(_.pad(Z, X, Y))
 }
 
 // `pad` but only from the left
 STR["padl"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  let Z = I.shift()
-  I.unshift(_.padStart(Z, X, Y))
+  let X = $.shift()
+  let Y = $.shift()
+  let Z = $.shift()
+  $.unshift(_.padStart(Z, X, Y))
 }
 
 // `pad` but only from the right
 STR["padr"] = $=>{
-  let X = I.shift()
-  let Y = I.shift()
-  let Z = I.shift()
-  I.unshift(_.padEnd(Z, X, Y))
+  let X = $.shift()
+  let Y = $.shift()
+  let Z = $.shift()
+  $.unshift(_.padEnd(Z, X, Y))
 }
 
 export default STR

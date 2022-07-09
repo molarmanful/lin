@@ -1,5 +1,5 @@
 // modules
-import {fs, INT} from './bridge.js'
+import {fs, INTRP} from './bridge.js'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 
@@ -11,9 +11,6 @@ let odefs = [
   // {name: 'itrlim', alias: 'l', type: Number,typeLabel: '<limit>', description: 'Maximum number of items to pretty-print in iterators.'}
 ]
 let opts = commandLineArgs(odefs)
-
-INT.verbose = opts.verbose
-// INT.max_itr = opts.itrlim || 10
 
 if(opts.help)
   console.log(commandLineUsage([
@@ -34,4 +31,4 @@ if(opts.help)
     }
   ]))
 
-else INT.run(opts.eval || fs.readFileSync(opts.file) + '')
+else new INTRP(opts.eval || fs.readFileSync(opts.file) + '', opts.file, {verbose: opts.verbose})

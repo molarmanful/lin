@@ -1,51 +1,75 @@
-import {_, INT as I, SL} from '../bridge.js'
+import {_, mth} from '../bridge.js'
 
 let MULTISTACK = {}
 
 // `es` index 1 on a stack with name given by index 0
 MULTISTACK["'s"] = $=>{
-  I.iter.unshift(I.st)
-  let X = I.shift()
-  let Y = I.shift()
-  I.st = X
-  if(!I.stack[I.st]) I.stack[I.st] = []
-  I.addf(a=> I.st = I.iter.shift())
-  I.exec(Y, 1)
+  $.iter.unshift($.st)
+  let X = $.shift()
+  let Y = $.shift()
+  $.st = X
+  if(!$.stack[$.st]) $.stack[$.st] = []
+  $.addf(a=> $.st = $.iter.shift())
+  $.exec(Y, 1)
 }
 
 // push index 1 to another stack with name given by index 0
 MULTISTACK["push"] = $=>{
-  let X = I.shift()
-  if(!I.stack[X]) I.stack[X] = []
-  I.stack[X].unshift(I.shift())
+  let X = $.shift()
+  if(!$.stack[X]) $.stack[X] = []
+  $.stack[X].unshift($.shift())
 }
 
 // push current stack to another stack with name given by index 0
 MULTISTACK["pushs"] = $=>{
-  let X = I.shift()
-  if(!I.stack[X]) I.stack[X] = []
-  I.stack[X].unshift(I.stack[I.st])
+  let X = $.shift()
+  if(!$.stack[X]) $.stack[X] = []
+  $.stack[X].unshift($.stack[$.st])
 }
 
 // push top item of another stack with name given by index 0
 MULTISTACK["pull"] = $=>{
-  let X = I.shift()
-  if(!I.stack[X]) I.stack[X] = []
-  I.unshift(I.stack[X].shift())
+  let X = $.shift()
+  if(!$.stack[X]) $.stack[X] = []
+  $.unshift($.stack[X].shift())
 }
 
 // `pull` without modifying other stack
 MULTISTACK["pud"] = $=>{
-  let X = I.shift()
-  if(!I.stack[X]) I.stack[X] = []
-  I.unshift(I.stack[X][0])
+  let X = $.shift()
+  if(!$.stack[X]) $.stack[X] = []
+  $.unshift($.stack[X][0])
 }
 
 // pull stack with name given by index 0 to current stack
 MULTISTACK["pulls"] = $=>{
-  let X = I.shift()
-  if(!I.stack[X]) I.stack[X] = []
-  I.unshift(I.stack[X])
+  let X = $.shift()
+  if(!$.stack[X]) $.stack[X] = []
+  $.unshift($.stack[X])
+}
+
+MULTISTACK["thr"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  let Z = $.shift()
+  let W = $.shift()
+  mth(async $=>{
+    let {path, fn} = global.threadData
+    let {INT} = await import(path)
+    INT.run(fn)
+    return INT.stack[INT.st]
+  }, {
+    path: new URL('../bridge.js', import.meta.url).href,
+    fn: W
+  })
+    .then(r=>{
+      $.stack[X] = r
+      $.exec(Z)
+    })
+    .catch(e=>{
+      $.stack[X] = [e]
+      $.exec(Y, 1)
+    })
 }
 
 export default MULTISTACK
