@@ -1,10 +1,10 @@
-import {chalk, itr, _, path, parse, SL} from './bridge.js'
+import {chalk, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {
   constructor(n, f){
     this.name = n
     this.file = f
-    this.ids = {}
+    this.ids = _.cloneDeep(SL)
     this.idls = {}
     this.lines = []
   }
@@ -18,19 +18,20 @@ class INTRP {
     this.gl = 0
     this.lambda = 0
     this.paren = []
-    this.ids = {}
+    this.ids = _.cloneDeep(SL)
     this.idls = {}
     this.lines = x.split`\n`
     this.lns = [[0, 0]]
     this.iter = []
     this.code = []
-    this.verbose = opts.verbose || 0
+    this.verbose = opts.verbose
+    this.step = opts.step
     this.scope = []
     this.scoped = 0
     this.objs = []
     this.dir = this.mresolve(file)
     this.PKG = PKG
-    this.pkg = 0
+    this.pkg = []
     this.pkf = []
 
     this.exec(this.lines[0])
@@ -49,6 +50,8 @@ class INTRP {
       this.addc(this.parse(x))
 
       while(this.code[0]?.length){
+
+        if(this.step) console.clear()
 
         // verbose mode
         if(this.verbose && !this.lambda){
@@ -82,17 +85,18 @@ class INTRP {
 
         else {
           // pkg call
-          if(this.pkg){
-            let {name, file, ids, idls} = this.pkg
+          if(this.pkg[0]){
+            let {name, file, ids, idls} = this.pkg[0]
             if(!(a in ids)) throw `unknown pkg fn "${name} ${a}"`
             this.addf($=> this.pkf.shift())
-            this.pkf.unshift(this.pkg)
-            this.pkg = 0
-            if(a in idls) this.tline(idls[a])
-            if(ids[a].constructor == PKG){
-              this.pkg = ids[a]
+            this.pkf.unshift(this.pkg.shift())
+            if(ids[a] instanceof PKG){
+              this.pkg.unshift(ids[a])
             }
-            else this.exec(ids[a], 1)
+            else {
+              if(a in idls) this.tline(idls[a])
+              this.exec(ids[a], 1)
+            }
           }
 
           // magic dot
@@ -120,26 +124,15 @@ class INTRP {
           else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
 
           // matched pkg functions
-          else if(this.pkf[0] && a in this.pkf[0].ids){
-            if(a in this.pkf[0].idls) this.tline(this.pkf[0].idls[a])
-            this.exec(this.pkf[0].ids[a], 1)
+          else if(this.pkf[0]){
+            if(a in this.pkf[0].ids) this.fmatch(a, this.pkf[0])
+            else throw `unknown fn "${a}" in pkg "${this.pkf[0].name}"`
           }
 
           // matched functions
-          else if(a in this.ids){
-            if(this.ids[a].constructor == PKG){
-              this.pkg = this.ids[a]
-            }
-            else {
-              if(a in this.idls) this.tline(this.idls[a])
-              this.exec(this.ids[a], 1)
-            }
-          }
+          else if(a in this.ids) this.fmatch(a, this)
 
-          // stdlib functions
-          else if(a in SL) SL[a](this)
-
-          else throw `unknown function "${a}"`
+          else throw `unknown fn "${a}"`
         }
 
         // verbose mode
@@ -150,9 +143,19 @@ class INTRP {
           ].map(a => console.log(a))
         }
 
+        if(this.step) rls.question("[ENTER to continue]")
       }
 
       this.code.shift()
+    }
+  }
+
+  fmatch(a, ctx){
+    if(ctx.ids[a] instanceof PKG) this.pkg.unshift(ctx.ids[a])
+    else if(ctx.ids[a] instanceof Function && a in SL) SL[a](this)
+    else {
+      if(a in ctx.idls) this.tline(ctx.idls[a])
+      this.exec(ctx.ids[a], 1)
     }
   }
 
@@ -315,7 +318,6 @@ class INTRP {
   }
 
   tline(l){
-    console.log(this.pkf)
     let x = [this.pkf[0].file, l]
     if(this.lns.some(a=> _.isEqual(l, a))){
       this.lns = _.dropWhile(this.lns, a=> !_.isEqual(l, a))

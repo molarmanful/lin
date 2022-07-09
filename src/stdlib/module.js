@@ -8,13 +8,8 @@ let imp = $=>{
   if(X.match(/[\d.]/)) throw `bad pkg name "${X}"`
   let I = new INTRP(fs.readFileSync(F) + '', X)
   I.ids.__PKG.name = X
-  I.ids.__PKG.file = X
+  I.ids.__PKG.file = F
   return {F, X, I}
-}
-
-MODULE["a::i"] = $=>{
-  let Y = $.shift()
-  let {X, I} = imp($)
 }
 
 MODULE["a::i"] = $=>{
