@@ -23,7 +23,7 @@ CONSTANT["n\\"] = $=> $.unshift('\n')
 // current line number
 CONSTANT["$L"] = $=> $.unshift($.lns[0][1])
 
-// current package name
+// current package
 CONSTANT["$P"] = $=> $.unshift($.lns[0][0])
 
 // current stack name

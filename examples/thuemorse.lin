@@ -1,4 +1,4 @@
-0 ( \clr dip (( 0+ dup ! ++ ) map ) ' () join ) 10 e* out
+0 ( ( rev ( N dup ! ++ ) map ) ' () join dup outln ) \n: out in e*
 
 
 
@@ -7,7 +7,6 @@
 Outputs the Thue-Morse sequence.
 
 - `0` is the initial condition.
-- `(...) 10 e* out` executes the given lambda 10 times and outputs the result.
-- `\clr dip` clears the stack except for the top item.
-- `( (...) map ) ' () join` executes the lambda on each digit in the number at the top of the stack and joins the result.
+- `(...) \n: out in e*` executes the given lambda (input) times and outputs the result.
+- `( rev (...) map ) ' () join dup outln` executes the lambda on each digit in the number at the top of the stack, joins the result, and outputs it.
 - `0+ dup ! ++` turns 0 into 01 and 1 into 10.

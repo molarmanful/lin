@@ -10,7 +10,7 @@ FLOW["e*"] = $=>{
   let X = $.shift()
   let Y = $.shift()
   $.addf(a=>{
-    if($.tru(X)){
+    if(X > 0){
       $.addf(a=> $.unshift(X - 1, Y), 'e*')
       $.exec(Y, 1)
     }

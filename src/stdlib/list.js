@@ -50,9 +50,10 @@ LIST[","] = $=> $.unshift([$.shift(), $.shift()])
 LIST["++"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  $.unshift(Y.big ? Y + $.str(X) : _.concat(X, Y))
+  $.unshift(Y.pop ? _.concat(X, Y) : Y + $.str(X))
 }
 
+// get random item from list
 LIST["r:"] = $=> $.exec('dup len rng * 0| g:', 1)
 
 // repeat list/string by index 0

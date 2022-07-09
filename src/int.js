@@ -29,7 +29,7 @@ class INTRP {
     this.scope = []
     this.scoped = 0
     this.objs = []
-    this.dir = this.mresolve(file)
+    this.file = this.mresolve(file)
     this.PKG = PKG
     this.pkg = []
     this.pkf = []
@@ -38,12 +38,16 @@ class INTRP {
   }
 
   exec(x, y){
-    x += ''
+    if(!x.big) x += ''
+
+    if(x.orig?.file == this.file && this.pkf[0] && x.orig?.file != this.pkf[0]?.file){
+      this.addf($=> this.pkf.shift())
+      this.pkf.unshift(0)
+      if(!_.isEqual(this.lns[0], x.orig.line)) this.lns.unshift(x.orig.line)
+    }
 
     // reuse stack frame
-    if(y){
-      this.addf(...this.parse(x))
-    }
+    if(y) this.addf(...this.parse(x))
 
     // new stack frame
     else {
@@ -72,9 +76,8 @@ class INTRP {
 
         // lambda mode
         else if(this.lambda){
-          if(a == '(') this.lambda++
-          else if(a == ')') this.lambda--
-          else if(!a.match(/[^)]/g)) this.lambda -= a.length
+          if(a.match(/^[()\[\]{}]+$/))
+            this.lambda += (a.match(/\(/g) || []).length - (a.match(/\)/g) || []).length
 
           if(this.lambda > 0) this.paren.push(a)
           else SL[')'](this)
@@ -150,6 +153,15 @@ class INTRP {
     }
   }
 
+  strtag(x){
+    if(x?.big && !x.orig){
+      let X = new String(x)
+      X.orig = {file: this.file, line: this.lns[0].slice()}
+      return X
+    }
+    return x
+  }
+
   fmatch(a, ctx){
     if(ctx.ids[a] instanceof PKG) this.pkg.unshift(ctx.ids[a])
     else if(ctx.ids[a] instanceof Function && a in SL) SL[a](this)
@@ -189,13 +201,14 @@ class INTRP {
     return res
   }
 
-  tru(x){ return x }
+  tru(x){ return x != '' && x }
 
   str(x){
-    return x?.pop ? x.reverse().join` `
+    return x?.big ? this.strtag(x + '')
+      : x?.pop ? x.reverse().join` `
       : this.isitr(x) ? '[...]`'
       : _.isObjectLike(x) ? _.map((a, i)=> i + this.str(a)).join` `
-      : x + ''
+      : this.strtag(x + '')
   }
 
   form(x, y='\n'){
@@ -238,7 +251,7 @@ class INTRP {
 
   shift(x){ return _.cloneDeep(this.stack[this.st].shift()) }
 
-  unshift(...x){ return this.stack[this.st].unshift(...x) }
+  unshift(...x){ return this.stack[this.st].unshift(...x.map(a=> this.strtag(a))) }
 
   each(O, f=_.map, s=false, g=x=> x){
     let X = this.shift()

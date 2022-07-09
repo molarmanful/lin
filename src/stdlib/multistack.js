@@ -7,8 +7,7 @@ MULTISTACK["'s"] = $=>{
   $.iter.unshift($.st)
   let X = $.shift()
   let Y = $.shift()
-  $.st = X
-  if(!$.stack[$.st]) $.stack[$.st] = []
+  if(!$.stack[$.st = X]) $.stack[$.st] = []
   $.addf(a=> $.st = $.iter.shift())
   $.exec(Y, 1)
 }
