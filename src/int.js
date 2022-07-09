@@ -172,7 +172,7 @@ class INTRP {
 
   getscope(x, m=0){
     let y = this.scope.find(a=> x in a)
-    return y ? y[x] : INT.ids[x]
+    return y ? y[x] : this.ids[x]
   }
 
   mod(x, y){ return (x % y + y) % y }
@@ -224,7 +224,7 @@ class INTRP {
   parse(x){ return parse(x.pop ? x.join` ` : x + '') }
 
   gind(o, x){
-    return _.isObjectLike(x) ? _.map(x, a=> INT.gind(o, a))
+    return _.isObjectLike(x) ? _.map(x, a=> this.gind(o, a))
       : o.at && !isNaN(+x) ? (o.pop ? a=> a : _.reverse)(o.at(typeof x == 'bigint' ? Number(x) : x))
       : o[x]
   }
@@ -232,8 +232,8 @@ class INTRP {
   get(x){ return this.gind(this.stack[this.st], x) }
 
   splice(x, y=1, z, w=0){
-    return z != undefined ? INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y, z)
-      : INT.stack[INT.st].splice(INT.mod(x, INT.stack[INT.st].length + w), y)
+    return z != undefined ? this.stack[this.st].splice(this.mod(x, this.stack[this.st].length + w), y, z)
+      : this.stack[this.st].splice(this.mod(x, this.stack[this.st].length + w), y)
   }
 
   shift(x){ return _.cloneDeep(this.stack[this.st].shift()) }
@@ -318,7 +318,7 @@ class INTRP {
   }
 
   tline(l){
-    let x = [this.pkf[0].file, l]
+    let x = [this.pkf[0]?.file || 0, l]
     if(this.lns.some(a=> _.isEqual(l, a))){
       this.lns = _.dropWhile(this.lns, a=> !_.isEqual(l, a))
     }
