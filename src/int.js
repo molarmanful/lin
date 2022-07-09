@@ -38,12 +38,15 @@ class INTRP {
   }
 
   exec(x, y){
-    if(!x.big) x += ''
+    if(!x?.big) x += ''
 
     if(x.orig?.file == this.file && this.pkf[0] && x.orig?.file != this.pkf[0]?.file){
       this.addf($=> this.pkf.shift())
       this.pkf.unshift(0)
-      if(!_.isEqual(this.lns[0], x.orig.line)) this.lns.unshift(x.orig.line)
+      if(!_.isEqual(this.lns[0], x.orig.line)){
+        this.addf($=> this.lns.shift())
+        this.lns.unshift(x.orig.line)
+      }
     }
 
     // reuse stack frame
