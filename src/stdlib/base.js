@@ -80,10 +80,10 @@ BASE["gs"] = $=> $.unshift($.form($.stack[$.st]))
 BASE["g@"] = $=> $.unshift($.gline($.shift()))
 
 //  push next line
-BASE["g;"] = $=> $.unshift($.lns[0][1] - -1)
+BASE["g;"] = $=> $.unshift($.gline($.lns[0][1] - -1))
 
 //  push previous line
-BASE["g;;"] = $=> $.unshift($.lns[0][1] - 1)
+BASE["g;;"] = $=> $.unshift($.gline($.lns[0][1] - 1))
 
 // convert index 0 to its formatted representation
 BASE["form"] = $=> $.unshift($.form([$.shift()]))

@@ -143,7 +143,7 @@ class INTRP {
           ].map(a => console.log(a))
         }
 
-        if(this.step) rls.question("[ENTER to continue]")
+        if(this.step) if(rls.question("[ENTER to continue, a + ENTER to auto-step]") == 'a') this.step = 0
       }
 
       this.code.shift()
@@ -194,8 +194,8 @@ class INTRP {
   str(x){
     return x?.pop ? x.reverse().join` `
       : this.isitr(x) ? '[...]`'
-      : _.isObjectLike(x) ? _.map((a, i)=> i + str(a)).join` `
-      : x
+      : _.isObjectLike(x) ? _.map((a, i)=> i + this.str(a)).join` `
+      : x + ''
   }
 
   form(x, y='\n'){

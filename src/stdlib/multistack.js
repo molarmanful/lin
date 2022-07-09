@@ -48,6 +48,12 @@ MULTISTACK["pulls"] = $=>{
   $.unshift($.stack[X])
 }
 
+// set stack with name given by index 0 to current stack
+MULTISTACK["hijk"] = $=> $.stack[$.shift()] = $.stack[$.st]
+
+// set current stack to stack with name given by index 0
+MULTISTACK["absb"] = $=> $.stack[$.st] = $.stack[$.shift()]
+
 MULTISTACK["thr"] = $=>{
   let X = $.shift()
   let Y = $.shift()
