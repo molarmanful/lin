@@ -43,10 +43,7 @@ class INTRP {
     if(x.orig?.file == this.file && this.pkf[0] && x.orig?.file != this.pkf[0]?.file){
       this.addf($=> this.pkf.shift())
       this.pkf.unshift(0)
-      if(!_.isEqual(this.lns[0], x.orig.line)){
-        this.addf($=> this.lns.shift())
-        this.lns.unshift(x.orig.line)
-      }
+      this.tline(x.orig.line, 1)
     }
 
     // reuse stack frame
@@ -333,14 +330,14 @@ class INTRP {
     }
   }
 
-  tline(l){
-    let x = [this.pkf[0]?.file || 0, l]
+  tline(l, r=0){
+    l = r ? l : [this.pkf[0]?.file || 0, l]
     if(this.lns.some(a=> _.isEqual(l, a))){
       this.lns = _.dropWhile(this.lns, a=> !_.isEqual(l, a))
     }
     else {
       if(this.code[0][0] || this.code[1]) this.addf($=> this.lns.shift())
-      this.lns.unshift(x)
+      this.lns.unshift(l)
     }
   }
 
