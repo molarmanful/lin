@@ -62,8 +62,8 @@ ITER["`mask"] = $=>{
   $.unshift(itr.compress(itrd($), itrd($)))
 }
 
-// zip all stack items into one iterator
-ITER["`,*"] = $=> $.stack[$.st] = [itr.zip(...itr.reverse(itr.map(a=> $.listitr(a), itrd($))))]
+// zip list of iterators into one iterator
+ITER["`,*"] = $=> $.unshift(itr.zip(...itr.reverse(itr.map(a=> $.listitr(a), itrd($)))))
 
 // iterator size (DOES NOT HALT ON INFINITE LISTS) 
 ITER["`size"] = $=> $.unshift(itr.size($.listitr($.stack[$.st][0])))
