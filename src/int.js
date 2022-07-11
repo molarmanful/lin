@@ -300,7 +300,7 @@ class INTRP {
   isitr(x){ return !x?.length && itr.isIterable(x) }
 
   listitr(x){
-    return !x?.pop && x?.length ? itr.map(a=> a.reverse(), x)
+    return !x?.pop && !x?.big && x?.length ? itr.map(a=> a.reverse(), x)
       : this.isitr(x) ? x
       : (x?.big ? x=> x: itr.reverse)(itr.wrap(['number', 'bigint'].includes(typeof x) ? [x] : x))
   }
