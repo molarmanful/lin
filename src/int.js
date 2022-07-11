@@ -108,9 +108,10 @@ class INTRP {
             this.unshift(a)
             if(a[1] && a[0] == '#'){
               this.unshift(this.shift().slice(1))
+              console.log(this.stack[this.st])
               SL[this.objs.length ? ':' : 'sl'](this)
             }
-            if(a[1] && a[0] == '\\'){
+            else if(a[1] && a[0] == '\\'){
               this.unshift(this.shift().slice(1))
               SL.sL(this)
             }
