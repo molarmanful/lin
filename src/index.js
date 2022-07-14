@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 // modules
-import {fs, INTRP, chalk} from './bridge.js'
+import {_, fs, INTRP, chalk} from './bridge.js'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
-import _ from 'lodash'
 
 let odefs = [
   {name: 'help', alias: 'h', type: Boolean, description: 'Show this guide.'},
