@@ -18,7 +18,7 @@ LIST["dep"] = $=>{
 LIST["'"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  if(Y.big || Y.toFixed) Y = $.str(Y).split``
+  if($.isstr(Y) || $.isnum(Y)) Y = $.str(Y).split``
   $.iter.unshift($.st)
   $.st = $.iter[0]+'\n'
   $.stack[$.st] = Y.slice()
@@ -50,7 +50,7 @@ LIST[","] = $=> $.unshift([$.shift(), $.shift()])
 LIST["++"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  $.unshift(Y.pop ? _.concat(X, Y) : Y + $.str(X))
+  $.unshift($.isarr(Y) ? _.concat(X, Y) : Y + $.str(X))
 }
 
 // get random item from list
@@ -60,7 +60,7 @@ LIST["r:"] = $=> $.exec('dup len rng * 0| g:', 1)
 LIST["rep"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  if(Y.big || Y.toFixed) $.unshift(_.repeat(Y, X))
+  if($.isstr(Y) || $.isnum(Y)) $.unshift(_.repeat(Y, X))
   else $.unshift(_.range(X).flatMap(a=> Y))
 }
 
@@ -82,7 +82,7 @@ LIST["wraps"] = $=> $.unshift($.splice(0, $.shift()))
 // opposite of `wrap`; take all items in list at index 0 and push to parent stack
 LIST["wrap_"] = $=>{
   let X = $.shift()
-  $.unshift(...X.pop ? X : [X])
+  $.unshift(...$.isarr(X) ? X : [X])
 }
 
 // enclose entire stack into a list

@@ -115,15 +115,15 @@ BASE["sL"] = $=>{
 // bring ID at index 0 as string into global scope
 BASE["::"] = $=> $.id($.shift())
 
-// pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, 5 if iterator, and 0 if anything else (ex.: undefined)
+// push type of index 0
 BASE["type"] = $=>{
   let X = $.shift()
   $.unshift(
-    X.pop ? 3
-    : X.big ? 2
-    : ['number', 'bigint'].includes(typeof X) ? 1
-    : $.isitr(X) ? 5
-    : _.isObjectLike(X) ? 4
+    $.isarr(X) ? 'arr'
+    : $.isstr(X) ? 'str'
+    : $.isnum(X) ? 'num'
+    : $.isitr(X) ? 'itr'
+    : $.isobj(X) ? 'obj'
     : 0
   )
 }

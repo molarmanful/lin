@@ -8,7 +8,13 @@ OBJ[":"] = $=>{
   else {
     let X = $.shift()
     let Y = $.shift()
-    $.stack[$.st][0][X] = Y
+    let O = $.stack[$.st][0]
+    if($.isarl(O) && X < 0) X -= -O.length
+    if($.isstr(O)){
+      O = $.shift()
+      $.unshift(O.slice(0, X) + Y + O.slice(X + 1))
+    }
+    else O[X] = Y
   }
 }
 

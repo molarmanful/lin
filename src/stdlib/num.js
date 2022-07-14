@@ -5,25 +5,25 @@ let NUM = {}
 // convert to bigint
 NUM["N"] = $=>{
   let X = $.shift()
-  $.unshift(BigInt(X.pop ? X.reverse().join`` : X))
+  $.unshift(BigInt($.isarr(X) ? X.reverse().join`` : X))
 }
 
 // convert to bigint (reversed if list)
 NUM["NN"] = $=>{
   let X = $.shift()
-  $.unshift(BigInt(X.pop ? X.join`` : X))
+  $.unshift(BigInt($.isarr(X) ? X.join`` : X))
 }
 
 // convert to number
 NUM["n_"] = $=>{
   let X = $.shift()
-  $.unshift(Number(X.pop ? X.reverse().join`` : X))
+  $.unshift(Number($.isarr(X) ? X.reverse().join`` : X))
 }
 
 // convert to number (reversed if list)
 NUM["N_"] = $=>{
   let X = $.shift()
-  $.unshift(Number(X.pop ? X.join`` : X))
+  $.unshift(Number($.isarr(X) ? X.join`` : X))
 }
 
 // convert number to digit list

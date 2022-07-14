@@ -2,7 +2,7 @@ import {$C, itr, _, SL} from '../bridge.js'
 
 let COUNT = {}
 
-let iconv = x=> x?.pop ? x.reverse() : x
+let iconv = ($, x)=> $.isarr(x) ? x.reverse() : x
 
 // factoradic representation of index 0
 COUNT["facc"] = $=> $.unshift($C.factoradic($.shift()).reverse())
@@ -18,28 +18,28 @@ COUNT["combc"] = $=>{
 // permutations of index 1 of length given by index 0
 COUNT["`perm"] = $=>{
   SL.swap($)
-  $.unshift(new $C.Permutation(iconv($.shift()), $.shift()))
+  $.unshift(new $C.Permutation(iconv($, $.shift()), $.shift()))
 }
 
 // combinations of index 1 of length given by index 0
 COUNT["`comb"] = $=>{
   SL.swap($)
-  $.unshift(new $C.Combination(iconv($.shift()), $.shift()))
+  $.unshift(new $C.Combination(iconv($, $.shift()), $.shift()))
 }
 
 // powerset of index 0
-COUNT["`pset"] = $=> $.unshift(new $C.PowerSet(iconv($.shift())))
+COUNT["`pset"] = $=> $.unshift(new $C.PowerSet(iconv($, $.shift())))
 
 // generate base-N sequence from digits at index 1 with length at index 0
 COUNT["`/\\"] = $=>{
   SL.swap($)
-  $.unshift(new $C.BaseN(iconv($.shift()), $.shift()))
+  $.unshift(new $C.BaseN(iconv($, $.shift()), $.shift()))
 }
 
 // cartesian product over list of sequences
 COUNT["`'*"] = $=>{
   SL.swap($)
-  $.unshift($C.CartesianProduct.from(_.map($.shift(), iconv).reverse()))
+  $.unshift($C.CartesianProduct.from(_.map($.shift(), x=> iconv($, x)).reverse()))
 }
 
 export default COUNT

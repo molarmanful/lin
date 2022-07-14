@@ -1,4 +1,4 @@
-import {chalk, rls, itr, _, path, parse, SL} from './bridge.js'
+import {chalk, fs, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -38,7 +38,7 @@ class INTRP {
   }
 
   exec(x, y){
-    if(!x?.big) x += ''
+    if(!this.isstr(x)) x += ''
 
     if(x.orig?.file == this.file && this.pkf[0] && x.orig?.file != this.pkf[0]?.file){
       this.addf($=> this.pkf.shift())
@@ -70,9 +70,7 @@ class INTRP {
         let a = this.getf()
 
         // for internal JS calls from commands
-        if(a.call){
-          a()
-        }
+        if(this.isfun(a)) a()
 
         // lambda mode
         else if(this.lambda){
@@ -84,7 +82,7 @@ class INTRP {
         }
 
         // numbers
-        else if(!isNaN(+a)) this.unshift(a > Number.MAX_SAFE_thisEGER ? BigInt(a.replace(/\.\d*$/, '')) : Number(a))
+        else if(this.isnum(+a)) this.unshift(+a > Number.MAX_SAFE_INTEGER ? BigInt(a.replace(/\.\d*$/, '')) : +a)
 
         else {
           // pkg call
@@ -155,7 +153,7 @@ class INTRP {
   }
 
   strtag(x){
-    if(x?.big && !x.orig){
+    if(this.isstr(x) && !x?.orig){
       let X = new String(x)
       X.orig = {file: this.file, line: this.lns[0].slice()}
       return X
@@ -205,26 +203,27 @@ class INTRP {
   tru(x){ return x != '' && x }
 
   str(x){
-    return x?.big ? this.strtag(x + '')
-      : x?.pop ? x.reverse().join` `
+    if(this.isstr(x) && x?.orig) return x
+    return this.isstr(x) ? this.strtag(x + '')
+      : this.isarr(x) ? x.reverse().join` `
       : this.isitr(x) ? '[...]`'
-      : _.isObjectLike(x) ? _.map((a, i)=> i + this.str(a)).join` `
+      : this.isobj(x) ? _.map((a, i)=> i + this.str(a)).join` `
       : this.strtag(x + '')
   }
 
   form(x, y='\n'){
     return x.map(a=>
       a == Infinity ? '$I'
-      : a && typeof a == 'bigint' ? a + 'N'
-      : a?.toFixed ?
+      : typeof a == 'bigint' ? a + 'N'
+      : this.isnum(a) ?
         a < 0 ? -a + '_' : a + ''
-      : a?.big ? JSON.stringify(a)
-      : a?.pop ?
+      : this.isstr(a) ? JSON.stringify(a + '')
+      : this.isarr(a) ?
         a.length ?
           `[ ${this.form(a, ' ')} ]`
         : '[]'
-      : a && this.isitr(a)? '[...]`'
-      : _.isObjectLike(a) ?
+      : this.isitr(a) ? '[...]`'
+      : this.isobj(a) ?
         _.keys(a).length ?
           `{ ${
             _.keys(a).map(b=> this.form([b]) + ': ' + this.form([a[b]])).join` `
@@ -235,11 +234,11 @@ class INTRP {
     ).reverse().join(y)
   }
 
-  parse(x){ return parse(x.pop ? x.join` ` : x + '') }
+  parse(x){ return parse(this.isarr(x) ? x.join` ` : x + '') }
 
   gind(o, x){
-    return _.isObjectLike(x) ? _.map(x, a=> this.gind(o, a))
-      : o.at && !isNaN(+x) ? (o.pop ? a=> a : _.reverse)(o.at(typeof x == 'bigint' ? Number(x) : x))
+    return this.isobj(x) ? _.map(x, a=> this.gind(o, a))
+      : o.at && this.isnum(+x) ? (this.isarr(o) ? a=> a : _.reverse)(o.at(this.isarr(o) ? Number(x) : x))
       : o[x]
   }
 
@@ -298,18 +297,30 @@ class INTRP {
     })
   }
 
-  isitr(x){ return !x?.length && itr.isIterable(x) }
+  isarr(x){ return _.isArray(x) }
+
+  isarl(x){ return _.isArrayLike(x) }
+
+  isstr(x){ return _.isString(x) }
+
+  isitr(x){ return x && !this.isarl(x) && itr.isIterable(x) }
+
+  isobj(x){ return _.isObjectLike(x) }
+
+  isnum(x){ return typeof x == 'bigint' || (_.isNumber(x) && !isNaN(x)) }
+
+  isfun(x){ return _.isFunction(x) }
 
   listitr(x){
-    return !x?.pop && !x?.big && x?.length ? itr.map(a=> a.reverse(), x)
+    return !this.isarl(x) && this.isnum(x?.length) ? itr.map(a=> a.reverse(), x)
       : this.isitr(x) ? x
-      : (x?.big ? x=> x: itr.reverse)(itr.wrap(['number', 'bigint'].includes(typeof x) ? [x] : x))
+      : (this.isstr(x) ? x=> x: itr.reverse)(itr.wrap(this.isnum(x) ? [x] : x))
   }
 
   listitrs(x){
-    return !x?.pop && x?.length ? this.listitr(x)
-      : this.isitr(x) || x?.big ? x
-      : x.pop ? this.listitr(_.map(x, this.listitrs))
+    return !this.isarl(x) && this.isnum(x?.length) ? this.listitr(x)
+      : this.isitr(x) || this.isstr(x) ? x
+      : this.isarr(x) ? this.listitr(_.map(x, this.listitrs))
       : x
   }
 
@@ -321,7 +332,7 @@ class INTRP {
 
   mname(x){ try { return path.basename(x, path.extname(x)) } catch(e){ return x } }
 
-  gline(x){ return this.pkf[0] ? this.pkf[0].lines[x] : this.lines[x] }
+  gline(x){ console.log(this.pkf, x); return this.pkf[0] ? this.pkf[0].lines[x] : this.lines[x] }
 
   eline(x){
     let l = this.lns[0][1] - -x
