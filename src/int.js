@@ -12,7 +12,7 @@ class PKG {
 
 class INTRP {
 
-  constructor(x, file, opts={}){
+  constructor(x, file=0, opts={}){
     this.stack = {0: []}
     this.st = 0
     this.gl = 0
@@ -29,7 +29,7 @@ class INTRP {
     this.scope = []
     this.scoped = 0
     this.objs = []
-    this.file = this.mresolve(file)
+    this.file = file && this.mresolve(file)
     this.PKG = PKG
     this.pkg = []
     this.pkf = []
