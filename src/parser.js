@@ -28,6 +28,6 @@ let parse = x=>
 
     return tree
 
-  }, []).reduce((a,b,X)=> b.type ? a.concat(b.value) : a, [])
+  }, []).reduce((a, b, X)=> b.type ? a.concat(b.value) : a, [])
 
 export default parse
