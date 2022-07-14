@@ -24,6 +24,10 @@ The little language that could.
 #c㌂㌄㌇㌕㌖㌗㌙㌚㌟㌠㌡㌫㌭㌮㌲㌴㌶㌽㍃㍇㍈㍊㍌㍑㍔㍖
 ```
 
+## Browser Interface
+
+[Try lin in your browser!](https://replit.com/@molarmanful/try-lin)
+
 ## Normal Installation
 
     npm i -g linlang
