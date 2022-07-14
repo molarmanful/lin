@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "bin": {
-    "lin": "node ./src/index.js @"
+    "lin": "./src/index.js"
   },
   "scripts": {
     "test": "mocha --recursive"

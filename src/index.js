@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // modules
 import {fs, INTRP} from './bridge.js'
 import commandLineArgs from 'command-line-args'
