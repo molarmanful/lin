@@ -1,0 +1,21 @@
+(01) 14`/\ .\b ;
+.x () split wrap_ \; map
+<char .b swap g: \; ' n\ out
+( N ( .c r: ) ( .w ) e? out ) map
+
+#x㿳㿳㼳㼳㌳㌳㌳㿿㿿
+#w　
+#c㌂㌄㌇㌕㌖㌗㌙㌚㌟㌠㌡㌫㌭㌮㌲㌴㌶㌽㍃㍇㍈㍊㍌㍑㍔㍖
+
+
+
+# EXPLANATION
+
+Outputs the lin logo.
+
+- `(01) 14`/\ .\b` stores binary sequences of length 14 into `b`.
+- `.x () split wrap_ \; map` splits sequence `x`, releases it to the stack, and maps over each element...
+  - `<char .b swap g:` translates each character to its corresponding binary sequence in `b`.
+  - `\; '` within the binary sequence...
+    - `( N ( .c r: ) ( .w ) e? out ) map` for each element, output random element from sequence `c` if 1, otherwise output space.
+  - `n\ out` output newline.

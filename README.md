@@ -17,9 +17,10 @@ The little language that could.
 ```
 (01) 14`/\ .\b ;
 .x () split wrap_ \; map
-<char .b swap g: \; ' () join outln
-( N ( .c r: ) ( .w ) e? ) map
-#x㿿㿿㌳㌳㌳㼳㼳㿳㿳
+<char .b swap g: \; ' n\ out
+( N ( .c r: ) ( .w ) e? out ) map
+
+#x㿳㿳㼳㼳㌳㌳㌳㿿㿿
 #w　
 #c㌂㌄㌇㌕㌖㌗㌙㌚㌟㌠㌡㌫㌭㌮㌲㌴㌶㌽㍃㍇㍈㍊㍌㍑㍔㍖
 ```
