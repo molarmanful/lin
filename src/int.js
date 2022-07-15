@@ -106,7 +106,6 @@ class INTRP {
             this.unshift(a)
             if(a[1] && a[0] == '#'){
               this.unshift(this.shift().slice(1))
-              console.log(this.stack[this.st])
               SL[this.objs.length ? ':' : 'sl'](this)
             }
             else if(a[1] && a[0] == '\\'){
@@ -207,7 +206,7 @@ class INTRP {
     return this.isstr(x) ? this.strtag(x + '')
       : this.isarr(x) ? x.join` `
       : this.isitr(x) ? '[...]`'
-      : this.isobj(x) ? _.map((a, i)=> i + this.str(a)).join` `
+      : this.isobj(x) ? _.map(x, (a, i)=> i + this.str(a)).join` `
       : this.strtag(x + '')
   }
 
@@ -222,13 +221,11 @@ class INTRP {
         a.length ?
           `[ ${this.form(a, ' ')} ]`
         : '[]'
-      : this.isitr(a) ? '[...]`'
-      : this.isobj(a) ?
-        _.keys(a).length ?
-          `{ ${
-            _.keys(a).map(b=> this.form([b]) + ': ' + this.form([a[b]])).join` `
-          } }`
+      : a instanceof Map ?
+        a.size ?
+          `{ ${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `} }`
         : '{}'
+      : this.isitr(a) ? '[...]`'
       : a == undefined ? '$U'
       : a
     ).join(y)
@@ -239,7 +236,7 @@ class INTRP {
   gind(o, x){
     return o.at && this.isnum(+x) ? o.at(this.isarr(o) ? Number(x) : x)
       : this.isobj(x) ? _.map(x, a=> this.gind(o, a))
-      : o[x]
+      : o.get(x)
   }
 
   get(x){ return this.gind(this.stack[this.st], ~x) }

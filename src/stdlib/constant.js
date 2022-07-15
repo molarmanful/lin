@@ -12,7 +12,7 @@ CONSTANT["()"] = $=> $.unshift('')
 CONSTANT["[]"] = $=> $.unshift([])
 
 // empty object
-CONSTANT["{}"] = $=> $.unshift({})
+CONSTANT["{}"] = $=> $.unshift(new Map())
 
 // push space
 CONSTANT["\\"] = $=> $.unshift(' ')

@@ -34,7 +34,7 @@ BASE["]"] = $=>{
 }
 
 BASE["{"] = $=>{
-  $.objs.push({})
+  $.objs.push(new Map())
   $.iter.push($.st)
   $.st = $.iter.at(-1) + '\n'
   $.stack[$.st] = []
@@ -71,7 +71,7 @@ BASE["gl"] = $=>{
   $.unshift($.getscope(X))
 }
 
-BASE["."] = $=> $.gl = 1
+BASE["."] = $=> $.gl++
 
 // push stack joined by newlines
 BASE["gs"] = $=> $.unshift($.form($.stack[$.st]))

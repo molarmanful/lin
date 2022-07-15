@@ -1,20 +1,20 @@
-import {_, SL} from '../bridge.js'
+import {itr, _, SL} from '../bridge.js'
 
 let OBJ = {}
 
 // set a key-value pair in an object, where index 0 is the key and index 1 is the value
 OBJ[":"] = $=>{
-  if($.objs.length) $.objs[$.objs.length - 1][$.shift()] = $.shift()
+  let X = $.strtag($.shift())
+  let Y = $.shift()
+  if($.objs.length) $.objs[$.objs.length - 1].set(X, Y)
   else {
-    let X = $.shift()
-    let Y = $.shift()
     let O = $.stack[$.st].at(-1)
     if($.isarl(O) && X < 0) X -= -O.length
     if($.isstr(O)){
       O = $.shift()
       $.unshift(O.slice(0, X) + Y + O.slice(X + 1))
     }
-    else O[X] = Y
+    else O.set(X, Y)
   }
 }
 
@@ -25,10 +25,10 @@ OBJ["g:"] = $=>{
 }
 
 // get keys of object/list at index 0
-OBJ["keys"] = $=> $.unshift(Object.keys($.shift()))
+OBJ["keys"] = $=> $.unshift([...$.shift().keys()])
 
 // get values of object/list at index 0
-OBJ["vals"] = $=> $.unshift(Object.values($.shift()))
+OBJ["vals"] = $=> $.unshift([...$.shift().values()])
 
 // remove key at index 0 from object at index 1
 OBJ["del"] = $=> delete $.stack[$.st][$.stack[$.st].length - 2][$.shift()]
@@ -36,21 +36,20 @@ OBJ["del"] = $=> delete $.stack[$.st][$.stack[$.st].length - 2][$.shift()]
 // convert object to a list containing each key-value pair
 OBJ["enom"] = $=>{
   let X = $.shift()
-  $.unshift(Object.keys(X).map(a=> [a, X[a]]))
+  $.unshift(_.zip([...X.keys()], [...X.values()]))
 }
 
 // convert `enom`-style list into object
 OBJ["denom"] = $=>{
-  let X = $.shift()
-  let O = {}
-  X.map(a=> O[a[0]] = a[1])
-  $.unshift(O)
+  $.unshift(new Map($.shift().filter(a=> a?.length > 1)))
 }
 
 // check if index 0 is in list/object at index 1
-OBJ["has"] = $=>{
-  SL.swap($)
-  $.unshift(+_.includes($.shift(), $.shift()))
+OBJ["el"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  if($.isstr(X)) $.unshift(+_.includes(Y, X))
+  else $.unshift(+itr.some(a=> _.isEqual(a, X), Y))
 }
 
 export default OBJ

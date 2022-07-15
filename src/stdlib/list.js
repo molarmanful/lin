@@ -21,7 +21,7 @@ LIST["'"] = $=>{
   if($.isstr(Y) || $.isnum(Y)) Y = $.str(Y).split``
   $.iter.push($.st)
   $.st = $.iter.at(-1) + '\n'
-  $.stack[$.st] = Y.slice()
+  $.stack[$.st] = [...Y]
   $.addf(a=>{
     Y = $.stack[$.st]
     delete $.stack[$.iter.at(-1) + '\n']
