@@ -5,7 +5,7 @@ let LIST = {}
 // length of index 0
 LIST["len"] = $=>{
   let X = $.shift()
-  $.unshift(X.length)
+  $.unshift(X.size || X.length)
 }
 
 // depth of index 0
