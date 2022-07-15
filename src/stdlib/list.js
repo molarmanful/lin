@@ -10,8 +10,8 @@ LIST["len"] = $=>{
 
 // depth of index 0
 LIST["dep"] = $=>{
-  let d = x=> $.isobj(x) ? 1 + Math.max(0, ..._.map(x, d)) : 0
-  $.unshift(d($.shift()))
+  let D = x=> $.isobj(x) ? 1 + Math.max(0, ...x instanceof Map ? _.map(x, D).values() : _.map(x, D)) : 0
+  $.unshift(D($.shift()))
 }
 
 // `es` index 0 on list at index 1

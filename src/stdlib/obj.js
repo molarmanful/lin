@@ -6,6 +6,7 @@ let OBJ = {}
 OBJ[":"] = $=>{
   let X = $.strtag($.shift())
   let Y = $.shift()
+  if($.isstr(X)) X += ''
   if($.objs.length) $.objs[$.objs.length - 1].set(X, Y)
   else {
     let O = $.stack[$.st].at(-1)
