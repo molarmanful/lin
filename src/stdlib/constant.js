@@ -21,10 +21,10 @@ CONSTANT["\\"] = $=> $.unshift(' ')
 CONSTANT["n\\"] = $=> $.unshift('\n')
 
 // current line number
-CONSTANT["$L"] = $=> $.unshift($.lns[0][1])
+CONSTANT["$L"] = $=> $.unshift($.lns.at(-1)[1])
 
 // current package
-CONSTANT["$P"] = $=> $.unshift($.lns[0][0])
+CONSTANT["$P"] = $=> $.unshift($.lns(-1)[0])
 
 // current stack name
 CONSTANT["$S"] = $=> $.unshift($.st)

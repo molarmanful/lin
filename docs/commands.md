@@ -31,12 +31,12 @@ Command | Description
 <code>g@</code> | push line at popped number (0-indexed)
 <code>g;</code> |  push next line
 <code>g;;</code> |  push previous line
-<code>form</code> | convert index 0 to its string representation
+<code>form</code> | convert index 0 to its formatted representation
 <code>si</code> | set global ID at index 0
 <code>sl</code> | `si` but follow scoping rules
 <code>sL</code> | `sl` but without overriding existing scoping rules
 <code>::</code> | bring ID at index 0 as string into global scope
-<code>type</code> | pushes 1 if index 0 is a number, 2 if string, 3 if list, 4 if object, 5 if iterator, and 0 if anything else (ex.: undefined)
+<code>type</code> | push type of index 0
 
 ## CONSTANT
 
@@ -49,6 +49,7 @@ Command | Description
 <code>\\</code> | push space
 <code>n\\</code> | push newline
 <code>$L</code> | current line number
+<code>$P</code> | current package
 <code>$S</code> | current stack name
 <code>$E</code> | Euler's constant
 <code>$Pi</code> | Pi
@@ -78,7 +79,7 @@ Command | Description
 <code>e\|</code> | `es` if index 0 is falsy
 <code>e?</code> | `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 <code>ew</code> | while `es` on index 1 is truthy, `es` on index 0
-<code>e@</code> | `es` line number at index 0
+<code>e@</code> | `es` next *n* lines, where *n* is index 0
 <code>@</code> | `es` current line
 <code>;</code> | `es` next line
 <code>;;</code> | `es` previous line
@@ -104,16 +105,17 @@ Command | Description
 <code>`_</code> | convert from iterator to list
 <code>`__</code> | convert from iterator to list recursively
 <code>`_`</code> | convert from iterator to string
+<code>`gen</code> | create iterator from initial value and function 
 <code>`=</code> | check if iterators are equal
 <code>`=*</code> | check if iterators are deeply equal
 <code>`?</code> | check if iterator at index 1 has sequence at index 0
 <code>`?*</code> | `?` with multiple sequences
 <code>`cyc</code> | create infinite cycle from index 0
 <code>`+</code> | concatenate top 2 items into iterator
-<code>`,</code> | prepend-concatenate index 0 into iterator
+<code>`,</code> | prepend index 0 into iterator
 <code>`+></code> | combine top 2 items into partially-sorted iterator via comparison function
 <code>`mask</code> | use index 0 as a bitmask for the iterator at index 1
-<code>`,*</code> | zip all stack items into one iterator
+<code>`,*</code> | zip list of iterators into one iterator
 <code>`size</code> | iterator size (DOES NOT HALT ON INFINITE LISTS) 
 <code>`enum</code> | convert each element to an index-element pair
 <code>`uniq</code> | yield only unique elements
@@ -155,6 +157,7 @@ Command | Description
 <code>join</code> | join list over string at index 0
 <code>,</code> | pair top 2 items
 <code>++</code> | concatenate top 2 items as strings or lists
+<code>r:</code> | get random item from list
 <code>rep</code> | repeat list/string by index 0
 <code>union</code> | set union of lists at index 0 and index 1
 <code>inter</code> | set intersection of lists at index 0 and index 1
@@ -184,8 +187,7 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>::i</code> | import module
-<code>::e</code> | export module
+
 
 ## MULTISTACK
 
@@ -197,15 +199,15 @@ Command | Description
 <code>pull</code> | push top item of another stack with name given by index 0
 <code>pud</code> | `pull` without modifying other stack
 <code>pulls</code> | pull stack with name given by index 0 to current stack
+<code>hijk</code> | set stack with name given by index 0 to current stack
+<code>absb</code> | set current stack to stack with name given by index 0
 
 ## NUM
 
 Command | Description
 --- | ---
 <code>N</code> | convert to bigint
-<code>NN</code> | convert to bigint (reversed if list)
 <code>n_</code> | convert to number
-<code>N_</code> | convert to number (reversed if list)
 <code>ns</code> | convert number to digit list
 <code>E</code> | `(index 1)*10^(index 0)`
 <code>_</code> | negation

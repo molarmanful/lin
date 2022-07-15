@@ -40,9 +40,9 @@ class INTRP {
   exec(x, y){
     if(!this.isstr(x)) x += ''
 
-    if(x.orig?.file == this.file && this.pkf[0] && x.orig?.file != this.pkf[0]?.file){
-      this.addf($=> this.pkf.shift())
-      this.pkf.unshift(0)
+    if(x.orig?.file == this.file && this.pkf.at(-1) && x.orig?.file != this.pkf.at(-1)?.file){
+      this.addf($=> this.pkf.pop())
+      this.pkf.push(0)
       this.tline(x.orig.line, 1)
     }
 
@@ -86,13 +86,13 @@ class INTRP {
 
         else {
           // pkg call
-          if(this.pkg[0]){
-            let {name, file, ids, idls} = this.pkg[0]
+          if(this.pkg.at(-1)){
+            let {name, file, ids, idls} = this.pkg.at(-1)
             if(!(a in ids)) throw `unknown pkg fn "${name} ${a}"`
-            this.addf($=> this.pkf.shift())
-            this.pkf.unshift(this.pkg.shift())
+            this.addf($=> this.pkf.pop())
+            this.pkf.push(this.pkg.pop())
             if(ids[a] instanceof PKG){
-              this.pkg.unshift(ids[a])
+              this.pkg.push(ids[a])
             }
             else {
               if(a in idls) this.tline(idls[a])
@@ -126,9 +126,9 @@ class INTRP {
           else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
 
           // matched pkg functions
-          else if(this.pkf[0]){
-            if(a in this.pkf[0].ids) this.fmatch(a, this.pkf[0])
-            else throw `unknown fn "${a}" in pkg "${this.pkf[0].name}"`
+          else if(this.pkf.at(-1)){
+            if(a in this.pkf.at(-1).ids) this.fmatch(a, this.pkf.at(-1))
+            else throw `unknown fn "${a}" in pkg "${this.pkf.at(-1).name}"`
           }
 
           // matched functions
@@ -155,14 +155,14 @@ class INTRP {
   strtag(x){
     if(this.isstr(x) && !x?.orig){
       let X = new String(x)
-      X.orig = {file: this.file, line: this.lns[0].slice()}
+      X.orig = {file: this.file, line: this.lns.at(-1)}
       return X
     }
     return x
   }
 
   fmatch(a, ctx){
-    if(ctx.ids[a] instanceof PKG) this.pkg.unshift(ctx.ids[a])
+    if(ctx.ids[a] instanceof PKG) this.pkg.push(ctx.ids[a])
     else if(ctx.ids[a] instanceof Function && a in SL) SL[a](this)
     else {
       if(a in ctx.idls) this.tline(ctx.idls[a])
@@ -181,8 +181,8 @@ class INTRP {
     }
   }
 
-  getscope(x, m=0){
-    let y = this.scope.find(a=> x in a)
+  getscope(x){
+    let y = _.findLast(this.scope, a=> x in a)
     return y ? y[x] : this.ids[x]
   }
 
@@ -205,7 +205,7 @@ class INTRP {
   str(x){
     if(this.isstr(x) && x?.orig) return x
     return this.isstr(x) ? this.strtag(x + '')
-      : this.isarr(x) ? x.reverse().join` `
+      : this.isarr(x) ? x.join` `
       : this.isitr(x) ? '[...]`'
       : this.isobj(x) ? _.map((a, i)=> i + this.str(a)).join` `
       : this.strtag(x + '')
@@ -231,53 +231,52 @@ class INTRP {
         : '{}'
       : a == undefined ? '$U'
       : a
-    ).reverse().join(y)
+    ).join(y)
   }
 
   parse(x){ return parse(this.isarr(x) ? x.join` ` : x + '') }
 
   gind(o, x){
-    return this.isobj(x) ? _.map(x, a=> this.gind(o, a))
-      : o.at && this.isnum(+x) ? (this.isarr(o) ? a=> a : _.reverse)(o.at(this.isarr(o) ? Number(x) : x))
+    return o.at && this.isnum(+x) ? o.at(this.isarr(o) ? Number(x) : x)
+      : this.isobj(x) ? _.map(x, a=> this.gind(o, a))
       : o[x]
   }
 
-  get(x){ return this.gind(this.stack[this.st], x) }
+  get(x){ return this.gind(this.stack[this.st], ~x) }
 
-  splice(x, y=1, z, w=0){
-    return z != undefined ? this.stack[this.st].splice(this.mod(x, this.stack[this.st].length + w), y, z)
-      : this.stack[this.st].splice(this.mod(x, this.stack[this.st].length + w), y)
+  splice(x, y=1, z){
+    return z != undefined ? this.stack[this.st].splice(~x, y, z) : this.stack[this.st].splice(~x, y)
   }
 
-  shift(x){ return _.cloneDeep(this.stack[this.st].shift()) }
+  shift(){ return _.cloneDeep(this.stack[this.st].pop()) }
 
-  unshift(...x){ return this.stack[this.st].unshift(...x.map(a=> this.strtag(a))) }
+  unshift(...x){ return this.stack[this.st].push(...x.map(a=> this.strtag(a))) }
 
   each(O, f=_.map, s=false, g=x=> x){
     let X = this.shift()
     return f(O, (a, i)=>{
-      this.iter.unshift(this.st)
-      this.st = this.iter[0] + ' '
+      this.iter.push(this.st)
+      this.st = this.iter.at(-1) + ' '
       this.stack[this.st] = s && itr.isIterable(a) ? [...a] : [a]
       this.exec(X)
       let A = this.shift()
-      delete this.stack[this.iter[0] + ' ']
-      this.st = this.iter.shift()
+      delete this.stack[this.iter.at(-1) + ' ']
+      this.st = this.iter.pop()
       return g(A)
     })
   }
 
-  acc(O, ac=false, f=_.reduceRight, g=x=> x){
+  acc(O, ac=false, f=_.reduce, g=x=> x){
     let X = this.shift()
     let Y = ac && this.shift()
     let F = (a, b)=>{
-      this.iter.unshift(this.st)
-      this.st = this.iter[0] + ' '
+      this.iter.push(this.st)
+      this.st = this.iter.at(-1) + ' '
       this.stack[this.st] = [b, a]
       this.exec(X)
       let A = this.shift()
-      delete this.stack[this.iter[0] + ' ']
-      this.st = this.iter.shift()
+      delete this.stack[this.iter.at(-1) + ' ']
+      this.st = this.iter.pop()
       return g(A, a)
     }
     return ac ? f(O, F, Y) : f(O, F)
@@ -286,13 +285,13 @@ class INTRP {
   cmp(O, f=(x, f)=> x.sort(f), g=x=> x){
     let X = this.shift()
     return f(O, (a, b)=>{
-      this.iter.unshift(this.st)
-      this.st = this.iter[0] + ' '
+      this.iter.push(this.st)
+      this.st = this.iter.at(-1) + ' '
       this.stack[this.st] = [b, a]
       this.exec(X)
       let A = this.shift()
-      delete this.stack[this.iter[0] + ' ']
-      this.st = this.iter.shift()
+      delete this.stack[this.iter.at(-1) + ' ']
+      this.st = this.iter.pop()
       return g(A)
     })
   }
@@ -312,9 +311,9 @@ class INTRP {
   isfun(x){ return _.isFunction(x) }
 
   listitr(x){
-    return !this.isarl(x) && this.isnum(x?.length) ? itr.map(a=> a.reverse(), x)
+    return !this.isarl(x) && this.isnum(x?.length) ? itr.wrap(x)
       : this.isitr(x) ? x
-      : (this.isstr(x) ? x=> x: itr.reverse)(itr.wrap(this.isnum(x) ? [x] : x))
+      : itr.wrap(this.isnum(x) ? [x] : x)
   }
 
   listitrs(x){
@@ -324,7 +323,7 @@ class INTRP {
       : x
   }
 
-  itrls(x){ return itr.toArray(itr.reverse(x)) }
+  itrls(x){ return itr.toArray(x) }
 
   itrlist(x){ return this.itrls(itr.map(a=> this.isitr(a) ? this.itrlist(a) : a, this.listitr(x))) }
 
@@ -332,10 +331,10 @@ class INTRP {
 
   mname(x){ try { return path.basename(x, path.extname(x)) } catch(e){ return x } }
 
-  gline(x){ console.log(this.pkf, x); return this.pkf[0] ? this.pkf[0].lines[x] : this.lines[x] }
+  gline(x){ return this.pkf.at(-1) ? this.pkf.at(-1).lines[x] : this.lines[x] }
 
   eline(x){
-    let l = this.lns[0][1] - -x
+    let l = this.lns.at(-1)[1] - -x
     if(this.gline(l)){
       this.tline(l)
       this.exec(this.gline(l), 1)
@@ -343,13 +342,13 @@ class INTRP {
   }
 
   tline(l, r=0){
-    l = r ? l : [this.pkf[0]?.file || 0, l]
+    l = r ? l : [this.pkf.at(-1)?.file || 0, l]
     if(this.lns.some(a=> _.isEqual(l, a))){
-      this.lns = _.dropWhile(this.lns, a=> !_.isEqual(l, a))
+      this.lns = _.dropRightWhile(this.lns, a=> !_.isEqual(l, a))
     }
     else {
-      if(this.code[0][0] || this.code[1]) this.addf($=> this.lns.shift())
-      this.lns.unshift(l)
+      if(this.code[0][0] || this.code[1]) this.addf($=> this.lns.pop())
+      this.lns.push(l)
     }
   }
 
@@ -362,7 +361,7 @@ class INTRP {
 
   getf(){
     let x = this.code[0][0]
-    this.code[0] = this.code[0].slice(1)
+    this.code[0].shift()
     return x
   }
 }

@@ -1,6 +1,6 @@
 .IN out in ;
-dup ( ( 1> ) any ) ' 0g: ( .ERR outln break ) e& ;
-( rev enum ( wrap_ swap 2 swap ^ * ) map \+ fold ) ' outln
+dup ( ( 1> ) any ) ' 1_ g: ( .ERR outln break ) e& ;
+( enum ( wrap_ swap 2 swap ^ * ) map \+ fold ) ' outln
 
 #INEnter a binary number: 
 #ERRNot a binary number!

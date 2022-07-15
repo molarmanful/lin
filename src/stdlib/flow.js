@@ -11,7 +11,7 @@ FLOW["e*"] = $=>{
   let Y = $.shift()
   $.addf(a=>{
     if(X > 0){
-      $.addf(a=> $.unshift(X - 1, Y), 'e*')
+      $.addf(a=> $.unshift(Y, X - 1), 'e*')
       $.exec(Y, 1)
     }
   })
@@ -46,7 +46,7 @@ FLOW["ew"] = $=>{
   let Y = $.shift()
   $.addf(a=>{
     if($.tru($.shift())){
-      $.addf(a=> $.unshift(X, Y), 'ew')
+      $.addf(a=> $.unshift(Y, X), 'ew')
       $.exec(X, 1)
     }
   })

@@ -9,6 +9,8 @@ ITER["`"] = $=> $.unshift(itrd($))
 
 ITER["]`"] = $=> $.exec('] `', 1)
 
+ITER["[]`"] = $=> $.exec('[] `', 1)
+
 // convert to iterator recursively
 ITER["``"] = $=> $.unshift($.listitrs($.shift()))
 
@@ -22,6 +24,24 @@ ITER["`__"] = $=> $.unshift($.itrlist(itrd($)))
 
 // convert from iterator to string
 ITER["`_`"] = $=> $.unshift(itr.str(itrd($)))
+
+// create iterator from initial value and function 
+ITER["`gen"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  let F = function*(){
+    yield Y
+    while(1){
+      $.iter.push($.st)
+      $.st = $.iter.at(-1) + ' '
+      $.stack[$.st] = [Y]
+      $.exec(X)
+      Y = $.shift()
+      yield Y
+    }
+  }
+  $.unshift(itr.wrap(F()))
+}
 
 // check if iterators are equal
 ITER["`="] = $=> $.unshift(itr.equal(itrd($), itrd($)))
@@ -44,8 +64,8 @@ ITER["`+"] = $=>{
   $.unshift(itr.concat(itrd($), itrd($)))
 }
 
-// prepend-concatenate index 0 into iterator
-ITER["`,"] = $=> $.unshift(itr.concat(itrd($), itrd($)))
+// prepend index 0 into iterator
+ITER["`,"] = $=> $.unshift(itr.prepend(itrd($), itrd($)))
 
 // combine top 2 items into partially-sorted iterator via comparison function
 ITER["`+>"] = $=>{
@@ -63,10 +83,10 @@ ITER["`mask"] = $=>{
 }
 
 // zip list of iterators into one iterator
-ITER["`,*"] = $=> $.unshift(itr.zip(...itr.reverse(itr.map(a=> $.listitr(a), itrd($)))))
+ITER["`,*"] = $=> $.unshift(itr.zip(...itr.map(a=> $.listitr(a), itrd($))))
 
 // iterator size (DOES NOT HALT ON INFINITE LISTS) 
-ITER["`size"] = $=> $.unshift(itr.size($.listitr($.stack[$.st][0])))
+ITER["`size"] = $=> $.unshift(itr.size($.listitr($.stack[$.st].at(-1))))
 
 // convert each element to an index-element pair
 ITER["`enum"] = $=> $.unshift(itr.enumerate(itrd($)))
@@ -139,15 +159,15 @@ ITER["`/a"] = $=>{
 ITER["`\\"] = $=>{
   let X = []
   SL.swap($)
-  let Y = $.acc(itrd($), 0, (x, f)=> itr.reduce(f, x), (A, a)=> (X.unshift(a), A))
-  $.unshift([Y, ...X])
+  let Y = $.acc(itrd($), 0, (x, f)=> itr.reduce(f, x), (A, a)=> (X.push(a), A))
+  $.unshift([...X, Y])
 }
 
 // `\`\\` with accumulator
 ITER["`\\a"] = $=>{
   let X = []
   SL.rot($)
-  let Y = $.acc(itrd($), 1, (x, f)=> itr.reduce(f, x), (A, a)=> (X.unshift(A), A))
+  let Y = $.acc(itrd($), 1, (x, f)=> itr.reduce(f, x), (A, a)=> (X.push(A), A))
   $.unshift(X)
 }
 

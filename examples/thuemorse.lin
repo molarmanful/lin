@@ -1,4 +1,4 @@
-0 ( ( rev ( N dup ! ++ ) map ) ' () join dup outln ) \n: out in e*
+0 ((( N dup ! ++ ) map ) ' () join dup outln ) \n: out in e*
 
 
 

@@ -21,40 +21,40 @@ BASE[")"] = $=>{
 }
 
 BASE["["] = $=>{
-  $.iter.unshift($.st)
-  $.st = $.iter[0] + '\n'
+  $.iter.push($.st)
+  $.st = $.iter.at(-1) + '\n'
   $.stack[$.st] = []
 }
 
 BASE["]"] = $=>{
   let X = $.stack[$.st]
-  delete $.stack[$.iter[0] + '\n']
-  $.st = $.iter.shift()
+  delete $.stack[$.iter.at(-1) + '\n']
+  $.st = $.iter.pop()
   $.unshift(X)
 }
 
 BASE["{"] = $=>{
-  $.objs.unshift({})
-  $.iter.unshift($.st)
-  $.st = $.iter[0] + '\n'
+  $.objs.push({})
+  $.iter.push($.st)
+  $.st = $.iter.at(-1) + '\n'
   $.stack[$.st] = []
 }
 
 BASE["}"] = $=>{
-  let X = $.objs.shift()
-  delete $.stack[$.iter[0] + '\n']
-  $.st = $.iter.shift()
+  let X = $.objs.pop()
+  delete $.stack[$.iter.at(-1) + '\n']
+  $.st = $.iter.pop()
   $.unshift(X)
 }
 
 // create new scope
 BASE["${"] = $=>{
-  $.scope.unshift({})
+  $.scope.push({})
 }
 
 // destroy current scope
 BASE["}$"] = $=>{
-  $.scope.shift()
+  $.scope.pop()
 }
 
 // push string at ID given by index 0
@@ -80,10 +80,10 @@ BASE["gs"] = $=> $.unshift($.form($.stack[$.st]))
 BASE["g@"] = $=> $.unshift($.gline($.shift()))
 
 //  push next line
-BASE["g;"] = $=> $.unshift($.gline($.lns[0][1] - -1))
+BASE["g;"] = $=> $.unshift($.gline($.lns.at(-1)[1] - -1))
 
 //  push previous line
-BASE["g;;"] = $=> $.unshift($.gline($.lns[0][1] - 1))
+BASE["g;;"] = $=> $.unshift($.gline($.lns.at(-1)[1] - 1))
 
 // convert index 0 to its formatted representation
 BASE["form"] = $=> $.unshift($.form([$.shift()]))
@@ -95,7 +95,7 @@ BASE["si"] = $=> $.ids[$.shift()] = $.shift()
 BASE["sl"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  if($.scope.length) $.scope[0][X] = Y
+  if($.scope.length) $.scope[$.scope.length - 1][X] = Y
   else $.ids[X] = Y
 }
 
@@ -104,10 +104,10 @@ BASE["sL"] = $=>{
   let X = $.shift()
   let Y = $.shift()
   if($.scope.length){
-    let i = $.scope.findIndex(a=> X in a)
+    let i = _.findLastIndex($.scope, a=> X in a)
     if(~i) $.scope[i][X] = Y
     else if(X in $.ids) $.ids[X] = Y
-    else $.scope[0][X] = Y
+    else $.scope[$.scope.length - 1][X] = Y
   }
   else $.ids[X] = Y
 }

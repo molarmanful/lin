@@ -13,7 +13,7 @@ fs.writeFileSync('./docs/commands.md',
       return `## ${
         f.replace(/\.js/g, '').toUpperCase()
       }\n\nCommand | Description\n--- | ---\n`
-        + sl.match(exp).join`\n`
+        + (sl.match(exp) || []).join`\n`
           .replace(exp, (_, d, c)=> `<code>${c.replace(/\|/g, '\\|')}</code> | ${d.replace(/\|/g, '\\|')}`)
     }).join`\n\n`
   }`

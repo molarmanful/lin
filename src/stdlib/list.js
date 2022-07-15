@@ -10,7 +10,7 @@ LIST["len"] = $=>{
 
 // depth of index 0
 LIST["dep"] = $=>{
-  let d = x=> _.isObjectLike(x) ? 1 + Math.max(0, ..._.map(x, d)) : 0
+  let d = x=> $.isobj(x) ? 1 + Math.max(0, ..._.map(x, d)) : 0
   $.unshift(d($.shift()))
 }
 
@@ -19,13 +19,13 @@ LIST["'"] = $=>{
   let X = $.shift()
   let Y = $.shift()
   if($.isstr(Y) || $.isnum(Y)) Y = $.str(Y).split``
-  $.iter.unshift($.st)
-  $.st = $.iter[0]+'\n'
+  $.iter.push($.st)
+  $.st = $.iter.at(-1) + '\n'
   $.stack[$.st] = Y.slice()
   $.addf(a=>{
     Y = $.stack[$.st]
-    delete $.stack[$.iter[0]+'\n']
-    $.st = $.iter.shift()
+    delete $.stack[$.iter.at(-1) + '\n']
+    $.st = $.iter.pop()
     $.unshift(Y)
   })
   $.exec(X, 1)
@@ -34,13 +34,13 @@ LIST["'"] = $=>{
 // split string at index 1 over string at index 0
 LIST["split"] = $=>{
   let X = $.shift()
-  $.unshift($.str($.shift()).split(X).reverse())
+  $.unshift($.str($.shift()).split(X))
 }
 
 // join list over string at index 0
 LIST["join"] = $=>{
   let X = $.shift()
-  $.unshift($.shift().slice().reverse().join(X))
+  $.unshift($.shift().join(X))
 }
 
 // pair top 2 items

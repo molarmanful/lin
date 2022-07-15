@@ -4,11 +4,11 @@ let OBJ = {}
 
 // set a key-value pair in an object, where index 0 is the key and index 1 is the value
 OBJ[":"] = $=>{
-  if($.objs.length) $.objs[0][$.shift()] = $.shift()
+  if($.objs.length) $.objs[$.objs.length - 1][$.shift()] = $.shift()
   else {
     let X = $.shift()
     let Y = $.shift()
-    let O = $.stack[$.st][0]
+    let O = $.stack[$.st].at(-1)
     if($.isarl(O) && X < 0) X -= -O.length
     if($.isstr(O)){
       O = $.shift()
@@ -31,19 +31,20 @@ OBJ["keys"] = $=> $.unshift(Object.keys($.shift()))
 OBJ["vals"] = $=> $.unshift(Object.values($.shift()))
 
 // remove key at index 0 from object at index 1
-OBJ["del"] = $=> delete $.stack[$.st][1][$.shift()]
+OBJ["del"] = $=> delete $.stack[$.st][$.stack[$.st].length - 2][$.shift()]
 
 // convert object to a list containing each key-value pair
 OBJ["enom"] = $=>{
   let X = $.shift()
-  $.unshift(Object.keys(X).map(a=> [X[a], a]))
+  $.unshift(Object.keys(X).map(a=> [a, X[a]]))
 }
 
 // convert `enom`-style list into object
 OBJ["denom"] = $=>{
   let X = $.shift()
-  $.unshift({})
-  X.map(a=> $.stack[$.st][0][a[1]] = a[0])
+  let O = {}
+  X.map(a=> O[a[0]] = a[1])
+  $.unshift(O)
 }
 
 // check if index 0 is in list/object at index 1

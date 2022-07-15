@@ -5,29 +5,17 @@ let NUM = {}
 // convert to bigint
 NUM["N"] = $=>{
   let X = $.shift()
-  $.unshift(BigInt($.isarr(X) ? X.reverse().join`` : X))
-}
-
-// convert to bigint (reversed if list)
-NUM["NN"] = $=>{
-  let X = $.shift()
   $.unshift(BigInt($.isarr(X) ? X.join`` : X))
 }
 
 // convert to number
 NUM["n_"] = $=>{
   let X = $.shift()
-  $.unshift(Number($.isarr(X) ? X.reverse().join`` : X))
-}
-
-// convert to number (reversed if list)
-NUM["N_"] = $=>{
-  let X = $.shift()
   $.unshift(Number($.isarr(X) ? X.join`` : X))
 }
 
 // convert number to digit list
-NUM["ns"] = $=> $.unshift(_.map($.str($.shift()), a=> +a).reverse())
+NUM["ns"] = $=> $.unshift(_.map($.str($.shift()), a=> +a))
 
 // `(index 1)*10^(index 0)`
 NUM["E"] = $=> $.exec('10 swap ^ *', 1)
@@ -54,7 +42,10 @@ NUM["/"] = $=>{
 }
 
 // integer division
-NUM["//"] = $=> $.exec('/ trunc', 1)
+NUM["//"] = $=>{
+  if(typeof $.get(0) == 'bigint') SL['/']($)
+  $.exec('/ trunc', 1)
+}
 
 // modulus
 NUM["%"] = $=>{

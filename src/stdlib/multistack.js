@@ -4,11 +4,11 @@ let MULTISTACK = {}
 
 // `es` index 1 on a stack with name given by index 0
 MULTISTACK["'s"] = $=>{
-  $.iter.unshift($.st)
+  $.iter.push($.st)
   let X = $.shift()
   let Y = $.shift()
   if(!$.stack[$.st = X]) $.stack[$.st] = []
-  $.addf(a=> $.st = $.iter.shift())
+  $.addf(a=> $.st = $.iter.pop())
   $.exec(Y, 1)
 }
 
@@ -16,28 +16,28 @@ MULTISTACK["'s"] = $=>{
 MULTISTACK["push"] = $=>{
   let X = $.shift()
   if(!$.stack[X]) $.stack[X] = []
-  $.stack[X].unshift($.shift())
+  $.stack[X].push($.shift())
 }
 
 // push current stack to another stack with name given by index 0
 MULTISTACK["pushs"] = $=>{
   let X = $.shift()
   if(!$.stack[X]) $.stack[X] = []
-  $.stack[X].unshift($.stack[$.st])
+  $.stack[X].push($.stack[$.st])
 }
 
 // push top item of another stack with name given by index 0
 MULTISTACK["pull"] = $=>{
   let X = $.shift()
   if(!$.stack[X]) $.stack[X] = []
-  $.unshift($.stack[X].shift())
+  $.unshift($.stack[X].pop())
 }
 
 // `pull` without modifying other stack
 MULTISTACK["pud"] = $=>{
   let X = $.shift()
   if(!$.stack[X]) $.stack[X] = []
-  $.unshift($.stack[X][0])
+  $.unshift($.stack[X].at(-1))
 }
 
 // pull stack with name given by index 0 to current stack
