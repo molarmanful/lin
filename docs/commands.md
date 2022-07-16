@@ -177,6 +177,7 @@ Command | Description
 <code>==</code> | strict equal
 <code>eq</code> | deep equal
 <code>!=</code> | not equal
+<code>!==</code> | strict not equal
 <code>></code> | greater than
 <code><</code> | less than
 <code>>=</code> | greater than or equal to
@@ -333,10 +334,12 @@ Command | Description
 Command | Description
 --- | ---
 <code>unesc</code> | unescape string at index 0
-<code>>char</code> | convert number to Unicode
-<code><char</code> | convert Unicode to number
-<code>lower</code> | lowercase
-<code>upper</code> | uppercase
+<code>>char</code> | convert charcode to char
+<code>>chars</code> | convert charcode list to string
+<code><char</code> | convert char to charcode
+<code><chars</code> | convert string to charcode list
+<code>>a</code> | lowercase
+<code>>A</code> | uppercase
 <code>pad</code> | pad string given by index 2 until length given by index 0 with string given by index 1
 <code>padl</code> | `pad` but only from the left
 <code>padr</code> | `pad` but only from the right

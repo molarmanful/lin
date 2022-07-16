@@ -161,6 +161,8 @@ class INTRP {
     return x
   }
 
+  untag(x){ return this.isstr(x) ? x + '' : x }
+
   fmatch(a, ctx){
     if(ctx.ids[a] instanceof PKG) this.pkg.push(ctx.ids[a])
     else if(ctx.ids[a] instanceof Function && a in SL) SL[a](this)

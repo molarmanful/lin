@@ -7,17 +7,23 @@ STR["str"] = $=> $.unshift($.str($.shift()))
 // unescape string at index 0
 STR["unesc"] = $=> $.unshift(unesc($.shift()))
 
-// convert number to Unicode
+// convert charcode to char
 STR[">char"] = $=> $.unshift(String.fromCodePoint($.shift()))
 
-// convert Unicode to number
+// convert charcode list to string
+STR[">chars"] = $=> $.unshift(String.fromCodePoint(...$.shift()))
+
+// convert char to charcode
 STR["<char"] = $=> $.unshift($.shift().codePointAt())
 
+// convert string to charcode list
+STR["<chars"] = $=> $.unshift(_.map($.shift(), a=> a.codePointAt()))
+
 // lowercase
-STR["lower"] = $=> $.unshift($.shift().toLowerCase())
+STR[">a"] = $=> $.unshift($.shift().toLowerCase())
 
 // uppercase
-STR["upper"] = $=> $.unshift($.shift().toUpperCase())
+STR[">A"] = $=> $.unshift($.shift().toUpperCase())
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
 STR["pad"] = $=>{
