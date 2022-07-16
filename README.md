@@ -15,12 +15,10 @@
 The little language that could.
 
 ```
-(01) 14`/\ .\b ;
-.x () split wrap_ \; map
-<char .b swap g: \; ' n\ out
-( N ( .c r: ) ( .w ) e? out ) map
+(01) 14`/\ .x unesc <chars g: wrap_ \; map
+(( N ( .c r: ) ( .w ) e? out ) map ) ' n\ out
 
-#x㿳㿳㼳㼳㌳㌳㌳㿿㿿
+#x㿳㿳\3㼳㼳㌳㌳㌳\3㿿㿿
 #w　
 #c㌂㌄㌇㌕㌖㌗㌙㌚㌟㌠㌡㌫㌭㌮㌲㌴㌶㌽㍃㍇㍈㍊㍌㍑㍔㍖
 ```
