@@ -55,7 +55,7 @@ Command | Description
 <code>$Pi</code> | Pi
 <code>$I</code> | Infinity
 <code>time</code> | milliseconds since January 1, 1970 00:00:00.000
-<code>$`</code> | infinite list of whole numbers
+<code>$\`</code> | infinite list of whole numbers
 
 ## COUNT
 
@@ -63,11 +63,11 @@ Command | Description
 --- | ---
 <code>facc</code> | factoradic representation of index 0
 <code>combc</code> | _m_th combinadic digit of _n_ C _k_, where _n_ _k_ _m_ are top 3 items
-<code>`perm</code> | permutations of index 1 of length given by index 0
-<code>`comb</code> | combinations of index 1 of length given by index 0
-<code>`pset</code> | powerset of index 0
-<code>`/\\</code> | generate base-N sequence from digits at index 1 with length at index 0
-<code>`'*</code> | cartesian product over list of sequences
+<code>\`perm</code> | permutations of index 1 of length given by index 0
+<code>\`comb</code> | combinations of index 1 of length given by index 0
+<code>\`pset</code> | powerset of index 0
+<code>\`/\\</code> | generate base-N sequence from digits at index 1 with length at index 0
+<code>\`'*</code> | cartesian product over list of sequences
 
 ## FLOW
 
@@ -100,51 +100,51 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>`</code> | convert to iterator
-<code>``</code> | convert to iterator recursively
-<code>`_</code> | convert from iterator to list
-<code>`__</code> | convert from iterator to list recursively
-<code>`_`</code> | convert from iterator to string
-<code>`gen</code> | create iterator from initial value and function 
-<code>`=</code> | check if iterators are equal
-<code>`=*</code> | check if iterators are deeply equal
-<code>`?</code> | check if iterator at index 1 has sequence at index 0
-<code>`?*</code> | `?` with multiple sequences
-<code>`cyc</code> | create infinite cycle from index 0
-<code>`+</code> | concatenate top 2 items into iterator
-<code>`,</code> | prepend index 0 into iterator
-<code>`+></code> | combine top 2 items into partially-sorted iterator via comparison function
-<code>`mask</code> | use index 0 as a bitmask for the iterator at index 1
-<code>`,*</code> | zip list of iterators into one iterator
-<code>`size</code> | iterator size (DOES NOT HALT ON INFINITE LISTS) 
-<code>`enum</code> | convert each element to an index-element pair
-<code>`uniq</code> | yield only unique elements
-<code>`rev</code> | reverse iterator
-<code>`flat</code> | flatten iterator
-<code>`melt</code> | flatten iterator by max depth at index 0
-<code>`xp</code> | split iterator into consecutive slices given by index 0
-<code>`chunk</code> | split iterator into chunks of length given by index 0
-<code>`btwn</code> | place index 0 between each element
-<code>`sp</code> | split iterator on sequence at index 0
-<code>`sp*</code> | `\`sp` with multiple sequences
-<code>`^</code> | first element
-<code>`:</code> | _n_th element, where _n_ is index 0
-<code>`t</code> | take first _n_ elements, where _n_ is index 0
-<code>`t></code> | `take` with sort predicate
-<code>`d</code> | drop first _n_ elements, where _n_ is index 0
-<code>`'</code> | `es` index 0 over each element
-<code>`/</code> | fold with `es` of index 0 over each element
-<code>`/a</code> | `\`/` with accumulator
-<code>`\\</code> | `\`/` with intermediate values
-<code>`\\a</code> | `\`\\` with accumulator
-<code>`#</code> | filter truthy results after `es`ing index 0 over each element
-<code>`t'</code> | `take` while `es`ing index 0 over each element is truthy
-<code>`d'</code> | `drop` while `es`ing index 0 over each element is truthy
-<code>`tap</code> | `es` index 0 over each element and return original element
-<code>`part</code> | `es` index 0 over each element and partition based on truthiness
-<code>`&</code> | check if all elements are truthy after `es`ing index 0 over each element
-<code>`\|</code> | check if any elements are truthy after `es`ing index 0 over each element
-<code>`?'</code> | find first element that returns truthy after `es`ing index 0
+<code>\`</code> | convert to iterator
+<code>\`\`</code> | convert to iterator recursively
+<code>\`_</code> | convert from iterator to list
+<code>\`__</code> | convert from iterator to list recursively
+<code>\`_\`</code> | convert from iterator to string
+<code>\`it</code> | create iterator from initial value and function 
+<code>\`=</code> | check if iterators are equal
+<code>\`=*</code> | check if iterators are deeply equal
+<code>\`?</code> | check if iterator at index 1 has sequence at index 0
+<code>\`?*</code> | `?` with multiple sequences
+<code>\`cyc</code> | create infinite cycle from index 0
+<code>\`+</code> | concatenate top 2 items into iterator
+<code>\`,</code> | prepend index 0 into iterator
+<code>\`+></code> | combine top 2 items into partially-sorted iterator via comparison function
+<code>\`mask</code> | use index 0 as a bitmask for the iterator at index 1
+<code>\`,*</code> | zip list of iterators into one iterator
+<code>\`size</code> | iterator size (DOES NOT HALT ON INFINITE LISTS) 
+<code>\`enum</code> | convert each element to an index-element pair
+<code>\`uniq</code> | yield only unique elements
+<code>\`rev</code> | reverse iterator
+<code>\`flat</code> | flatten iterator
+<code>\`melt</code> | flatten iterator by max depth at index 0
+<code>\`xp</code> | split iterator into consecutive slices given by index 0
+<code>\`chunk</code> | split iterator into chunks of length given by index 0
+<code>\`btwn</code> | place index 0 between each element
+<code>\`sp</code> | split iterator on sequence at index 0
+<code>\`sp*</code> | `\`sp` with multiple sequences
+<code>\`^</code> | first element
+<code>\`:</code> | _n_th element, where _n_ is index 0
+<code>\`t</code> | take first _n_ elements, where _n_ is index 0
+<code>\`t></code> | `take` with sort predicate
+<code>\`d</code> | drop first _n_ elements, where _n_ is index 0
+<code>\`'</code> | `es` index 0 over each element
+<code>\`/</code> | fold with `es` of index 0 over each element
+<code>\`/a</code> | `\`/` with accumulator
+<code>\`\\</code> | `\`/` with intermediate values
+<code>\`\\a</code> | `\`\\` with accumulator
+<code>\`#</code> | filter truthy results after `es`ing index 0 over each element
+<code>\`t'</code> | `take` while `es`ing index 0 over each element is truthy
+<code>\`d'</code> | `drop` while `es`ing index 0 over each element is truthy
+<code>\`tap</code> | `es` index 0 over each element and return original element
+<code>\`part</code> | `es` index 0 over each element and partition based on truthiness
+<code>\`&</code> | check if all elements are truthy after `es`ing index 0 over each element
+<code>\`\|</code> | check if any elements are truthy after `es`ing index 0 over each element
+<code>\`?'</code> | find first element that returns truthy after `es`ing index 0
 
 ## LIST
 

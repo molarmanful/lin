@@ -14,7 +14,7 @@ fs.writeFileSync('./docs/commands.md',
         f.replace(/\.js/g, '').toUpperCase()
       }\n\nCommand | Description\n--- | ---\n`
         + (sl.match(exp) || []).join`\n`
-          .replace(exp, (_, d, c)=> `<code>${c.replace(/\|/g, '\\|')}</code> | ${d.replace(/\|/g, '\\|')}`)
+          .replace(exp, (_, d, c)=> `<code>${c.replace(/\|/g, '\\|').replace(/`/g, '\\`')}</code> | ${d.replace(/\|/g, '\\|')}`)
     }).join`\n\n`
   }`
 )

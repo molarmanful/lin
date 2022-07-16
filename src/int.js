@@ -43,8 +43,9 @@ class INTRP {
     if(x.orig?.file == this.file && this.pkf.at(-1) && x.orig?.file != this.pkf.at(-1)?.file){
       this.addf($=> this.pkf.pop())
       this.pkf.push(0)
-      this.tline(x.orig.line, 1)
     }
+
+    if(x.orig) this.tline(x.orig.line, 1)
 
     // reuse stack frame
     if(y) this.addf(...this.parse(x))
@@ -144,7 +145,7 @@ class INTRP {
           ].map(a => console.log(a))
         }
 
-        if(this.step) if(rls.question("[ENTER to continue, a + ENTER to auto-step]") == 'a') this.step = 0
+        if(this.step && !this.lambda) if(rls.question("[ENTER to continue, a + ENTER to auto-step]") == 'a') this.step = 0
       }
 
       this.code.shift()
@@ -291,6 +292,19 @@ class INTRP {
       this.st = this.iter.pop()
       return g(A)
     })
+  }
+
+  *gen(f, a){
+    while(true){
+      yield a
+      this.iter.push(this.st)
+      this.st = this.iter.at(-1) + ' '
+      this.stack[this.st] = [a]
+      this.exec(f)
+      a = this.shift()
+      delete this.stack[this.iter.at(-1) + ' ']
+      this.st = this.iter.pop()
+    }
   }
 
   isarr(x){ return _.isArray(x) }

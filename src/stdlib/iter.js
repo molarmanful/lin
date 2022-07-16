@@ -26,21 +26,10 @@ ITER["`__"] = $=> $.unshift($.itrlist(itrd($)))
 ITER["`_`"] = $=> $.unshift(itr.str(itrd($)))
 
 // create iterator from initial value and function 
-ITER["`gen"] = $=>{
+ITER["`it"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  let F = function*(){
-    yield Y
-    while(1){
-      $.iter.push($.st)
-      $.st = $.iter.at(-1) + ' '
-      $.stack[$.st] = [Y]
-      $.exec(X)
-      Y = $.shift()
-      yield Y
-    }
-  }
-  $.unshift(itr.wrap(F()))
+  $.unshift(itr.wrap($.gen(X, Y)))
 }
 
 // check if iterators are equal

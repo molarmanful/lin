@@ -9,12 +9,10 @@ FLOW["es"] = $=> $.exec($.shift(), 1)
 FLOW["e*"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  $.addf(a=>{
-    if(X > 0){
-      $.addf(a=> $.unshift(Y, X - 1), 'e*')
-      $.exec(Y, 1)
-    }
-  })
+  if(X > 0){
+    $.addf(a=> $.unshift(Y, X - 1), 'e*')
+    $.exec(Y, 1)
+  }
 }
 
 // `es` if index 0 is truthy
