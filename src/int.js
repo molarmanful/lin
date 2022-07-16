@@ -248,7 +248,7 @@ class INTRP {
     return z != undefined ? this.stack[this.st].splice(~x, y, z) : this.stack[this.st].splice(~x, y)
   }
 
-  shift(){ return _.cloneDeep(this.stack[this.st].pop()) }
+  shift(){ return _.cloneDeep(this.strtag(this.stack[this.st].pop())) }
 
   unshift(...x){ return this.stack[this.st].push(...x.map(a=> this.strtag(a))) }
 
