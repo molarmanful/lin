@@ -54,7 +54,7 @@ ITER["`+"] = $=>{
 }
 
 // prepend index 0 into iterator
-ITER["`,"] = $=> $.unshift(itr.prepend(itrd($), itrd($)))
+ITER["`,"] = $=> $.unshift(itr.prepend($.shift(), itrd($)))
 
 // combine top 2 items into partially-sorted iterator via comparison function
 ITER["`+>"] = $=>{
