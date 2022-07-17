@@ -29,8 +29,9 @@ Command | Description
 <code>gl</code> | `gi` but follow scoping rules
 <code>gs</code> | push stack joined by newlines
 <code>g@</code> | push line at popped number (0-indexed)
-<code>g;</code> |  push next line
-<code>g;;</code> |  push previous line
+<code>g;</code> | push next line
+<code>g;;</code> | push previous line
+<code>L</code> | line number + index 0
 <code>form</code> | convert index 0 to its formatted representation
 <code>si</code> | set global ID at index 0
 <code>sl</code> | `si` but follow scoping rules
@@ -46,8 +47,8 @@ Command | Description
 <code>()</code> | empty string
 <code>[]</code> | empty list
 <code>{}</code> | empty object
-<code>\\</code> | push space
-<code>n\\</code> | push newline
+<code>\\</code> | space
+<code>n\\</code> | newline
 <code>$L</code> | current line number
 <code>$P</code> | current package
 <code>$S</code> | current stack name
@@ -56,6 +57,8 @@ Command | Description
 <code>$I</code> | Infinity
 <code>time</code> | milliseconds since January 1, 1970 00:00:00.000
 <code>$\`</code> | infinite list of whole numbers
+<code>$A</code> | uppercase alphabet
+<code>$a</code> | lowercase alphabet
 
 ## COUNT
 
@@ -333,8 +336,11 @@ Command | Description
 
 Command | Description
 --- | ---
+<code>S</code> | construct multiline string by getting lines until index 0 is matched at the start of the string
 <code>str</code> | convert to string
-<code>unesc</code> | unescape string at index 0
+<code>tag</code> | tag string with line number
+<code>tag_</code> | untag string
+<code>esc_</code> | unescape string at index 0
 <code>>char</code> | convert charcode to char
 <code>>chars</code> | convert charcode list to string
 <code><char</code> | convert char to charcode
@@ -346,7 +352,12 @@ Command | Description
 <code>>ls</code> | split with newline
 <code><ls</code> | join with newline
 <code>>a</code> | lowercase
-<code>>A</code> | uppercase
+<code>>A</code> | UPPERCASE
+<code>>Aa</code> | capitalize first letter
+<code>>aA</code> | camelCase
+<code>>a-a</code> | kebab-case 
+<code>>a_a</code> | snake_case 
+<code>>AA</code> | Start Case 
 <code>pad</code> | pad string given by index 2 until length given by index 0 with string given by index 1
 <code>padl</code> | `pad` but only from the left
 <code>padr</code> | `pad` but only from the right

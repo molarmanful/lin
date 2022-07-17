@@ -223,7 +223,7 @@ class INTRP {
       : typeof a == 'bigint' ? a + 'N'
       : this.isnum(a) ?
         a < 0 ? -a + '_' : a + ''
-      : this.isstr(a) ? JSON.stringify(a + '')
+      : this.isstr(a) ? JSON.stringify(a + '') + (a.orig ? '_' : '')
       : this.isarr(a) ?
         a.length ?
           `[ ${this.form(a, ' ')} ]`

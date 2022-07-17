@@ -79,11 +79,14 @@ BASE["gs"] = $=> $.unshift($.form($.stack[$.st]))
 // push line at popped number (0-indexed)
 BASE["g@"] = $=> $.unshift($.gline($.shift()))
 
-//  push next line
+// push next line
 BASE["g;"] = $=> $.unshift($.gline($.lns.at(-1)[1] - -1))
 
-//  push previous line
+// push previous line
 BASE["g;;"] = $=> $.unshift($.gline($.lns.at(-1)[1] - 1))
+
+// line number + index 0
+BASE["L"] = $=> $.exec('$L +',1)
 
 // convert index 0 to its formatted representation
 BASE["form"] = $=> $.unshift($.form([$.shift()]))

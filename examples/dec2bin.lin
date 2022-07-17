@@ -1,6 +1,5 @@
-[ .IN out in \dup ( 2/% swap ) ew pop rev ] <cs outln
-
-#INEnter a decimal number: 
+[ g; out in \dup ( 2/% swap ) ew pop rev ] <cs outln
+Enter a decimal number: 
 
 
 

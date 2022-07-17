@@ -14,17 +14,17 @@ CONSTANT["[]"] = $=> $.unshift([])
 // empty object
 CONSTANT["{}"] = $=> $.unshift(new Map())
 
-// push space
+// space
 CONSTANT["\\"] = $=> $.unshift(' ')
 
-// push newline
+// newline
 CONSTANT["n\\"] = $=> $.unshift('\n')
 
 // current line number
 CONSTANT["$L"] = $=> $.unshift($.lns.at(-1)[1])
 
 // current package
-CONSTANT["$P"] = $=> $.unshift($.lns(-1)[0])
+CONSTANT["$P"] = $=> $.unshift($.lns.at(-1)[0])
 
 // current stack name
 CONSTANT["$S"] = $=> $.unshift($.st)
@@ -43,5 +43,11 @@ CONSTANT["time"] = $=> $.unshift(Date.now())
 
 // infinite list of whole numbers
 CONSTANT["$`"] = $=> $.unshift(itr.range())
+
+// uppercase alphabet
+CONSTANT["$A"] = $=> $.unshift('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+
+// lowercase alphabet
+CONSTANT["$a"] = $=> $.unshift('abcdefghijklmnopqrstuvwxyz')
 
 export default CONSTANT

@@ -2,28 +2,39 @@ import {unesc, _, itr} from '../bridge.js'
 
 let STR = {}
 
-STR["///"] = $=>{
-  let X
-  let Y = $.lns.at(-1)[1] - -1
+// construct multiline string by getting lines until index 0 is matched at the start of the string
+STR["S"] = $=>{
+  let X, Z
+  let Y = $.lns.at(-1)[1]
+  let S = new RegExp(`^${$.shift()}`)
   $.unshift([...
     itr.pipe(
-      itr.drop(Y),
-      itr.takeWhile(a=> (X = a, Y++, !a.match(/^ *\\\\\\/)))
+      itr.drop(Y + 1),
+      itr.takeWhile(a=> (X = a, Y++, Z = !a.match(S)))
     )($.pkf.at(-1)?.lines || $.lines)
   ].join('\n'))
   let F = $.shift()
   F.orig.line[1]++
   $.unshift(F)
-  $.exec($.strtag(X.replace(/^ *\\\\\\/, ''), [$.lns.at(-1)[0], Y]), 1)
+  if(!Z) $.exec($.strtag(X.replace(S, ''), [$.lns.at(-1)[0], Y]), 1)
 }
-
-STR["\\\\\\"] = $=>{}
 
 // convert to string
 STR["str"] = $=> $.unshift($.str($.shift()))
 
+// tag string with line number
+STR["tag"] = $=>{
+  let X = $.shift()
+  let X1 = Number(X)
+  if($.isnum(Number(X1))) $.unshift($.strtag($.untag($.shift()), [0, X1]))
+  else throw `bad tag number "${X}"`
+}
+
+// untag string
+STR["tag_"] = $=> $.unshift($.untag($.shift()))
+
 // unescape string at index 0
-STR["unesc"] = $=> $.unshift(unesc($.shift()))
+STR["esc_"] = $=> $.unshift(unesc($.shift()))
 
 // convert charcode to char
 STR[">char"] = $=> $.unshift(String.fromCodePoint($.shift()))
@@ -58,8 +69,23 @@ STR["<ls"] = $=> $.unshift($.shift().join`\n`)
 // lowercase
 STR[">a"] = $=> $.unshift($.shift().toLowerCase())
 
-// uppercase
+// UPPERCASE
 STR[">A"] = $=> $.unshift($.shift().toUpperCase())
+
+// capitalize first letter
+STR[">Aa"] = $=> $.unshift(_.capitalize($.shift()))
+
+// camelCase
+STR[">aA"] = $=> $.unshift(_.camelCase($.shift()))
+
+// kebab-case 
+STR[">a-a"] = $=> $.unshift(_.kebabCase($.shift()))
+
+// snake_case 
+STR[">a_a"] = $=> $.unshift(_.snakeCase($.shift()))
+
+// Start Case 
+STR[">AA"] = $=> $.unshift(_.startCase($.shift()))
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
 STR["pad"] = $=>{
