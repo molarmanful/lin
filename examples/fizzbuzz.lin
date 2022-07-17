@@ -1,5 +1,5 @@
 1 101 range \; map
-dup .\n [ .n 3% \\Fizz e| .n 5% \\Buzz e| ] () join dup \pop e| outln
+dup .\n [ .n 3% \\Fizz e| .n 5% \\Buzz e| ] <cs dup \pop e| outln
 
 
 

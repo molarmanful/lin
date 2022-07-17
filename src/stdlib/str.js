@@ -41,19 +41,19 @@ STR["<chars"] = $=> $.unshift(_.map($.shift(), a=> a.codePointAt()))
 STR[">cs"] = $=> $.unshift($.str($.shift()).split``)
 
 // join with empty string
-STR["<cs"] = $=> $.unshift($.str($.shift()).join``)
+STR["<cs"] = $=> $.unshift($.shift().join``)
 
 // split with space
 STR[">ws"] = $=> $.unshift($.str($.shift()).split` `)
 
 // join with space
-STR["<ws"] = $=> $.unshift($.str($.shift()).join` `)
+STR["<ws"] = $=> $.unshift($.shift().join` `)
 
 // split with newline
 STR[">ls"] = $=> $.unshift($.str($.shift()).split`\n`)
 
 // join with newline
-STR["<ls"] = $=> $.unshift($.str($.shift()).join`\n`)
+STR["<ls"] = $=> $.unshift($.shift().join`\n`)
 
 // lowercase
 STR[">a"] = $=> $.unshift($.shift().toLowerCase())

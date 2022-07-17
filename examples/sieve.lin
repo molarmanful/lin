@@ -2,7 +2,7 @@
 \n: out in 1+ .\n { 1 1: } .\s SIEVE clr ;
 1 .n range ( .s over g: \\_ e& ) map ;
 ( 0absb ( ns len ) map max .\m ) 1's ( \ .m pad ) map ;
-10cols ( \ join ) map enclose n\ join outln
+10cols \<ws map enclose <ls outln
 
 #SIEVE .n .5^ 0| 1 range ( .\a .s .a g: \; e| ) map
 $` ( 2+ .a * ) `' ( .n <= ) `t' ( .s 1 rot : .\s ) `' `_
@@ -18,7 +18,7 @@ Outputs a Sieve of Eratosthenes.
 - `1 .n range ( ... ) map` for each item *b* in the range from 1 to *n*...
   - `.s over g: \\_ e&` replaces sieved (i.e. non-prime) numbers with `_`.
 - `( 0absb ( ns len ) map max .\m ) 1's ( \ .m pad ) map ;` pads each element with spaces.
-- `10cols ( \ join ) map enclose n\ join outln` formats and outputs the stack.
+- `10cols \<ws map enclose <ls outln` formats and outputs the stack.
 
 In SIEVE:
 
