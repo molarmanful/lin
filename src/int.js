@@ -38,14 +38,18 @@ class INTRP {
   }
 
   exec(x, y){
-    if(!this.isstr(x)) x += ''
+    if(this.isarr(x)) x = x.join` ` 
+    else if(!this.isstr(x)) x += ''
 
-    if(x.orig?.file == this.file && this.pkf.at(-1) && x.orig?.file != this.pkf.at(-1)?.file){
+    let orig = x.orig
+    x = x.split`\n`[0]
+
+    if(orig?.file == this.file && this.pkf.at(-1) && orig?.file != this.pkf.at(-1)?.file){
       this.addf($=> this.pkf.pop())
       this.pkf.push(0)
     }
 
-    if(x.orig) this.tline(x.orig.line, 1)
+    if(orig) this.tline(orig.line, 1)
 
     // reuse stack frame
     if(y) this.addf(...this.parse(x))
@@ -152,10 +156,10 @@ class INTRP {
     }
   }
 
-  strtag(x){
+  strtag(x, l){
     if(this.isstr(x) && !x?.orig){
       let X = new String(x)
-      X.orig = {file: this.file, line: this.lns.at(-1)}
+      X.orig = {file: this.file, line: l || this.lns.at(-1)}
       return X
     }
     return x
@@ -344,7 +348,7 @@ class INTRP {
 
   mname(x){ try { return path.basename(x, path.extname(x)) } catch(e){ return x } }
 
-  gline(x){ return this.pkf.at(-1) ? this.pkf.at(-1).lines[x] : this.lines[x] }
+  gline(x){ return this.pkf.at(-1)?.lines[x] || this.lines[x] }
 
   eline(x){
     let l = this.lns.at(-1)[1] - -x

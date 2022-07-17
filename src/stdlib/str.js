@@ -1,7 +1,25 @@
-import {unesc, _} from '../bridge.js'
+import {unesc, _, itr} from '../bridge.js'
 
 let STR = {}
 
+STR["///"] = $=>{
+  let X
+  let Y = $.lns.at(-1)[1] - -1
+  $.unshift([...
+    itr.pipe(
+      itr.drop(Y),
+      itr.takeWhile(a=> (X = a, Y++, !a.match(/^ *\\\\\\/)))
+    )($.pkf.at(-1)?.lines || $.lines)
+  ].join('\n'))
+  let F = $.shift()
+  F.orig.line[1]++
+  $.unshift(F)
+  $.exec($.strtag(X.replace(/^ *\\\\\\/, ''), [$.lns.at(-1)[0], Y]), 1)
+}
+
+STR["\\\\\\"] = $=>{}
+
+// convert to string
 STR["str"] = $=> $.unshift($.str($.shift()))
 
 // unescape string at index 0
@@ -18,6 +36,24 @@ STR["<char"] = $=> $.unshift($.shift().codePointAt())
 
 // convert string to charcode list
 STR["<chars"] = $=> $.unshift(_.map($.shift(), a=> a.codePointAt()))
+
+// split with empty string
+STR[">cs"] = $=> $.unshift($.str($.shift()).split``)
+
+// join with empty string
+STR["<cs"] = $=> $.unshift($.str($.shift()).join``)
+
+// split with space
+STR[">ws"] = $=> $.unshift($.str($.shift()).split` `)
+
+// join with space
+STR["<ws"] = $=> $.unshift($.str($.shift()).join` `)
+
+// split with newline
+STR[">ls"] = $=> $.unshift($.str($.shift()).split`\n`)
+
+// join with newline
+STR["<ls"] = $=> $.unshift($.str($.shift()).join`\n`)
 
 // lowercase
 STR[">a"] = $=> $.unshift($.shift().toLowerCase())

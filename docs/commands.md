@@ -333,11 +333,18 @@ Command | Description
 
 Command | Description
 --- | ---
+<code>str</code> | convert to string
 <code>unesc</code> | unescape string at index 0
 <code>>char</code> | convert charcode to char
 <code>>chars</code> | convert charcode list to string
 <code><char</code> | convert char to charcode
 <code><chars</code> | convert string to charcode list
+<code>>cs</code> | split with empty string
+<code><cs</code> | join with empty string
+<code>>ws</code> | split with space
+<code><ws</code> | join with space
+<code>>ls</code> | split with newline
+<code><ls</code> | join with newline
 <code>>a</code> | lowercase
 <code>>A</code> | uppercase
 <code>pad</code> | pad string given by index 2 until length given by index 0 with string given by index 1

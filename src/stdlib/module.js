@@ -5,7 +5,7 @@ let MODULE = {}
 let imp = $=>{
   let F = $.mresolve($.shift() + '.lin')
   let X = $.mname(F)
-  if(X.match(/[\d\s.]/)) throw `bad pkg name "${X}"`
+  if(X.match(/[\d. ]/)) throw `bad pkg name "${X}"`
   let I = new INTRP(fs.readFileSync(F) + '', F)
   I.ids.__PKG.name = X
   I.ids.__PKG.file = F
