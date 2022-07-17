@@ -1,6 +1,6 @@
 \P :: ;
 ( of beer ) .\x ( on the wall ) .\y ;
-99 orang \; map
+99orang \; map
 .\n .n P .\b ;
 [ .n .b .x ] dup ( .y ) ' ( <ws outln ) 2e* ;
 ( Take one down, pass it around ) outln ;
@@ -15,7 +15,7 @@
 Outputs lyrics for the song "99 Bottles of Beer on the Wall."
 
 - `( of beer ) .\x ( on the wall ) .\y` stores repeated phrases for later.
-- `100 orang \; map` executes the line 3 for each *n* from 99 to 1.
+- `99orang \; map` executes the line 3 for each *n* from 99 to 1.
 
 On line 3:
 

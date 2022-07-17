@@ -5,7 +5,6 @@ class PKG {
     this.name = n
     this.file = f
     this.ids = _.cloneDeep(SL)
-    this.idls = {}
     this.lines = []
   }
 }
@@ -19,7 +18,6 @@ class INTRP {
     this.lambda = 0
     this.paren = []
     this.ids = _.cloneDeep(SL)
-    this.idls = {}
     this.lines = x.split`\n`
     this.lns = [[0, 0]]
     this.iter = []
@@ -92,17 +90,14 @@ class INTRP {
         else {
           // pkg call
           if(this.pkg.at(-1)){
-            let {name, file, ids, idls} = this.pkg.at(-1)
+            let {name, file, ids} = this.pkg.at(-1)
             if(!(a in ids)) throw `unknown pkg fn "${name} ${a}"`
             this.addf($=> this.pkf.pop())
             this.pkf.push(this.pkg.pop())
             if(ids[a] instanceof PKG){
               this.pkg.push(ids[a])
             }
-            else {
-              if(a in idls) this.tline(idls[a])
-              this.exec(ids[a], 1)
-            }
+            else this.exec(ids[a], 1)
           }
 
           // magic dot
@@ -171,10 +166,7 @@ class INTRP {
   fmatch(a, ctx){
     if(ctx.ids[a] instanceof PKG) this.pkg.push(ctx.ids[a])
     else if(ctx.ids[a] instanceof Function && a in SL) SL[a](this)
-    else {
-      if(a in ctx.idls) this.tline(ctx.idls[a])
-      this.exec(ctx.ids[a], 1)
-    }
+    else this.exec(ctx.ids[a], 1)
   }
 
   print(x){ console.log(x); return x }
@@ -183,8 +175,7 @@ class INTRP {
     let y = RegExp(`^ *#${x}`)
     let line = this.lines.findIndex(a=> a.match(y))
     if(~line){
-      this.ids[x] = this.lines[line].replace(y, '')
-      this.idls[x] = line
+      this.ids[x] = this.strtag(this.lines[line].replace(y, ''), [0, line])
     }
   }
 
@@ -358,7 +349,7 @@ class INTRP {
 
   mname(x){ try { return path.basename(x, path.extname(x)) } catch(e){ return x } }
 
-  gline(x){ return this.pkf.at(-1)?.lines[x] || this.lines[x] }
+  gline(x){ return this.strtag(this.pkf.at(-1)?.lines[x] || this.lines[x], [this.pkf.at(-1)?.file || 0, x]) }
 
   eline(x){
     let l = this.lns.at(-1)[1] - -x
