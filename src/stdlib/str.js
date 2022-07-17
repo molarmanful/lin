@@ -1,6 +1,12 @@
-import {unesc, _, itr} from '../bridge.js'
+import {unesc, _, itr, voca, SL} from '../bridge.js'
 
 let STR = {}
+
+// convert to string
+STR["str"] = $=> $.unshift($.str($.shift()))
+
+// convert to formatted representation
+STR["form"] = $=> $.unshift($.form([$.shift()]))
 
 // construct multiline string by getting lines until index 0 is matched at the start of the string
 STR["lns"] = $=>{
@@ -19,9 +25,6 @@ STR["lns"] = $=>{
   if(!Z) $.exec($.strtag(X.replace(S, ''), [$.lns.at(-1)[0], Y]), 1)
 }
 
-// convert to string
-STR["str"] = $=> $.unshift($.str($.shift()))
-
 // tag string with line number
 STR["tag"] = $=>{
   let X = $.shift()
@@ -32,6 +35,12 @@ STR["tag"] = $=>{
 
 // untag string
 STR["tag_"] = $=> $.unshift($.untag($.shift()))
+
+// equivalent of `sprintf` - takes string and list
+STR["sf"] = $=>{
+  SL.swap($)
+  $.unshift(voca.vprintf($.shift(), $.shift()))
+}
 
 // unescape string at index 0
 STR["esc_"] = $=> $.unshift(unesc($.shift()))
@@ -66,6 +75,12 @@ STR[">ls"] = $=> $.unshift($.str($.shift()).split`\n`)
 // join with newline
 STR["<ls"] = $=> $.unshift($.shift().join`\n`)
 
+// split into words
+STR["words"] = $=> $.unshift(voca.words($.shift()))
+
+// split into graphemes
+STR["graphms"] = $=> $.unshift(voca.graphemes($.shift()))
+
 // lowercase
 STR[">a"] = $=> $.unshift($.shift().toLowerCase())
 
@@ -73,19 +88,20 @@ STR[">a"] = $=> $.unshift($.shift().toLowerCase())
 STR[">A"] = $=> $.unshift($.shift().toUpperCase())
 
 // capitalize first letter
-STR[">Aa"] = $=> $.unshift(_.capitalize($.shift()))
+STR[">Aa"] = $=> $.unshift(voca.capitalize($.shift()))
 
 // camelCase
-STR[">aA"] = $=> $.unshift(_.camelCase($.shift()))
+STR[">aA"] = $=> $.unshift(voca.camelCase($.shift()))
 
 // kebab-case 
-STR[">a-a"] = $=> $.unshift(_.kebabCase($.shift()))
+STR[">a-a"] = $=> $.unshift(voca.kebabCase($.shift()))
 
 // snake_case 
-STR[">a_a"] = $=> $.unshift(_.snakeCase($.shift()))
+STR[">a_a"] = $=> $.unshift(voca.snakeCase($.shift()))
 
-// Start Case 
-STR[">AA"] = $=> $.unshift(_.startCase($.shift()))
+// Title Case 
+STR[">AA"] = $=> $.unshift(voca.titleCase($.shift()))
+
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
 STR["pad"] = $=>{
@@ -109,6 +125,22 @@ STR["padr"] = $=>{
   let Y = $.shift()
   let Z = $.shift()
   $.unshift(_.padEnd(Z, X, Y))
+}
+
+// latinize
+STR["lat"] = $=> $.unshift(voca.latinise($.shift()))
+
+// transliterate chars in index 2 from index 1 to index 0
+STR["tr"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  $.unshift(voca.tr($.shift(), Y + '', X + ''))
+}
+
+// `tr` but with chars at index 1 and object at index 0
+STR["tro"] = $=>{
+  SL.swap($)
+  $.unshift(voca.tr($.shift(), Object.fromEntries($.shift())))
 }
 
 export default STR

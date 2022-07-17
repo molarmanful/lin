@@ -29,6 +29,7 @@ export * as itr from 'iter-tools-es'
 export {default as chalk} from 'chalk'
 export {runOnThread as mth} from 'funthreads'
 export * as path from 'path'
+export {default as voca} from 'voca'
 
 export {_}
 export {default as parse} from './parser.js'

@@ -88,9 +88,6 @@ BASE["g;;"] = $=> $.unshift($.gline($.lns.at(-1)[1] - 1))
 // line number + index 0
 BASE["L"] = $=> $.exec('$L +',1)
 
-// convert index 0 to its formatted representation
-BASE["form"] = $=> $.unshift($.form([$.shift()]))
-
 // set global ID at index 0
 BASE["si"] = $=> $.ids[$.shift()] = $.shift()
 

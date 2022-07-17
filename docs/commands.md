@@ -32,7 +32,6 @@ Command | Description
 <code>g;</code> | push next line
 <code>g;;</code> | push previous line
 <code>L</code> | line number + index 0
-<code>form</code> | convert index 0 to its formatted representation
 <code>si</code> | set global ID at index 0
 <code>sl</code> | `si` but follow scoping rules
 <code>sL</code> | `sl` but without overriding existing scoping rules
@@ -336,10 +335,12 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>lns</code> | construct multiline string by getting lines until index 0 is matched at the start of the string
 <code>str</code> | convert to string
+<code>form</code> | convert to formatted representation
+<code>lns</code> | construct multiline string by getting lines until index 0 is matched at the start of the string
 <code>tag</code> | tag string with line number
 <code>tag_</code> | untag string
+<code>sf</code> | equivalent of `sprintf` - takes string and list
 <code>esc_</code> | unescape string at index 0
 <code>>char</code> | convert charcode to char
 <code>>chars</code> | convert charcode list to string
@@ -351,13 +352,18 @@ Command | Description
 <code><ws</code> | join with space
 <code>>ls</code> | split with newline
 <code><ls</code> | join with newline
+<code>words</code> | split into words
+<code>graphms</code> | split into graphemes
 <code>>a</code> | lowercase
 <code>>A</code> | UPPERCASE
 <code>>Aa</code> | capitalize first letter
 <code>>aA</code> | camelCase
 <code>>a-a</code> | kebab-case 
 <code>>a_a</code> | snake_case 
-<code>>AA</code> | Start Case 
+<code>>AA</code> | Title Case 
 <code>pad</code> | pad string given by index 2 until length given by index 0 with string given by index 1
 <code>padl</code> | `pad` but only from the left
 <code>padr</code> | `pad` but only from the right
+<code>lat</code> | latinize
+<code>tr</code> | transliterate chars in index 2 from index 1 to index 0
+<code>tro</code> | `tr` but with chars at index 1 and object at index 0

@@ -219,17 +219,25 @@ class INTRP {
   }
 
   form(x, y='\n'){
+    let M = a=>{
+      if(a?.orig){
+        let m = this.mname(a.orig.file)
+        let l = a.orig.line[1]
+        return a.file == this.file ? `_(${m} ${l})` : `_${l}`
+      }
+      return ''
+    }
     return x.map(a=>
       a == Infinity ? '$I'
       : typeof a == 'bigint' ? a + 'N'
       : this.isnum(a) ?
         a < 0 ? -a + '_' : a + ''
-      : this.isstr(a) ? JSON.stringify(a + '') + (a.orig ? '_' : '')
+      : this.isstr(a) ? JSON.stringify(a + '') + M(a)
       : this.isarr(a) ?
         a.length ?
           `[ ${this.form(a, ' ')} ]`
         : '[]'
-      : a instanceof Map ?
+      : a instanceof Map ? this.print(a) &&
         a.size ?
           `{ ${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `} }`
         : '{}'
