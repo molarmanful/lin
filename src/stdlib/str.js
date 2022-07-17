@@ -3,7 +3,7 @@ import {unesc, _, itr} from '../bridge.js'
 let STR = {}
 
 // construct multiline string by getting lines until index 0 is matched at the start of the string
-STR["S"] = $=>{
+STR["lns"] = $=>{
   let X, Z
   let Y = $.lns.at(-1)[1]
   let S = new RegExp(`^${$.shift()}`)

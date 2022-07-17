@@ -109,7 +109,8 @@ class INTRP {
           else if(this.gl){
             this.gl = 0
             this.unshift(a)
-            if(a[1] && a[0] == '#'){
+            if(a == '.') this.shift(), SL.lns(this)
+            else if(a[1] && a[0] == '#'){
               this.unshift(this.shift().slice(1))
               SL[this.objs.length ? ':' : 'sl'](this)
             }

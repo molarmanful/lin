@@ -336,7 +336,7 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>S</code> | construct multiline string by getting lines until index 0 is matched at the start of the string
+<code>lns</code> | construct multiline string by getting lines until index 0 is matched at the start of the string
 <code>str</code> | convert to string
 <code>tag</code> | tag string with line number
 <code>tag_</code> | untag string
