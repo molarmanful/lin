@@ -51,6 +51,7 @@ Command | Description
 <code>$L</code> | current line number
 <code>$P</code> | current package
 <code>$S</code> | current stack name
+<code>$s</code> | previous stack name
 <code>$E</code> | Euler's constant
 <code>$Pi</code> | Pi
 <code>$I</code> | Infinity
@@ -272,6 +273,8 @@ Command | Description
 <code>enom</code> | convert object to a list containing each key-value pair
 <code>denom</code> | convert `enom`-style list into object
 <code>el</code> | check if index 0 is in list/object at index 1
+<code><json</code> | parse JSON string
+<code>>json</code> | serialize as JSON
 
 ## STACK
 
@@ -361,6 +364,7 @@ Command | Description
 <code>>a-a</code> | kebab-case 
 <code>>a_a</code> | snake_case 
 <code>>AA</code> | Title Case 
+<code>>aa</code> | sWAP cASE
 <code>pad</code> | pad string given by index 2 until length given by index 0 with string given by index 1
 <code>padl</code> | `pad` but only from the left
 <code>padr</code> | `pad` but only from the right

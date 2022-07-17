@@ -29,6 +29,9 @@ CONSTANT["$P"] = $=> $.unshift($.lns.at(-1)[0])
 // current stack name
 CONSTANT["$S"] = $=> $.unshift($.st)
 
+// previous stack name
+CONSTANT["$s"] = $=> $.unshift($.iter.at(-1))
+
 // Euler's constant
 CONSTANT["$E"] = $=> $.unshift(Math.E)
 

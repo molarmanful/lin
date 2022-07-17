@@ -237,7 +237,7 @@ class INTRP {
         a.length ?
           `[ ${this.form(a, ' ')} ]`
         : '[]'
-      : a instanceof Map ? this.print(a) &&
+      : a instanceof Map ?
         a.size ?
           `{ ${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `} }`
         : '{}'
@@ -251,6 +251,7 @@ class INTRP {
 
   gind(o, x){
     return o.at && this.isnum(+x) ? o.at(this.isarr(o) ? Number(x) : x)
+      : this.isstr(x) ? o.get(this.untag(x))
       : this.isobj(x) ? _.map(x, a=> this.gind(o, a))
       : o.get(x)
   }

@@ -102,6 +102,9 @@ STR[">a_a"] = $=> $.unshift(voca.snakeCase($.shift()))
 // Title Case 
 STR[">AA"] = $=> $.unshift(voca.titleCase($.shift()))
 
+// sWAP cASE
+STR[">aa"] = $=> $.unshift(voca.titleCase($.shift()))
+
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
 STR["pad"] = $=>{

@@ -53,4 +53,22 @@ OBJ["el"] = $=>{
   else $.unshift(+itr.some(a=> _.isEqual(a, X), Y))
 }
 
+// parse JSON string
+OBJ["<json"] = $=>{
+  let P = x=>
+    $.isarr(x) ? x.map(P)
+    : $.isobj(x) ? new Map(Object.entries(x)).map(P)
+    : x
+  $.unshift(P(JSON.parse($.shift())))
+}
+
+// serialize as JSON
+OBJ[">json"] = $=>{
+  let S = x=>
+    $.isarr(x) ? x.map(S)
+    : $.isobj(x) ? Object.fromEntries(Array.from(x, ([a, b])=> [$.str(a) + '', S(b)]))
+    : x
+  $.unshift(JSON.stringify(S($.shift())))
+}
+
 export default OBJ
