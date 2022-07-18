@@ -1,4 +1,4 @@
-import {chalk, fs, rls, itr, _, path, parse, SL} from './bridge.js'
+import {unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -85,9 +85,13 @@ class INTRP {
         else if(this.lambda){
           if(a.match(/^[()\[\]{}]+$/))
             this.lambda += (a.match(/\(/g) || []).length - (a.match(/\)/g) || []).length
-
           if(this.lambda > 0) this.paren.push(a)
           else SL[')'](this)
+        }
+
+        // literals
+        else if(a?.[0] == '"'){
+          this.unshift((this.gl ? (this.gl = 0, unesc) : x=> x)(a.slice(1, a.slice(-1) == '"' ? -1 : undefined)))
         }
 
         // numbers
