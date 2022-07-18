@@ -261,7 +261,7 @@ class INTRP {
 
   shift(){ return _.cloneDeep(this.strtag(this.stack[this.st].pop())) }
 
-  unshift(...x){ return this.stack[this.st].push(...x.map(a=> this.strtag(a))) }
+  unshift(...x){ return this.stack[this.st].push(...x.map(a=> typeof a == 'boolean' ? +a : this.strtag(a))) }
 
   each(O, f=_.map, s=false, g=x=> x){
     let X = this.shift()

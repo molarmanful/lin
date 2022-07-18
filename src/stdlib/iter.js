@@ -33,16 +33,16 @@ ITER["`it"] = $=>{
 }
 
 // check if iterators are equal
-ITER["`="] = $=> $.unshift(itr.equal(itrd($), itrd($)))
+ITER["`="] = $=> $.unshift(+itr.equal(itrd($), itrd($)))
 
 // check if iterators are deeply equal
-ITER["`=*"] = $=> $.unshift(itr.deepEqual(itrd($), itrd($)))
+ITER["`=*"] = $=> $.unshift(+itr.deepEqual(itrd($), itrd($)))
 
 // check if iterator at index 1 has sequence at index 0
-ITER["`?"] = $=> $.unshift(itr.includesSeq(itrd($), itrd($)))
+ITER["`?"] = $=> $.unshift(+itr.includesSeq(itrd($), itrd($)))
 
 // `?` with multiple sequences
-ITER["`?*"] = $=> $.unshift(itr.includesAnySeq(itr.listitrs($.shift()), itrd($)))
+ITER["`?*"] = $=> $.unshift(+itr.includesAnySeq(itr.listitrs($.shift()), itrd($)))
 
 // create infinite cycle from index 0
 ITER["`cyc"] = $=> $.unshift(itr.cycle(itrd($)))
@@ -81,7 +81,7 @@ ITER["`size"] = $=> $.unshift(itr.size($.listitr($.stack[$.st].at(-1))))
 ITER["`enum"] = $=> $.unshift(itr.enumerate(itrd($)))
 
 // yield only unique elements
-ITER["`uniq"] = $=> $.unshift(itr.uniq(itrd($)))
+ITER["`uniq"] = $=> $.unshift(itr.distinct(itrd($)))
 
 // reverse iterator
 ITER["`rev"] = $=> $.unshift(itr.reverse(itrd($)))
