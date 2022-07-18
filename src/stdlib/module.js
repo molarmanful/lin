@@ -21,6 +21,7 @@ MODULE["::e"] = $=>{
   let X = $.shift()
   if($.isobj(X)){
     $.ids.__PKG = new $.PKG()
+    $.ids.__PKG.lines = $.lines
     _.assign($.ids.__PKG.ids, Object.fromEntries(X))
   }
   else throw `bad export "${$.file}"`

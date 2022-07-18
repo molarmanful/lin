@@ -20,9 +20,9 @@ STR["lns"] = $=>{
     )($.pkf.at(-1)?.lines || $.lines)
   ].join('\n'))
   let F = $.shift()
-  F.orig.line[1]++
+  F.orig[1]++
   $.unshift(F)
-  if(!Z) $.exec($.strtag(X.replace(S, ''), [$.lns.at(-1)[0], Y]), 1)
+  if(!Z) $.exec($.strtag(X.replace(S, ''), [0, Y]), 1)
 }
 
 // tag string with line number

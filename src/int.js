@@ -42,12 +42,12 @@ class INTRP {
     let orig = x.orig
     x = x.split`\n`[0]
 
-    if(orig?.file == this.file && this.pkf.at(-1) && orig?.file != this.pkf.at(-1)?.file){
+    if(orig && orig[0] == this.file && this.pkf.at(-1) && orig[0] != this.pkf.at(-1)?.file){
       this.addf($=> this.pkf.pop())
       this.pkf.push(0)
     }
 
-    if(orig) this.tline(orig.line, 1)
+    if(orig) this.tline(orig[1], orig[0])
 
     // reuse stack frame
     if(y) this.addf(...this.parse(x))
@@ -64,7 +64,13 @@ class INTRP {
         if(this.verbose && !this.lambda){
           // console.log(this.code.map(a=> a.map(b=> b+'')));
           [
-            chalk.gray.dim(`———>{C:${this.code.map(a=> a.length).join` `}}{L:${this.lns.map(([a, b])=> this.mname(a) + ' ' + b).join`;`}}{S:${(this.st + '').replace(/\n/g, '\\n')}}`),
+            chalk.gray.dim(`———>{C:${
+                this.code.map(a=> a.length).join` `
+              }}{L:${
+                this.lns.map(([a, b])=> this.mname(a) + ' ' + b).join`;`
+              }}{S:${
+                (this.st + '').replace(/\n/g, '\\n')
+              }}`),
             chalk.greenBright(this.code[0][0]),
             chalk.gray.dim('———')
           ].map(a=> console.log(a))
@@ -152,10 +158,10 @@ class INTRP {
     }
   }
 
-  strtag(x, l){
+  strtag(x, l = [0, 0]){
     if(this.isstr(x) && !x?.orig){
       let X = new String(x)
-      X.orig = {file: this.file, line: l || this.lns.at(-1)}
+      X.orig = [l[0] || this.file, l[1] || this.lns.at(-1)[1]]
       return X
     }
     return x
@@ -212,9 +218,9 @@ class INTRP {
   form(x, y='\n'){
     let M = a=>{
       if(a?.orig){
-        let m = this.mname(a.orig.file)
-        let l = a.orig.line[1]
-        return a.file == this.file ? `_(${m} ${l})` : `_${l}`
+        let m = this.mname(a.orig[0])
+        let l = a.orig[1]
+        return a[0] == this.file ? `_(${m} ${l})` : `_${l}`
       }
       return ''
     }
@@ -349,7 +355,7 @@ class INTRP {
 
   mname(x){ try { return path.basename(x, path.extname(x)) } catch(e){ return x } }
 
-  gline(x){ return this.strtag(this.pkf.at(-1)?.lines[x] || this.lines[x], [this.pkf.at(-1)?.file || 0, x]) }
+  gline(x){ return this.strtag(this.pkf.at(-1)?.lines?.[x] || this.lines[x], [this.pkf.at(-1)?.file, x]) }
 
   eline(x){
     let l = this.lns.at(-1)[1] - -x
@@ -359,8 +365,8 @@ class INTRP {
     }
   }
 
-  tline(l, r=0){
-    l = r ? l : [this.pkf.at(-1)?.file || 0, l]
+  tline(l, f = 0){
+    l = f == this.file ? [0, l] : [this.pkf.at(-1)?.file || 0, l]
     if(this.lns.some(a=> _.isEqual(l, a))){
       this.lns = _.dropRightWhile(this.lns, a=> !_.isEqual(l, a))
     }
