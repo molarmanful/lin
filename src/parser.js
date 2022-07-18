@@ -6,7 +6,7 @@ let parse = x=>{
 
     // inside literal
     if(lit){
-      if(esc) last.value += a == '"' ? a : '\\' + a
+      if(esc) esc = 0, last.value += a == '"' ? a : '\\' + a
       else if(a == '\\') esc = 1
       else if(a == '"') last.value += a, lit = 0
       else last.value += a
