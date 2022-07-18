@@ -1,10 +1,10 @@
 \P :: ;
-( of beer ) .\x ( on the wall ) .\y ;
+"of beer".\x "on the wall".\y ;
 99orang \; map
 .\n .n P .\b ;
 [ .n .b .x ] dup ( .y ) ' ( <ws outln ) 2e* ;
-( Take one down, pass it around ) outln ;
-[ .n 1- dup ( pop ( No more ) ) e| P .x .y n\ ] <ws outln
+"Take one down, pass it around"outln ;
+[ .n 1- dup ( pop "No more" ) e| P .x .y n\ ] <ws outln
 
 #P \bottle over 1= ( \s ++ ) e|
 

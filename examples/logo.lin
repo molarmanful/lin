@@ -1,8 +1,7 @@
 (01) 14`/\ .x esc_ <chars g: wrap_ \; map
-(( N ( .c r: ) ( .w ) e? out ) map ) ' n\ out
+(( N ( .c r: ) ("　") e? out ) map ) ' n\ out
 
 #x㿳㿳\3㼳㼳㌳㌳㌳\3㿿㿿
-#w　
 #c㌂㌄㌇㌕㌖㌗㌙㌚㌟㌠㌡㌫㌭㌮㌲㌴㌶㌽㍃㍇㍈㍊㍌㍑㍔㍖
 
 
@@ -14,5 +13,5 @@ Outputs the lin logo.
 - `(01) 14`/\` gets all binary sequences of length 14.
 - `.x unesc <chars g:` converts `x` to charcodes and uses them to index binary sequences.
 - `wrap_ \; map` for each sequence...
-  - `(( N ( .c r: ) ( .w ) e? out ) map ) '` outputs random characters and wide spaces in place of 1s and 0s.
+  - `(( N ( .c r: ) ("　") e? out ) map ) '` outputs random characters and wide spaces in place of 1s and 0s.
   - `n\ out` outputs newline.
