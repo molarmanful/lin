@@ -11,13 +11,13 @@ BASE["$("] = $=>{
 
 BASE[")"] = $=>{
   let X = $.paren.join` `
-  $.paren = []
   if($.scoped){
     X = `\${ ${X} }$`
     $.scoped = 0
   }
   $.unshift(X)
   $.lambda = 0
+  $.paren = []
 }
 
 BASE["["] = $=>{

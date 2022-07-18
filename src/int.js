@@ -58,6 +58,8 @@ class INTRP {
 
       while(this.code[0]?.length){
 
+        let a = this.getf()
+
         if(this.step) console.clear()
 
         // verbose mode
@@ -71,12 +73,10 @@ class INTRP {
               }}{S:${
                 (this.st + '').replace(/\n/g, '\\n')
               }}`),
-            chalk.greenBright(this.code[0][0]),
+            chalk.greenBright(a),
             chalk.gray.dim('———')
           ].map(a=> console.log(a))
         }
-
-        let a = this.getf()
 
         // for internal JS calls from commands
         if(this.isfun(a)) a()
@@ -91,7 +91,11 @@ class INTRP {
 
         // literals
         else if(a?.[0] == '"'){
-          this.unshift((this.gl ? (this.gl = 0, unesc) : x=> x)(a.slice(1, a.slice(-1) == '"' ? -1 : undefined)))
+          if(this.gl){
+            this.gl = 0
+            a = unesc(a)
+          }
+          this.unshift(a.slice(1, a.slice(-1) == '"' ? -1 : undefined))
         }
 
         // numbers

@@ -38,9 +38,11 @@ let parse = x=>{
         last.value += a
       else tree.push({type: 'key', value: a})
     }
+    
+    else tree.push('')
 
     return tree
-  }, []).map(a=> a.value)
+  }, []).flatMap(a=> a.value || [])
 }
 
 export default parse
