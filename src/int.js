@@ -57,14 +57,12 @@ class INTRP {
       this.addc(this.parse(x))
 
       while(this.code[0]?.length){
-
         let a = this.getf()
 
         if(this.step) console.clear()
 
         // verbose mode
         if(this.verbose && !this.lambda){
-          // console.log(this.code.map(a=> a.map(b=> b+'')));
           [
             chalk.gray.dim(`———>{C:${
                 this.code.map(a=> a.length).join` `
@@ -89,6 +87,15 @@ class INTRP {
           else SL[')'](this)
         }
 
+        // pkg mode
+        else if(this.pkg.at(-1)){
+          let {name, file, ids} = this.pkg.at(-1)
+          if(!(a in ids)) this.err(`unknown pkg fn "${name} ${a}"`)
+          this.addf($=> this.pkf.pop())
+          this.pkf.push(this.pkg.pop())
+          this.fmatch(a, this.pkf.at(-1))
+        }
+
         // literals
         else if(a?.[0] == '"'){
           if(this.gl){
@@ -99,23 +106,13 @@ class INTRP {
         }
 
         // numbers
-        else if(this.isnum(+a)) this.unshift(+a > Number.MAX_SAFE_INTEGER ? BigInt(a.replace(/\.\d*$/, '')) : +a)
+        else if(this.isnum(+a)){
+          this.unshift(+a > Number.MAX_SAFE_INTEGER ? BigInt(a.replace(/\.\d*$/, '')) : +a)
+        }
 
         else {
-          // pkg call
-          if(this.pkg.at(-1)){
-            let {name, file, ids} = this.pkg.at(-1)
-            if(!(a in ids)) throw `unknown pkg fn "${name} ${a}"`
-            this.addf($=> this.pkf.pop())
-            this.pkf.push(this.pkg.pop())
-            if(ids[a] instanceof PKG){
-              this.pkg.push(ids[a])
-            }
-            else this.exec(ids[a], 1)
-          }
-
           // magic dot
-          else if(this.gl){
+          if(this.gl){
             this.gl = 0
             this.unshift(a)
             if(a == '.') this.shift(), SL.lns(this)
@@ -139,16 +136,10 @@ class INTRP {
           // refs
           else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
 
-          // matched pkg functions
-          else if(this.pkf.at(-1)){
-            if(a in this.pkf.at(-1).ids) this.fmatch(a, this.pkf.at(-1))
-            else throw `unknown fn "${a}" in pkg "${this.pkf.at(-1).name}"`
-          }
-
           // matched functions
           else if(a in this.ids) this.fmatch(a, this)
 
-          else throw `unknown fn "${a}"`
+          else this.err(`unknown fn "${a}"`)
         }
 
         // verbose mode
@@ -166,6 +157,11 @@ class INTRP {
     }
   }
 
+  err(x){
+    console.error(chalk.redBright(`ERR: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
+    process.exit(1)
+  }
+
   strtag(x, l = [0, 0]){
     if(this.isstr(x) && !x?.orig){
       let X = new String(x)
@@ -179,7 +175,7 @@ class INTRP {
 
   fmatch(a, ctx){
     if(ctx.ids[a] instanceof PKG) this.pkg.push(ctx.ids[a])
-    else if(ctx.ids[a] instanceof Function && a in SL) SL[a](this)
+    else if(ctx.ids[a] instanceof Function && a in SL) SL[a](ctx)
     else this.exec(ctx.ids[a], 1)
   }
 
@@ -391,11 +387,7 @@ class INTRP {
 
   addf(...x){ this.code[0] = x.reduceRight((a,b)=> [b, ...a], this.code[0]) }
 
-  getf(){
-    let x = this.code[0][0]
-    this.code[0].shift()
-    return x
-  }
+  getf(){ return this.code[0].shift() }
 }
 
 export default INTRP

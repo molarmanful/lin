@@ -86,7 +86,9 @@ Command | Description
 <code>@</code> | `es` current line
 <code>;</code> | `es` next line
 <code>;;</code> | `es` previous line
+<code>err</code> | throw error
 <code>break</code> | end execution of current call stack frame
+<code>exit</code> | exit with code at index 0
 
 ## IO
 

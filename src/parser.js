@@ -33,7 +33,7 @@ let parse = x=>{
     }
 
     // key
-    else if(a.match(/[^0-9. ]/)){
+    else if(a.match(/[^"\d. ]/)){
       if(tree.length && last.type == 'key')
         last.value += a
       else tree.push({type: 'key', value: a})

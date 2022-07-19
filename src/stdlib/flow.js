@@ -63,7 +63,13 @@ FLOW[";"] = $=> $.eline(1)
 // `es` previous line
 FLOW[";;"] = $=> $.eline(-1)
 
+// throw error
+FLOW["err"] = $=> $.err($.shift())
+
 // end execution of current call stack frame
 FLOW["break"] = $=> $.code.shift()
+
+// exit with code at index 0
+FLOW["exit"] = $=> process.exit($.shift())
 
 export default FLOW

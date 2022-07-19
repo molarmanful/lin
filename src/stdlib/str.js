@@ -30,7 +30,7 @@ STR["tag"] = $=>{
   let X = $.shift()
   let X1 = Number(X)
   if($.isnum(Number(X1))) $.unshift($.strtag($.untag($.shift()), [0, X1]))
-  else throw `bad tag number "${X}"`
+  else $.err(`bad tag number "${X}"`)
 }
 
 // untag string
