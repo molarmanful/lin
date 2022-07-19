@@ -210,7 +210,7 @@ ITER["`|"] = $=>{
 // find first element that returns truthy after `es`ing index 0
 ITER["`?'"] = $=>{
   SL.swap($)
-  $.unshift(+$.each(itrd($), (x, f)=> itr.find(f, x)))
+  $.unshift($.each(itrd($), (x, f)=> itr.find(f, x)))
 }
 
 export default ITER
