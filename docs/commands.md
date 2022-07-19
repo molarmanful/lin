@@ -287,7 +287,7 @@ Command | Description
 <code>enum</code> | convert each item in stack to an index-item pair
 <code>denum</code> | convert `enum`-style stack into a normal stack
 <code>pick</code> | `dup` but with any index
-<code>nix</code> | `drop` but with any index
+<code>nix</code> | `pop` but with any index
 <code>roll</code> | `rot` but with any index
 <code>roll_</code> | `rot_` but with any index
 <code>trade</code> | swap index 1 with index given by index 0

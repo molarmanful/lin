@@ -26,7 +26,7 @@ MODULE["a:i"] = $=>{
 
 MODULE[":e"] = $=>{
   let X = $.shift()
-  if(X instanceof Map){
+  if($.ismap(X)){
     $.ids.__PKG = new $.PKG()
     $.ids.__PKG.lines = $.lines
     _.assign($.ids.__PKG.ids, Object.fromEntries(X))

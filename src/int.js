@@ -238,7 +238,7 @@ class INTRP {
         a.length ?
           `[ ${this.form(a, ' ')} ]`
         : '[]'
-      : a instanceof Map ?
+      : this.ismap(a) ?
         a.size ?
           `{ ${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `} }`
         : '{}'
@@ -251,19 +251,25 @@ class INTRP {
   parse(x){ return parse(this.isarr(x) ? x.join` ` : x + '') }
 
   gind(o, x){
-    return o.at && this.isnum(+x) ? o.at(this.isarr(o) ? Number(x) : x)
+    return this.clone(
+      o.at && this.isnum(+x) ? o.at(this.isarr(o) ? Number(x) : x)
       : this.isstr(x) ? o.get(this.untag(x))
       : this.isobj(x) ? _.map(x, a=> this.gind(o, a))
       : o.get(x)
+    )
   }
 
   get(x){ return this.gind(this.stack[this.st], ~x) }
+
+  clone(x){
+    return _.cloneDeepWith(x, a=> this.isitr(a) ? a : undefined)
+  }
 
   splice(x, y=1, z){
     return z != undefined ? this.stack[this.st].splice(~x, y, z) : this.stack[this.st].splice(~x, y)
   }
 
-  shift(){ return _.cloneDeep(this.strtag(this.stack[this.st].pop())) }
+  shift(){ return this.clone(this.strtag(this.stack[this.st].pop())) }
 
   unshift(...x){ return this.stack[this.st].push(...x.map(a=> typeof a == 'boolean' ? +a : this.strtag(a))) }
 
@@ -330,7 +336,9 @@ class INTRP {
 
   isstr(x){ return _.isString(x) }
 
-  isitr(x){ return x && !this.isarl(x) && itr.isIterable(x) }
+  isitr(x){ return x && !this.isarl(x) && !this.ismap(x) && itr.isIterable(x) }
+
+  ismap(x){ return x instanceof Map }
 
   isobj(x){ return _.isObjectLike(x) }
 

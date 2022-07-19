@@ -95,6 +95,11 @@ ITER["`melt"] = $=> $.unshift(itr.flat($.shift(), itrd($)))
 // split iterator into consecutive slices given by index 0
 ITER["`xp"] = $=> $.unshift(itr.window($.shift(), itrd($)))
 
+ITER["`bi"] = $=>{
+  let [A, B] = itr.bisect($.shift(), itrd($))
+  $.unshift([A, B])
+}
+
 // split iterator into chunks of length given by index 0
 ITER["`chunk"] = $=> $.unshift(itr.batch($.shift(), itrd($)))
 
@@ -186,12 +191,7 @@ ITER["`tap"] = $=>{
 
 // `es` index 0 over each element and partition based on truthiness
 ITER["`part"] = $=>{
-  let X = $.shift()
-  let Y = itrd($)
-  $.unshift(X)
-  let A = $.each(Y, (x, f)=> itr.filter(f, x))
-  $.unshift(X)
-  let B = $.each(Y, (x, f)=> itr.filter(a=> !f(a), x))
+  let [A, B] = $.each(itrd($), (x, f)=> itr.filter(f, x))
   $.unshift([A, B])
 }
 

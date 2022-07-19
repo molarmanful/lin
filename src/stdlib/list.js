@@ -10,7 +10,7 @@ LIST["len"] = $=>{
 
 // depth of index 0
 LIST["dep"] = $=>{
-  let D = x=> $.isobj(x) ? 1 + Math.max(0, ...x instanceof Map ? _.map(x, D).values() : _.map(x, D)) : 0
+  let D = x=> $.isobj(x) ? 1 + Math.max(0, ...$.ismap(x) ? _.map(x, D).values() : _.map(x, D)) : 0
   $.unshift(D($.shift()))
 }
 

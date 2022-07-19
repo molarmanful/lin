@@ -21,12 +21,8 @@ STACK["denum"] = $=>{
 // `dup` but with any index
 STACK["pick"] = $=> $.unshift($.get($.shift()))
 
-// `drop` but with any index
-STACK["nix"] = $=>{
-  let X = $.shift()
-  if(_.isObjectLike(X)) _.map(X, a=> $.splice(a))
-  else $.splice(X)
-}
+// `pop` but with any index
+STACK["nix"] = $=> $.splice($.shift())
 
 // `rot` but with any index
 STACK["roll"] = $=> $.unshift($.splice($.shift())[0])
