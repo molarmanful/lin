@@ -1,4 +1,4 @@
-import {unesc, _, itr, voca, SL} from '../bridge.js'
+import {RE2, unesc, _, itr, voca, SL} from '../bridge.js'
 
 let STR = {}
 
@@ -12,7 +12,7 @@ STR["form"] = $=> $.unshift($.form([$.shift()]))
 STR["lns"] = $=>{
   let X, Z
   let Y = $.lns.at(-1)[1]
-  let S = new RegExp(`^${$.shift()}`)
+  let S = new RE2(`^${$.str($.shift())}`)
   $.unshift([...
     itr.pipe(
       itr.drop(Y + 1),
@@ -135,15 +135,31 @@ STR["lat"] = $=> $.unshift(voca.latinise($.shift()))
 
 // transliterate chars in index 2 from index 1 to index 0
 STR["tr"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  $.unshift(voca.tr($.shift(), Y + '', X + ''))
+  let X = $.str($.shift()) + ''
+  let Y = $.str($.shift()) + ''
+  $.unshift(voca.tr($.shift(), Y, X))
 }
 
 // `tr` but with chars at index 1 and object at index 0
 STR["tro"] = $=>{
   SL.swap($)
   $.unshift(voca.tr($.shift(), Object.fromEntries($.shift())))
+}
+
+// new regex with no flags
+STR["?"] = $=> $.exec('""?f', 1)
+
+// new regex with flags at index 0
+STR["?f"] = $=>{
+  SL.swap($)
+  $.unshift($.rex($.shift(), $.shift()))
+}
+
+// iterator of matches when regex at index 0 is applied to string at index 1
+STR["?m"] = $=>{
+  let X = $.rex($.shift(), 'g')
+  let Y = $.shift()
+  $.unshift(Y.matchAll(X))
 }
 
 export default STR

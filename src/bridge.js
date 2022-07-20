@@ -30,9 +30,11 @@ export {default as chalk} from 'chalk'
 export {runOnThread as mth} from 'funthreads'
 export * as path from 'path'
 export {default as voca} from 'voca'
+export {default as RE2} from 're2'
 
 export {_}
 export {default as parse} from './parser.js'
 export {default as unesc} from './unesc.js'
 export {default as INTRP} from './int.js'
 export {default as SL} from './stdlib.js'
+export {default as DOT} from './stdlib/dot.js'

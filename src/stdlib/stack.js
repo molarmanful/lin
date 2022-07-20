@@ -154,9 +154,6 @@ STACK["wins"] = $=>{
 // `es` on each individual item in the stack
 STACK["map"] = $=> $.stack[$.st] = $.each($.stack[$.st])
 
-// `map` with list items treated as stacks
-STACK["maps"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.map, 1)
-
 // `es` with accumulator and item; result of each `es` becomes the new accumulator
 STACK["fold"] = $=> $.stack[$.st] = [$.acc($.stack[$.st])]
 
@@ -178,28 +175,28 @@ STACK["scana"] = $=>{
 }
 
 // remove each item that is falsy after `es`
-STACK["filter"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.filter)
+STACK["filter"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.filter, $.tru)
 
 // push 1 if any items return truthy after `es`, else push 0
-STACK["any"] = $=> $.unshift(+$.each($.stack[$.st], _.some))
+STACK["any"] = $=> $.unshift(+$.each($.stack[$.st], _.some, $.tru))
 
 // push 1 if all items return truthy after `es`, else push 0
-STACK["all"] = $=> $.unshift(+$.each($.stack[$.st], _.every))
+STACK["all"] = $=> $.unshift(+$.each($.stack[$.st], _.every, $.tru))
 
 // find first item that returns truthy after `es` or undefined on failure
-STACK["find"] = $=> $.unshift($.each($.stack[$.st], _.findLast))
+STACK["find"] = $=> $.unshift($.each($.stack[$.st], _.findLast, $.tru))
 
 // `find` but returns index
 STACK["findi"] = $=>{
-  let X = $.each($.stack[$.st], _.findLastIndex)
+  let X = $.each($.stack[$.st], _.findLastIndex, $.tru)
   $.unshift(~X || undefined)
 }
 
 // `take` items until `es` returns falsy for an item
-STACK["takew"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.takeRightWhile)
+STACK["takew"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.takeRightWhile, 0, $.tru)
 
 // `drop` items until `es` returns falsy for an item
-STACK["dropw"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.dropRightWhile)
+STACK["dropw"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.dropRightWhile, 0, $.tru)
 
 // sort items based on `es`
 STACK["sort"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.sortBy)
@@ -208,7 +205,7 @@ STACK["sort"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.sortBy)
 STACK["sortc"] = $=> $.stack[$.st] = $.cmp($.stack[$.st])
 
 // separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
-STACK["part"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.partition)
+STACK["part"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.partition, 0, $.tru)
 
 // categorize items into keys after `es`ing index 0
 STACK["group"] = $=> $.stack[$.st] = [$.each($.stack[$.st], _.groupBy)]
@@ -218,7 +215,7 @@ STACK["table"] = $=>{
   let X = $.shift()
   let O = [...$C.CartesianProduct.from($.stack[$.st])]
   $.unshift(X)
-  $.stack[$.st] = $.each(O, _.map, true)
+  $.stack[$.st] = $.each(O, _.map, x=> x, 1)
 }
 
 // get insert index of index 0 from binary searching over `es` of index 1 on each element in stack

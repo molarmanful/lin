@@ -7,6 +7,7 @@
 - [BASE](#BASE)
 - [CONSTANT](#CONSTANT)
 - [COUNT](#COUNT)
+- [DOT](#DOT)
 - [FLOW](#FLOW)
 - [IO](#IO)
 - [ITER](#ITER)
@@ -27,6 +28,7 @@ Command | Description
 <code>}$</code> | destroy current scope
 <code>gi</code> | push string at ID given by index 0
 <code>gl</code> | `gi` but follow scoping rules
+<code>.</code> | magic dot
 <code>gs</code> | push stack joined by newlines
 <code>g@</code> | push line at popped number (0-indexed)
 <code>g;</code> | push next line
@@ -66,11 +68,39 @@ Command | Description
 --- | ---
 <code>facc</code> | factoradic representation of index 0
 <code>combc</code> | _m_th combinadic digit of _n_ C _k_, where _n_ _k_ _m_ are top 3 items
-<code>\`perm</code> | permutations of index 1 of length given by index 0
+<code>\`perm</code> | permutations of index 0
+<code>\`pern</code> | permutations of index 1 of length given by index 0
 <code>\`comb</code> | combinations of index 1 of length given by index 0
 <code>\`pset</code> | powerset of index 0
 <code>\`/\\</code> | generate base-N sequence from digits at index 1 with length at index 0
 <code>\`'*</code> | cartesian product over list of sequences
+
+## DOT
+
+Command | Description
+--- | ---
+<code>.</code> | `lns`
+<code>+</code> | `dup`
+<code>-</code> | `pop`
+<code>~</code> | `swap`
+<code>@</code> | `rot`
+<code>@_</code> | `rot_`
+<code>'</code> | `map`
+<code>/</code> | `fold`
+<code>/+</code> | `folda`
+<code>\\</code> | `scan`
+<code>\\+</code> | `scana`
+<code>#</code> | `filter`
+<code>\|</code> | `any`
+<code>&</code> | `all`
+<code>:</code> | `find`
+<code>:#</code> | `findi`
+<code>,</code> | `zip`
+<code>$</code> | `wrap`
+<code>$$</code> | `enclose`
+<code>$_</code> | `wrap_`
+<code>;</code> | `2e@`
+<code>;;</code> | `2_ e@`
 
 ## FLOW
 
@@ -317,7 +347,6 @@ Command | Description
 <code>zip</code> | group multiple arrays' items together by indices
 <code>wins</code> | split stack into consecutive slices given by index 0
 <code>map</code> | `es` on each individual item in the stack
-<code>maps</code> | `map` with list items treated as stacks
 <code>fold</code> | `es` with accumulator and item; result of each `es` becomes the new accumulator
 <code>folda</code> | `fold` with initial accumulator
 <code>scan</code> | `fold` with intermediate values
@@ -373,3 +402,6 @@ Command | Description
 <code>lat</code> | latinize
 <code>tr</code> | transliterate chars in index 2 from index 1 to index 0
 <code>tro</code> | `tr` but with chars at index 1 and object at index 0
+<code>?</code> | new regex with no flags
+<code>?f</code> | new regex with flags at index 0
+<code>?m</code> | iterator of matches when regex at index 0 is applied to string at index 1

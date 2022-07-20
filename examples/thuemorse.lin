@@ -1,4 +1,4 @@
-0 ((( N dup ! ++ ) map ) ' <cs dup outln ) \n: out in e*
+0 (.(( N.+ ! ++ ).' ) <cs.+ outln ) "n:"out in e*
 
 
 
@@ -7,6 +7,6 @@
 Outputs the Thue-Morse sequence.
 
 - `0` is the initial condition.
-- `(...) \n: out in e*` executes the given lambda (input) times and outputs the result.
-- `( rev (...) map ) ' <cs dup outln` executes the lambda on each digit in the number at the top of the stack, joins the result, and outputs it.
-- `0+ dup ! ++` turns 0 into 01 and 1 into 10.
+- `(...) "n:"out in e*` executes the given lambda (input) times and outputs the result.
+- `.((...).' ) <cs.+ outln` executes the lambda on each digit in the number at the top of the stack, joins the result, and outputs it.
+- `N.+ ! ++` turns 0 into 01 and 1 into 10.

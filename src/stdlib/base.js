@@ -6,7 +6,7 @@ BASE["("] = $=> $.lambda = 1
 
 BASE["$("] = $=>{
   $.lambda = 1
-  $.scoped = 1
+  SL['(']($)
 }
 
 BASE[")"] = $=>{
@@ -18,6 +18,10 @@ BASE[")"] = $=>{
   $.unshift(X)
   $.lambda = 0
   $.paren = []
+  if($.apos){
+    $.apos = 0
+    SL["'"]($)
+  }
 }
 
 BASE["["] = $=>{
@@ -61,7 +65,7 @@ BASE["}$"] = $=>{
 BASE["gi"] = $=>{
   let X = $.shift()
   if(!(X in $.ids)) $.id(X)
-  $.unshift($.ids[X])
+  $.unshift($.getid(X))
 }
 
 // `gi` but follow scoping rules
@@ -71,6 +75,7 @@ BASE["gl"] = $=>{
   $.unshift($.getscope(X))
 }
 
+// magic dot
 BASE["."] = $=> $.gl++
 
 // push stack joined by newlines

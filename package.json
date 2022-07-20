@@ -28,6 +28,7 @@
     "iter-tools-es": "^7.4.0",
     "js-combinatorics": "^2.1.0",
     "lodash-es": "^4.17.21",
+    "re2": "^1.17.7",
     "readline-sync": "^1.4.10",
     "voca": "^1.4.0"
   },

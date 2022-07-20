@@ -1,4 +1,4 @@
-import {unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
+import {DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -26,6 +26,7 @@ class INTRP {
     this.step = opts.step
     this.scope = []
     this.scoped = 0
+    this.apos = 0
     this.objs = []
     this.file = file && this.mresolve(file)
     this.PKG = PKG
@@ -111,27 +112,40 @@ class INTRP {
         }
 
         else {
+
+          // brackets/parens only
+          if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `,1)
+
           // magic dot
-          if(this.gl){
+          else if(this.gl){
             this.gl = 0
-            this.unshift(a)
-            if(a == '.') this.shift(), SL.lns(this)
+            if(a in DOT){
+              DOT[a](this)
+            }
+
+            else if(a[0] == '?'){
+              this.unshift(a.slice(1))
+              SL['?f'](this)
+            }
+
             else if(a[1] && a[0] == '#'){
-              this.unshift(this.shift().slice(1))
+              this.unshift(a.slice(1))
               SL[this.objs.length ? ':' : 'sl'](this)
             }
+
             else if(a[1] && a[0] == '\\'){
-              this.unshift(this.shift().slice(1))
+              this.unshift(a.slice(1))
               SL.sL(this)
             }
-            else SL.gl(this)
+
+            else {
+              this.unshift(a)
+              SL.gl(this)
+            }
           }
 
           // ignore hashes
           else if(a[1] && a[0] == '#'){}
-
-          // brackets/parens only
-          else if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `,1)
 
           // refs
           else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
@@ -182,16 +196,21 @@ class INTRP {
   print(x){ console.log(x); return x }
 
   id(x){
-    let y = RegExp(`^ *#${x}`)
+    let y = new RE2(`^ *#${x}`)
     let line = this.lines.findIndex(a=> a.match(y))
     if(~line){
       this.ids[x] = this.strtag(this.lines[line].replace(y, ''), [0, line])
     }
   }
 
+  getid(x){
+    let y = this.ids[x]
+    return this.isfun(y) ? x : y
+  }
+
   getscope(x){
     let y = _.findLast(this.scope, a=> x in a)
-    return y ? y[x] : this.ids[x]
+    return y ? y[x] : this.getid(x)
   }
 
   mod(x, y){ return (x % y + y) % y }
@@ -219,6 +238,13 @@ class INTRP {
       : this.strtag(x + '')
   }
 
+  rex(s, f=''){
+    if(!this.isrex(s)) s = this.str(s) + ''
+    f = this.str(f) + ''
+    try { return new RE2(s, f) }
+    catch(e){ return new RegExp(s, f) }
+  }
+
   form(x, y='\n'){
     let M = a=>{
       if(a?.orig){
@@ -233,6 +259,7 @@ class INTRP {
       : typeof a == 'bigint' ? a + 'N'
       : this.isnum(a) ?
         a < 0 ? -a + '_' : a + ''
+      : this.isrex(a) ? JSON.stringify(a.source) + '?' + a.flags
       : this.isstr(a) ? JSON.stringify(a + '') + M(a)
       : this.isarr(a) ?
         a.length ?
@@ -273,7 +300,7 @@ class INTRP {
 
   unshift(...x){ return this.stack[this.st].push(...x.map(a=> typeof a == 'boolean' ? +a : this.strtag(a))) }
 
-  each(O, f=_.map, s=false, g=x=> x){
+  each(O, f=_.map, g=x=> x, s){
     let X = this.shift()
     return f(O, (a, i)=>{
       this.iter.push(this.st)
@@ -330,22 +357,6 @@ class INTRP {
     }
   }
 
-  isarr(x){ return _.isArray(x) }
-
-  isarl(x){ return _.isArrayLike(x) }
-
-  isstr(x){ return _.isString(x) }
-
-  isitr(x){ return x && !this.isarl(x) && !this.ismap(x) && itr.isIterable(x) }
-
-  ismap(x){ return x instanceof Map }
-
-  isobj(x){ return _.isObjectLike(x) }
-
-  isnum(x){ return typeof x == 'bigint' || (_.isNumber(x) && !isNaN(x)) }
-
-  isfun(x){ return _.isFunction(x) }
-
   listitr(x){
     return !this.isarl(x) && this.isnum(x?.length) ? itr.wrap(x)
       : this.isitr(x) ? x
@@ -396,6 +407,26 @@ class INTRP {
   addf(...x){ this.code[0] = x.reduceRight((a,b)=> [b, ...a], this.code[0]) }
 
   getf(){ return this.code[0].shift() }
+
+  // type checkers
+
+  isarr(x){ return _.isArray(x) }
+
+  isarl(x){ return _.isArrayLike(x) }
+
+  isstr(x){ return _.isString(x) }
+
+  isrex(x){ return _.isRegExp(x) || x instanceof RE2 }
+
+  isitr(x){ return x && !this.isarl(x) && !this.ismap(x) && itr.isIterable(x) }
+
+  ismap(x){ return x instanceof Map }
+
+  isobj(x){ return _.isObjectLike(x) }
+
+  isnum(x){ return typeof x == 'bigint' || (_.isNumber(x) && !isNaN(x)) }
+
+  isfun(x){ return _.isFunction(x) }
 }
 
 export default INTRP

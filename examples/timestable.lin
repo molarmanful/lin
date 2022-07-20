@@ -1,4 +1,4 @@
-[ 1 13 range ] dup \* table ( \ 3padl ) map 12cols ( <ws outln ) map
+[ 1 13 range ].+ \* table ( \ 3padl ).' 12cols ( <ws outln ).'
 
 
 
@@ -6,6 +6,6 @@
 
 Outputs the multiplication table from 1 to 12.
 
-- `[ 1 13 range ] dup \* table` creates the table using a Cartesian product.
-- `( \ 3padl ) map` formats each number to length 3 using spaces.
-- `12cols ( <ws outln ) map` reshapes the table and prints each row.
+- `[ 1 13 range ].+ \* table` creates the table using a Cartesian product.
+- `( \ 3padl ).'` formats each number to length 3 using spaces.
+- `12cols ( <ws outln ).'` reshapes the table and prints each row.

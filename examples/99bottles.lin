@@ -1,10 +1,10 @@
 \P :: ;
 "of beer".\x "on the wall".\y ;
-99orang \; map
+99orang \;.'
 .\n .n P .\b ;
-[ .n .b .x ] dup ( .y ) ' ( <ws outln ) 2e* ;
+[ .n .b .x ].+.( .y ) ( <ws outln ) 2e* ;
 "Take one down, pass it around"outln ;
-[ .n 1- dup ( pop "No more" ) e| P .x .y n\ ] <ws outln
+[ .n 1-.+ (.-"No more") e| P .x .y n\ ] <ws outln
 
 #P \bottle over 1= ( \s ++ ) e|
 
@@ -20,7 +20,7 @@ Outputs lyrics for the song "99 Bottles of Beer on the Wall."
 On line 3:
 
 - `.\n .n P .\b` stores "bottle" or "bottles" depending on whether *n* is 1.
-- `[ .n .b .x ] dup ( .y ) ' ( <ws outln ) 2e* ;` first 2 lines of chorus.
-- `( Take one down, pass it around ) outln ;` third line of chorus.
-- `.n 1- dup ( pop ( No more ) ) e|` decrements *n* and replaces it with "No more" if 0.
+- `[ .n .b .x ].+.( .y ) ( <ws outln ) 2e* ;` first 2 lines of chorus.
+- `"Take one down, pass it around" outln ;` third line of chorus.
+- `.n 1-.+ (.-"No more") e|` decrements *n* and replaces it with "No more" if 0.
 - `[ ... P .x .y n\ ] <ws outln` last line of chorus.

@@ -9,6 +9,8 @@ ITER["`"] = $=> $.unshift(itrd($))
 
 ITER["]`"] = $=> $.exec('] `', 1)
 
+ITER["}`"] = $=> $.exec('} `', 1)
+
 ITER["[]`"] = $=> $.exec('[] `', 1)
 
 // convert to iterator recursively
@@ -168,19 +170,19 @@ ITER["`\\a"] = $=>{
 // filter truthy results after `es`ing index 0 over each element
 ITER["`#"] = $=>{
   SL.swap($)
-  $.unshift($.each(itrd($), (x, f)=> itr.filter(f, x)))
+  $.unshift($.each(itrd($), (x, f)=> itr.filter(f, x), $.tru))
 }
 
 // `take` while `es`ing index 0 over each element is truthy
 ITER["`t'"] = $=>{
   SL.swap($)
-  $.unshift($.each(itrd($), (x, f)=> itr.takeWhile(f, x)))
+  $.unshift($.each(itrd($), (x, f)=> itr.takeWhile(f, x), $.tru))
 }
 
 // `drop` while `es`ing index 0 over each element is truthy
 ITER["`d'"] = $=>{
   SL.swap($)
-  $.unshift($.each(itrd($), (x, f)=> itr.dropWhile(f, x)))
+  $.unshift($.each(itrd($), (x, f)=> itr.dropWhile(f, x), $.tru))
 }
 
 // `es` index 0 over each element and return original element
@@ -191,26 +193,26 @@ ITER["`tap"] = $=>{
 
 // `es` index 0 over each element and partition based on truthiness
 ITER["`part"] = $=>{
-  let [A, B] = $.each(itrd($), (x, f)=> itr.filter(f, x))
+  let [A, B] = $.each(itrd($), (x, f)=> itr.filter(f, x), $.tru)
   $.unshift([A, B])
 }
 
 // check if all elements are truthy after `es`ing index 0 over each element
 ITER["`&"] = $=>{
   SL.swap($)
-  $.unshift(+$.each(itrd($), (x, f)=> itr.every(f, x)))
+  $.unshift(+$.each(itrd($), (x, f)=> itr.every(f, x), $.tru))
 }
 
 // check if any elements are truthy after `es`ing index 0 over each element
 ITER["`|"] = $=>{
   SL.swap($)
-  $.unshift(+$.each(itrd($), (x, f)=> itr.some(f, x)))
+  $.unshift(+$.each(itrd($), (x, f)=> itr.some(f, x), $.tru))
 }
 
 // find first element that returns truthy after `es`ing index 0
 ITER["`?'"] = $=>{
   SL.swap($)
-  $.unshift($.each(itrd($), (x, f)=> itr.find(f, x)))
+  $.unshift($.each(itrd($), (x, f)=> itr.find(f, x), $.tru))
 }
 
 export default ITER

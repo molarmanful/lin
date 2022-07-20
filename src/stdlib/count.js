@@ -1,4 +1,4 @@
-import {$C, itr, _, SL} from '../bridge.js'
+import {$C, _, SL} from '../bridge.js'
 
 let COUNT = {}
 
@@ -13,8 +13,13 @@ COUNT["combc"] = $=>{
   $.unshift($C.combinadic(Z, Y)(X))
 }
 
-// permutations of index 1 of length given by index 0
+// permutations of index 0
 COUNT["`perm"] = $=>{
+  $.unshift(new $C.Permutation($.shift()))
+}
+
+// permutations of index 1 of length given by index 0
+COUNT["`pern"] = $=>{
   SL.swap($)
   $.unshift(new $C.Permutation($.shift(), $.shift()))
 }

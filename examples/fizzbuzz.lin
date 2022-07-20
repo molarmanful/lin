@@ -1,5 +1,6 @@
 1 101 range \; map
-dup .\n [ .n 3% \\Fizz e| .n 5% \\Buzz e| ] <cs dup \pop e| outln
+dup .\n ; <cs dup \pop e| outln
+[ .n 3% \\Fizz e| .n 5% \\Buzz e| ]
 
 
 
@@ -14,6 +15,6 @@ On line 1:
 
 - `dup .\n` saves the element as *n*.
 - `.n 3% \\Fizz e| .n 5% \\Buzz e|` pushes "Fizz" on multiples of 3 and "Buzz" on multiples of 5.
-- `[ ... ] () join` joins the top of the stack to get either "Fizz," "Buzz," "FizzBuzz," or an empty string.
+- `[...] <cs` joins the top of the stack to get either "Fizz," "Buzz," "FizzBuzz," or an empty string.
 - `dup \pop e|` pops the top item if it is an empty string.
 - `outln` outputs the top item.
