@@ -60,6 +60,7 @@ Command | Description
 <code>$T</code> | milliseconds since January 1, 1970 00:00:00.000
 <code>$\`</code> | infinite list of whole numbers
 <code>$\`P</code> | infinite list of primes
+<code>$\`R</code> | infinite list of uniformly random numbers between 0 and 1
 <code>$A</code> | uppercase alphabet
 <code>$a</code> | lowercase alphabet
 
@@ -265,7 +266,7 @@ Command | Description
 <code>^</code> | exponentiation
 <code>abs</code> | absolute value
 <code>sign</code> | sign function
-<code>rng</code> | push random number between 0 and 1
+<code>rng</code> | push uniformly random number between 0 and 1
 <code>ln</code> | natural logarithm
 <code>logII</code> | base-2 logarithm
 <code>logX</code> | base-10 logarithm

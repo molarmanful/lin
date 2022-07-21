@@ -1,4 +1,4 @@
-import {$C, _, SL} from '../bridge.js'
+import {RAND, $C, _, SL} from '../bridge.js'
 
 let NUM = {}
 
@@ -68,8 +68,8 @@ NUM["abs"] = $=> $.unshift(Math.abs($.shift()))
 // sign function
 NUM["sign"] = $=> $.unshift(Math.sign($.shift()))
 
-// push random number between 0 and 1
-NUM["rng"] = $=> $.unshift(Math.random())
+// push uniformly random number between 0 and 1
+NUM["rng"] = $=> $.unshift(RAND.base.randu())
 
 // natural logarithm
 NUM["ln"] = $=> $.unshift(Math.ln($.shift()))

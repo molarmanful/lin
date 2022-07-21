@@ -1,4 +1,4 @@
-import {itr, iter, _, SL} from '../bridge.js'
+import {itr, ITR, _, SL} from '../bridge.js'
 
 let ITER = {}
 
@@ -118,10 +118,10 @@ ITER["`sp*"] = $=> $.unshift(itr.splitOnAnySeq($.listitrs($.shift(), 2), itrd($)
 ITER["`^"] = $=> $.unshift(itr.first(itrd($)))
 
 // last element
-ITER["`$"] = $=> $.unshift(iter.iterLast(itrd($)))
+ITER["`$"] = $=> $.unshift(ITR.iterLast(itrd($)))
 
 // _n_th element, where _n_ is index 0
-ITER["`:"] = $=> $.unshift(iter.iterNth(itrd($)))
+ITER["`:"] = $=> $.unshift(ITR.iterNth(itrd($)))
 
 // take first _n_ elements, where _n_ is index 0
 ITER["`t"] = $=> $.unshift(itr.take($.shift(), itrd($)))
