@@ -1,3 +1,4 @@
+import { get } from 'lodash-es'
 import {DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {
@@ -123,14 +124,29 @@ class INTRP {
               DOT[a](this)
             }
 
+            else if(a.slice(0, 2) == '?!'){
+              this.unshift(a.slice(2))
+              SL['?!'](this)
+            }
+
+            else if(a.slice(0, 2) == '??'){
+              this.unshift(a.slice(2))
+              SL['??'](this)
+            }
+
             else if(a[0] == '?'){
               this.unshift(a.slice(1))
-              SL['?f'](this)
+              SL['?'](this)
+            }
+
+            else if(a[1] && a[0] == ':'){
+              this.unshift(a.slice(1))
+              SL[':'](this)
             }
 
             else if(a[1] && a[0] == '#'){
               this.unshift(a.slice(1))
-              SL[this.objs.length ? ':' : 'sl'](this)
+              SL.sl(this)
             }
 
             else if(a[1] && a[0] == '\\'){
@@ -174,6 +190,11 @@ class INTRP {
   err(x){
     console.error(chalk.redBright(`ERR: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
     process.exit(1)
+  }
+
+  warn(x){
+    if(this.verbose)
+      console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
   }
 
   strtag(x, l = [0, 0]){
@@ -231,18 +252,50 @@ class INTRP {
 
   str(x){
     if(this.isstr(x) && x?.orig) return x
-    return this.isstr(x) ? this.strtag(x + '')
-      : this.isarr(x) ? x.join` `
+    return this.strtag(
+      this.isstr(x) ? x + ''
+      : this.isarr(x) ? x.map(a=> this.str(a)).join` `
       : this.isitr(x) ? '[...]`'
-      : this.isobj(x) ? _.map(x, (a, i)=> i + this.str(a)).join` `
-      : this.strtag(x + '')
+      : this.ismap(x) ? Array.from(x, ([a, i])=> i + ' ' + this.str(a)).join`\n`
+      : x + ''
+    )
+  }
+
+  prex(s, f=''){
+    f = this.str(f) + ''
+    if(this.isrex(s)){
+      f = [...new Set(f + s.flags)].join``
+      s = s.source
+    }
+    else s = this.str(s) + ''
+    return [s, f]
   }
 
   rex(s, f=''){
-    if(!this.isrex(s)) s = this.str(s) + ''
-    f = this.str(f) + ''
-    try { return new RE2(s, f) }
-    catch(e){ return new RegExp(s, f) }
+    [s, f] = this.prex(s, f)
+    try { return RE2(s, f) }
+    catch(e){
+      this.warn(`engine switch "${s}" "${f}" (${e})`)
+      return this.urex(s, f)
+    }
+  }
+
+  srex(s, f=''){
+    [s, f] = this.prex(s, f)
+    try { return RE2(s, f) }
+    catch(e){ this.err(`bad safe regex "${s}" "${f}" (${e})`) }
+  }
+
+  urex(s, f=''){
+    [s, f] = this.prex(s, f)
+    try { return RegExp(s, f) }
+    catch(e){ this.err(`bad regex "${s}" "${f}" (${e})`) }
+  }
+
+  arex(s, f=''){
+    if(this.isstr(s)) return this.rex(s, f)
+    if(s instanceof RE2) return this.srex(s, f)
+    return this.urex(s, f)
   }
 
   form(x, y='\n'){
@@ -259,7 +312,7 @@ class INTRP {
       : typeof a == 'bigint' ? a + 'N'
       : this.isnum(a) ?
         a < 0 ? -a + '_' : a + ''
-      : this.isrex(a) ? JSON.stringify(a.source) + '?' + a.flags
+      : this.isrex(a) ? JSON.stringify(a.source) + '?' + (a instanceof RE2 ? '!' : '?') + a.flags
       : this.isstr(a) ? JSON.stringify(a + '') + M(a)
       : this.isarr(a) ?
         a.length ?
@@ -300,60 +353,54 @@ class INTRP {
 
   unshift(...x){ return this.stack[this.st].push(...x.map(a=> typeof a == 'boolean' ? +a : this.strtag(a))) }
 
+  quar(f){
+    this.iter.push(this.st)
+    this.st = this.iter.at(-1) + ' '
+    f()
+    let A = this.shift()
+    delete this.stack[this.iter.at(-1) + ' ']
+    this.st = this.iter.pop()
+    return A
+  }
+
   each(O, f=_.map, g=x=> x, s){
     let X = this.shift()
-    return f(O, (a, i)=>{
-      this.iter.push(this.st)
-      this.st = this.iter.at(-1) + ' '
-      this.stack[this.st] = s && itr.isIterable(a) ? [...a] : [a]
-      this.exec(X)
-      let A = this.shift()
-      delete this.stack[this.iter.at(-1) + ' ']
-      this.st = this.iter.pop()
-      return g(A)
-    })
+    return f(O, (a, i)=>
+      g(this.quar($=>{
+        this.stack[this.st] = s && itr.isIterable(a) ? [...a] : [a]
+        this.exec(X)
+      }))
+    )
   }
 
   acc(O, ac=false, f=_.reduce, g=x=> x){
     let X = this.shift()
     let Y = ac && this.shift()
-    let F = (a, b)=>{
-      this.iter.push(this.st)
-      this.st = this.iter.at(-1) + ' '
-      this.stack[this.st] = [b, a]
-      this.exec(X)
-      let A = this.shift()
-      delete this.stack[this.iter.at(-1) + ' ']
-      this.st = this.iter.pop()
-      return g(A, a)
-    }
+    let F = (a, b)=>
+      g(this.quar($=>{
+        this.stack[this.st] = [b, a]
+        this.exec(X)
+      }), a)
     return ac ? f(O, F, Y) : f(O, F)
   }
 
   cmp(O, f=(x, f)=> x.sort(f), g=x=> x){
     let X = this.shift()
-    return f(O, (a, b)=>{
-      this.iter.push(this.st)
-      this.st = this.iter.at(-1) + ' '
-      this.stack[this.st] = [b, a]
-      this.exec(X)
-      let A = this.shift()
-      delete this.stack[this.iter.at(-1) + ' ']
-      this.st = this.iter.pop()
-      return g(A)
-    })
+    return f(O, (a, b)=>
+      g(this.quar($=>{
+        this.stack[this.st] = [b, a]
+        this.exec(X)
+      })
+    ))
   }
 
   *gen(f, a){
     while(true){
       yield a
-      this.iter.push(this.st)
-      this.st = this.iter.at(-1) + ' '
-      this.stack[this.st] = [a]
-      this.exec(f)
-      a = this.shift()
-      delete this.stack[this.iter.at(-1) + ' ']
-      this.st = this.iter.pop()
+      a = this.quar($=>{
+        this.stack[this.st] = [a]
+        this.exec(f)
+      })
     }
   }
 

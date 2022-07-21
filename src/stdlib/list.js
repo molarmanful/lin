@@ -65,13 +65,22 @@ LIST["rep"] = $=>{
 }
 
 // set union of lists at index 0 and index 1
-LIST["union"] = $=> $.unshift(_.union($.shift(), $.shift()))
+LIST["union"] = $=>{
+  SL.swap($)
+  $.unshift(_.union($.shift(), $.shift()))
+}
 
 // set intersection of lists at index 0 and index 1
-LIST["inter"] = $=> $.unshift(_.intersection($.shift(), $.shift()))
+LIST["inter"] = $=>{
+  SL.swap($)
+  $.unshift(_.intersection($.shift(), $.shift()))
+}
 
 // set difference of lists at index 0 and index 1
-LIST["diff"] = $=> $.unshift(_.difference($.shift(), $.shift()))
+LIST["diff"] = $=>{
+  SL.swap($)
+  $.unshift(_.difference($.shift(), $.shift()))
+}
 
 // wrap index 0 in a list
 LIST["wrap"] = $=> $.unshift([$.shift()])

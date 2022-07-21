@@ -4,7 +4,7 @@
 ( 0absb ( ns len ).' max .\m ) 1's ( \ .m pad ).' ;
 10cols \<ws.'.$$ <ls outln
 
-#SIEVE .n .5^ 0| 1range ( .\a .s .a g: \; e| ) map
+#SIEVE .n .5^ 0| 1range (.\a .s .a g: \; e| ) map
 $` ( 2+ .a * ) `' ( .n <= ) `t' ( .s 1 rot : .\s ) `' `_
 
 
@@ -15,7 +15,7 @@ Outputs a Sieve of Eratosthenes.
 
 - `\n: out in 1+ .\n` stores input + 1 to *n*.
 - `{ 1 1: }.\s SIEVE clr` initializes the sieve, runs SIEVE, and clears the stack.
-- `1 .n range ( ... ) map` for each item *b* in the range from 1 to *n*...
+- `1 .n range (...) map` for each item *b* in the range from 1 to *n*...
   - `.s over g: \\_ e&` replaces sieved (i.e. non-prime) numbers with `_`.
 - `( 0absb ( ns len ).' max .\m ) 1's ( \ .m pad ).' ;` pads each element with spaces.
 - `10cols \<ws.'.$$ <ls outln` formats and outputs the stack.
@@ -23,8 +23,8 @@ Outputs a Sieve of Eratosthenes.
 In SIEVE:
 
 - `.n .5^ 0| 1 range` creates a range from `floor(sqrt(n))` to 1.
-- `( ... ) map` for each item *a* in the range...
-  - `.\a .s .a g: \; e|` executes line 6 if *a* is found in the sieve.
+- `(.\a...) map` for each item *a* in the range...
+  - `.s .a g: \; e|` executes line 6 if *a* isn't found in the sieve.
 
 On line 6:
 

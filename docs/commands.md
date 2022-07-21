@@ -402,6 +402,12 @@ Command | Description
 <code>lat</code> | latinize
 <code>tr</code> | transliterate chars in index 2 from index 1 to index 0
 <code>tro</code> | `tr` but with chars at index 1 and object at index 0
-<code>?</code> | new regex with no flags
-<code>?f</code> | new regex with flags at index 0
+<code>?</code> | new regex with flags at index 0
+<code>?!</code> | safe regex
+<code>??</code> | unsafe regex
 <code>?m</code> | iterator of matches when regex at index 0 is applied to string at index 1
+<code>?M</code> | `?m` but detailed
+<code>?i</code> | `?m` with indices only
+<code>?t</code> | `?m` with truthiness
+<code>?s</code> | replace matches of regex at index 1 on string at index 2 with string at index 0
+<code>?S</code> | `?s` with replacement function

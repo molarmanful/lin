@@ -146,20 +146,78 @@ STR["tro"] = $=>{
   $.unshift(voca.tr($.shift(), Object.fromEntries($.shift())))
 }
 
-// new regex with no flags
-STR["?"] = $=> $.exec('""?f', 1)
-
 // new regex with flags at index 0
-STR["?f"] = $=>{
+STR["?"] = $=>{
   SL.swap($)
   $.unshift($.rex($.shift(), $.shift()))
 }
 
+// safe regex
+STR["?!"] = $=>{
+  SL.swap($)
+  $.unshift($.srex($.shift(), $.shift()))
+}
+
+// unsafe regex
+STR["??"] = $=>{
+  SL.swap($)
+  $.unshift($.urex($.shift(), $.shift()))
+}
+
 // iterator of matches when regex at index 0 is applied to string at index 1
 STR["?m"] = $=>{
-  let X = $.rex($.shift(), 'g')
-  let Y = $.shift()
+  let X = $.arex($.shift(), 'g')
+  let Y = $.str($.shift()) + ''
   $.unshift(Y.matchAll(X))
+}
+
+// `?m` but detailed
+STR["?M"] = $=>{
+  let X = $.arex($.shift(), 'g')
+  let Y = $.str($.shift()) + ''
+  let m = a=> new Map(Object.entries(a).map(([b, c])=> [b, $.isobj(c) ? m(c) : c]))
+  $.unshift(itr.map(m, Y.matchAll(X)))
+}
+
+// `?m` with indices only
+STR["?i"] = $=>{
+  let X = $.arex($.shift(), 'g')
+  let Y = $.str($.shift()) + ''
+  $.unshift(itr.map(a=> a.index, Y.matchAll(X)))
+}
+
+// `?m` with truthiness
+STR["?t"] = $=>{
+  let X = $.arex($.shift(), 'g')
+  let Y = $.str($.shift()) + ''
+  $.unshift(+X.test(Y))
+}
+
+// replace matches of regex at index 1 on string at index 2 with string at index 0
+STR["?s"] = $=>{
+  let X = $.str($.shift()) + ''
+  let Y = $.arex($.shift())
+  let Z = $.str($.shift()) + ''
+  $.unshift(Z.replace(Y, X))
+}
+
+// `?s` with replacement function
+STR["?S"] = $=>{
+  let X = $.str($.shift()) + ''
+  let Y = $.arex($.shift())
+  let Z = $.str($.shift()) + ''
+  $.unshift(Z.replace(Y, (m, ...c)=>{
+    let groups
+    if($.isobj(c.at(-1))) groups = new Map(Object.entries(c.pop()))
+    let input = c.pop()
+    let index = c.pop()
+    return $.str($.quar(a=>{
+      $.scope.push({index, input, groups})
+      $.stack[$.st] = [c.reverse(), m]
+      $.exec(X)
+      $.scope.pop()
+    }))
+  }))
 }
 
 export default STR

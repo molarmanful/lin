@@ -127,6 +127,7 @@ BASE["type"] = $=>{
     $.isarr(X) ? 'arr'
     : $.ismap(X) ? 'obj'
     : $.isstr(X) ? 'str'
+    : $.isrex(X) ? 'rex'
     : $.isnum(X) ? 'num'
     : $.isitr(X) ? 'itr'
     : $.isobj(X) ? 'obl'
