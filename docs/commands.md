@@ -86,6 +86,7 @@ Command | Description
 <code>@</code> | `rot`
 <code>@_</code> | `rot_`
 <code>'</code> | `map`
+<code>',</code> | `mapf`
 <code>/</code> | `fold`
 <code>/+</code> | `folda`
 <code>\\</code> | `scan`
@@ -167,7 +168,8 @@ Command | Description
 <code>\`t</code> | take first _n_ elements, where _n_ is index 0
 <code>\`t></code> | `take` with sort predicate
 <code>\`d</code> | drop first _n_ elements, where _n_ is index 0
-<code>\`'</code> | `es` index 0 over each element
+<code>\`'</code> | map with `es` of index 0 over each element
+<code>\`',</code> | map and flatten
 <code>\`/</code> | fold with `es` of index 0 over each element
 <code>\`/a</code> | `\`/` with accumulator
 <code>\`\\</code> | `\`/` with intermediate values
@@ -347,6 +349,7 @@ Command | Description
 <code>zip</code> | group multiple arrays' items together by indices
 <code>wins</code> | split stack into consecutive slices given by index 0
 <code>map</code> | `es` on each individual item in the stack
+<code>mapf</code> | `map` and `flat`
 <code>fold</code> | `es` with accumulator and item; result of each `es` becomes the new accumulator
 <code>folda</code> | `fold` with initial accumulator
 <code>scan</code> | `fold` with intermediate values

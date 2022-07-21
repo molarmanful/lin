@@ -28,6 +28,9 @@ DOT["@_"] = SL.rot_
 // `map`
 DOT["'"] = SL.map
 
+// `mapf`
+DOT["',"] = SL.mapf
+
 // `fold`
 DOT["/"] = SL.fold
 

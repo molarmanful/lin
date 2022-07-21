@@ -154,6 +154,9 @@ STACK["wins"] = $=>{
 // `es` on each individual item in the stack
 STACK["map"] = $=> $.stack[$.st] = $.each($.stack[$.st])
 
+// `map` and `flat`
+STACK["mapf"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.flatMap)
+
 // `es` with accumulator and item; result of each `es` becomes the new accumulator
 STACK["fold"] = $=> $.stack[$.st] = [$.acc($.stack[$.st])]
 

@@ -133,10 +133,16 @@ ITER["`t>"] = $=>{
 // drop first _n_ elements, where _n_ is index 0
 ITER["`d"] = $=> $.unshift(itr.drop($.shift(), itrd($)))
 
-// `es` index 0 over each element
+// map with `es` of index 0 over each element
 ITER["`'"] = $=>{
   SL.swap($)
   $.unshift($.each(itrd($), (x, f)=> itr.map(f, x)))
+}
+
+// map and flatten
+ITER["`',"] = $=>{
+  SL.swap($)
+  $.unshift($.each(itrd($), (x, f)=> itr.flatMap(f, x)))
 }
 
 // fold with `es` of index 0 over each element
