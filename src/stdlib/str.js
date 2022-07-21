@@ -130,6 +130,15 @@ STR["padr"] = $=>{
   $.unshift(_.padEnd(Z, X, Y))
 }
 
+// trim whitespace from both ends of the string
+STR["trim"] = $=> $.unshift(voca.trim($.shift()))
+
+// `trim` but only from the left
+STR["triml"] = $=> $.unshift(voca.trimLeft($.shift()))
+
+// `trim` but only from the right
+STR["trimr"] = $=> $.unshift(voca.trimRight($.shift()))
+
 // latinize
 STR["lat"] = $=> $.unshift(voca.latinise($.shift()))
 

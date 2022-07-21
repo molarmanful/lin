@@ -1,4 +1,4 @@
-import {itr, _} from '../bridge.js'
+import {seq, itr, _} from '../bridge.js'
 
 let CONSTANT = {}
 
@@ -42,10 +42,13 @@ CONSTANT["$Pi"] = $=> $.unshift(Math.PI)
 CONSTANT["$I"] = $=> $.unshift(Infinity)
 
 // milliseconds since January 1, 1970 00:00:00.000
-CONSTANT["time"] = $=> $.unshift(Date.now())
+CONSTANT["$T"] = $=> $.unshift(Date.now())
 
 // infinite list of whole numbers
 CONSTANT["$`"] = $=> $.unshift(itr.range())
+
+// infinite list of primes
+CONSTANT["$`P"] = $=> $.unshift(seq.iterPrimesSeq())
 
 // uppercase alphabet
 CONSTANT["$A"] = $=> $.unshift('ABCDEFGHIJKLMNOPQRSTUVWXYZ')

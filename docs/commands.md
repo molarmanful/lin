@@ -57,8 +57,9 @@ Command | Description
 <code>$E</code> | Euler's constant
 <code>$Pi</code> | Pi
 <code>$I</code> | Infinity
-<code>time</code> | milliseconds since January 1, 1970 00:00:00.000
+<code>$T</code> | milliseconds since January 1, 1970 00:00:00.000
 <code>$\`</code> | infinite list of whole numbers
+<code>$\`P</code> | infinite list of primes
 <code>$A</code> | uppercase alphabet
 <code>$a</code> | lowercase alphabet
 
@@ -165,6 +166,7 @@ Command | Description
 <code>\`sp</code> | split iterator on sequence at index 0
 <code>\`sp*</code> | `\`sp` with multiple sequences
 <code>\`^</code> | first element
+<code>\`$</code> | last element
 <code>\`:</code> | _n_th element, where _n_ is index 0
 <code>\`t</code> | take first _n_ elements, where _n_ is index 0
 <code>\`t></code> | `take` with sort predicate
@@ -406,6 +408,9 @@ Command | Description
 <code>pad</code> | pad string given by index 2 until length given by index 0 with string given by index 1
 <code>padl</code> | `pad` but only from the left
 <code>padr</code> | `pad` but only from the right
+<code>trim</code> | trim whitespace from both ends of the string
+<code>triml</code> | `trim` but only from the left
+<code>trimr</code> | `trim` but only from the right
 <code>lat</code> | latinize
 <code>tr</code> | transliterate chars in index 2 from index 1 to index 0
 <code>tro</code> | `tr` but with chars at index 1 and object at index 0
