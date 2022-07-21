@@ -70,6 +70,9 @@ DOT["$$"] = SL.enclose
 // `wrap_`
 DOT["$_"] = SL.wrap_
 
+// `usurp`
+DOT["$$_"] = SL.usurp
+
 // `2e@`
 DOT[";"] = $=> $.exec('2e@', 1)
 

@@ -100,6 +100,7 @@ Command | Description
 <code>$</code> | `wrap`
 <code>$$</code> | `enclose`
 <code>$_</code> | `wrap_`
+<code>$$_</code> | `usurp`
 <code>;</code> | `2e@`
 <code>;;</code> | `2_ e@`
 
@@ -205,6 +206,9 @@ Command | Description
 <code>enclose</code> | enclose entire stack into a list
 <code>dups</code> | push entire stack as list
 <code>usurp</code> | set current stack to the list at index 0
+<code>eye</code> | identity matrix with side length at index 0
+<code>!s</code> | convert list to truth mask
+<code>repl</code> | use list at index 0 as replication mask for list at index 1
 
 ## LOGIC
 

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/molarmanful/lin#readme",
   "dependencies": {
+    "@stdlib/stdlib": "^0.0.96",
     "chalk": "^5.0.1",
     "command-line-args": "^5.2.1",
     "command-line-usage": "^6.1.3",

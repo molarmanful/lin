@@ -1,4 +1,4 @@
-import {_} from '../bridge.js'
+import {_, SL} from '../bridge.js'
 
 let LIST = {}
 
@@ -102,5 +102,29 @@ LIST["dups"] = $=> $.unshift($.stack[$.st].slice())
 
 // set current stack to the list at index 0
 LIST["usurp"] = $=> $.stack[$.st] = [...$.shift()]
+
+// identity matrix with side length at index 0
+LIST["eye"] = $=>{
+  let X = $.shift()
+  $.unshift(_.range(X).map((a, i)=> _.range(X).map((b, j)=> +(i == j))))
+}
+
+// convert list to truth mask
+LIST["!s"] = $=>{
+  let m = x=> x.map(a=> $.isarr(a) ?  m(a) : $.tru(a) ? 1 : 0)
+  $.unshift(m($.shift()))
+}
+
+// use list at index 0 as replication mask for list at index 1
+LIST["repl"] = $=>{
+  let m = (x, y)=>
+    y.flatMap((a, i)=>
+      $.isarr(a) ?  $.isarr(x[i]) ? [m(x[i], a)] : [x[i]]
+      : $.tru(a) && i in x ?  _.range($.isnum(a) ? a : 1).map(b=> x[i])
+      : []
+    )
+  SL.swap($)
+  $.unshift(m($.shift(), $.shift()))
+}
 
 export default LIST
