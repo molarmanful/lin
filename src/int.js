@@ -1,4 +1,3 @@
-import { get } from 'lodash-es'
 import {DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {

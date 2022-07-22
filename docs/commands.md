@@ -13,6 +13,7 @@
 - [ITER](#ITER)
 - [LIST](#LIST)
 - [LOGIC](#LOGIC)
+- [MATRIX](#MATRIX)
 - [MODULE](#MODULE)
 - [MULTISTACK](#MULTISTACK)
 - [NUM](#NUM)
@@ -209,7 +210,6 @@ Command | Description
 <code>enclose</code> | enclose entire stack into a list
 <code>dups</code> | push entire stack as list
 <code>usurp</code> | set current stack to the list at index 0
-<code>eye</code> | identity matrix with side length at index 0
 <code>!s</code> | convert list to truth mask
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
 
@@ -227,6 +227,13 @@ Command | Description
 <code>>=</code> | greater than or equal to
 <code><=</code> | less than or equal to
 <code><=></code> | comparison function (-1 for less than, 0 for equal, 1 for greater than)
+
+## MATRIX
+
+Command | Description
+--- | ---
+<code>shape</code> | reshape the stack using dimensions at index 0
+<code>eye</code> | identity matrix with side length at index 0
 
 ## MODULE
 
@@ -352,7 +359,6 @@ Command | Description
 <code>blob</code> | deshape the stack
 <code>rows</code> | split stack into _n_ lists, where _n_ is index 0
 <code>cols</code> | split stack into lists of length _n_, where _n_ is index 0
-<code>shape</code> | reshape the stack using dimensions at index 0
 <code>zip</code> | group multiple arrays' items together by indices
 <code>wins</code> | split stack into consecutive slices given by index 0
 <code>map</code> | `es` on each individual item in the stack

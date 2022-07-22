@@ -1,4 +1,4 @@
-import {RAND, MATH, itr, _} from '../bridge.js'
+import {RI, MIS, itr, _} from '../bridge.js'
 
 let CONSTANT = {}
 
@@ -48,10 +48,10 @@ CONSTANT["$T"] = $=> $.unshift(Date.now())
 CONSTANT["$`"] = $=> $.unshift(itr.range())
 
 // infinite list of primes
-CONSTANT["$`P"] = $=> $.unshift(MATH.iter.sequences.iterPrimesSeq())
+CONSTANT["$`P"] = $=> $.unshift(MIS.iterPrimesSeq())
 
 // infinite list of uniformly random numbers between 0 and 1
-CONSTANT["$`R"] = $=> $.unshift(RAND.iterators.randu())
+CONSTANT["$`R"] = $=> $.unshift(RI.randu())
 
 // uppercase alphabet
 CONSTANT["$A"] = $=> $.unshift('ABCDEFGHIJKLMNOPQRSTUVWXYZ')

@@ -44,7 +44,11 @@ OBJ["enom"] = $=>{
 
 // convert `enom`-style list into object
 OBJ["denom"] = $=>{
-  $.unshift(new Map($.shift().filter(a=> a?.length > 1)))
+  $.unshift(new Map(
+    $.itrlist($.shift()).map(a=>
+      $.isarr(a) ? a.length > 1 ? a : a.concat(a) : [a, a]
+    ).filter(a=> a.length > 1)
+  ))
 }
 
 // check if index 0 is in list/object at index 1

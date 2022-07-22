@@ -44,7 +44,10 @@ LIST["join"] = $=>{
 }
 
 // pair top 2 items
-LIST[","] = $=> $.unshift([$.shift(), $.shift()])
+LIST[","] = $=>{
+  SL.swap($)
+  $.unshift([$.shift(), $.shift()])
+}
 
 // concatenate top 2 items as strings or lists
 LIST["++"] = $=>{
@@ -102,12 +105,6 @@ LIST["dups"] = $=> $.unshift($.stack[$.st].slice())
 
 // set current stack to the list at index 0
 LIST["usurp"] = $=> $.stack[$.st] = [...$.shift()]
-
-// identity matrix with side length at index 0
-LIST["eye"] = $=>{
-  let X = $.shift()
-  $.unshift(_.range(X).map((a, i)=> _.range(X).map((b, j)=> +(i == j))))
-}
 
 // convert list to truth mask
 LIST["!s"] = $=>{
