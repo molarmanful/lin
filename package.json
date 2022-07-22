@@ -1,6 +1,6 @@
 {
   "name": "linlang",
-  "version": "0.1.0-24",
+  "version": "0.1.0-25",
   "description": "A line-based programming language",
   "main": "src/index.js",
   "type": "module",
