@@ -1,6 +1,6 @@
 .IN out in.+ ;
-.(( 1> ).| ) 1_ g: ( .ERR outln break ) e& ;
-.( enum (.$_.~ 2 .~ ^ * ).' \+./ ) outln
+.(( 1> ).| ) 1_ g: ( .ERR err ) e& ;
+.( enum zip.~ 2 .~ ^ * \+./ ) outln
 
 #INEnter a binary number: 
 #ERRNot a binary number!
@@ -11,7 +11,7 @@
 
 Converts binary to decimal.
 
-- `.N out in.+` prompts the user for a binary number.
+- `.IN out in.+` prompts the user for a binary number.
 - `.(( 1> ).| ) 1_ g: ( .ERR outln break ) e&` errors if the input is not a binary number.
-- `.( enum (...).' \+./ ) outln` applies the given lambda over each digit and its index, then sums the result and outputs it.
-- `.$_.~ 2 .~ ^ *` does `2 ^ (index) * (current digit)`.
+- `.( enum zip.~ ... \+./ ) outln` applies the given lambda over each digit and its index, then sums the result and outputs it.
+- `2 .~ ^ *` does `2 ^ (index) * (current digit)`.
