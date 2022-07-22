@@ -38,7 +38,7 @@ STR["tag"] = $=>{
 STR["tag_"] = $=> $.stack[$.st].set(-1, $.untag($.get(0)))
 
 // equivalent of `sprintf` - takes string and list
-STR["sf"] = $=> $.u2(voca.vprintf)
+STR["sf"] = $=> $.u2((a, b)=> $.v1(x=> voca.vprintf(x, b), a))
 
 // unescape string at index 0
 STR["esc_"] = $=> $.u1(a=> $.v1(unesc, a))
@@ -164,12 +164,6 @@ STR["?i"] = $=>
 STR["?t"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.arex(y, 'g').test($.str(x) + ''), a, b))
 
 // replace matches of regex at index 1 on string at index 2 with string at index 0
-STR["?s"] = $=>{
-  let X = $.str($.shift()) + ''
-  let Y = $.arex($.shift())
-  let Z = $.str($.shift()) + ''
-  $.unshift(Z.replace(Y, X))
-}
 STR["?s"] = $=>
   $.u3((a, b, c)=> $.v3((x, y, z)=>
     ($.str(x) + '').replace($.arex(y), $.str(z) + ''), a, b, c

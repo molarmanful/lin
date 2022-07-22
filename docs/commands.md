@@ -195,7 +195,6 @@ Command | Description
 <code>len</code> | length of index 0
 <code>dep</code> | depth of index 0
 <code>'</code> | `es` index 0 on list at index 1
-<code>,</code> | pair top 2 items
 <code>++</code> | concatenate top 2 items as strings or lists
 <code>r:</code> | get random item from list
 <code>rep</code> | repeat list/string by index 0
@@ -203,7 +202,8 @@ Command | Description
 <code>inter</code> | set intersection of lists at index 0 and index 1
 <code>diff</code> | set difference of lists at index 0 and index 1
 <code>wrap</code> | wrap index 0 in a list
-<code>wraps</code> | wrap first _n_ items in a list, where _n_ is index 0
+<code>,</code> | `wrap` top 2 items
+<code>wraps</code> | wrap first _n_ items
 <code>wrap_</code> | opposite of `wrap`; take all items in list at index 0 and push to parent stack
 <code>enclose</code> | enclose entire stack into a list
 <code>dups</code> | push entire stack as list

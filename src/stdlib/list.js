@@ -26,9 +26,6 @@ LIST["'"] = $=>{
   }))
 }
 
-// pair top 2 items
-LIST[","] = $=> $.u2((a, b)=> [a, b])
-
 // concatenate top 2 items as strings or lists
 LIST["++"] = $=> $.u2((a, b)=> $.isarr(a) ? _.concat(a, b) : a + $.str(b))
 
@@ -62,10 +59,13 @@ LIST["diff"] = $=>{
 }
 
 // wrap index 0 in a list
-LIST["wrap"] = $=> $.unshift([$.shift()])
+LIST["wrap"] = $=> $.u1(a=> [a])
 
-// wrap first _n_ items in a list, where _n_ is index 0
-LIST["wraps"] = $=> $.unshift($.splice(0, $.shift()))
+// `wrap` top 2 items
+LIST[","] = $=> $.u2((a, b)=> [a, b])
+
+// wrap first _n_ items
+LIST["wraps"] = $=> $.u1(a=> $.splice(0, a))
 
 // opposite of `wrap`; take all items in list at index 0 and push to parent stack
 LIST["wrap_"] = $=>{
@@ -87,10 +87,10 @@ LIST["repl"] = $=>{
   let m = (x, y)=>
     y.flatMap((a, i)=>
       $.isarr(a) ?  $.isarr(x[i]) ? [m(x[i], a)] : [x[i]]
-      : $.tru(a) && i in x ?  _.range($.isnum(a) ? a : 1).map(b=> x[i])
+      : $.tru(a) && i in x ? _.range($.isnum(a) ? a : 1).map(b=> x[i])
       : []
     )
-  $.u2((a, b)=> $.v2(m, a, b))
+  $.u2(m)
 }
 
 export default LIST
