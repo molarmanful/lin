@@ -15,9 +15,9 @@ IO["in"] = $=> $.unshift(rls.question(''))
 IO["inh"] = $=> $.unshift(rls.question('', {hideEchoBack: true, mask: ''}))
 
 // output index 0 to STDOUT
-IO["out"] = $=> $.v1(x=> process.stdout.write($.str(x) + ''), $.shift)
+IO["out"] = $=> $.v1(x=> process.stdout.write($.str(x) + ''), $.shift())
 
 // output index 0 as a line to STDOUT
-IO["outln"] = $=> $.v1(x=> process.stdout.write($.str(x) + '\n'), $.shift)
+IO["outln"] = $=> $.v1(x=> process.stdout.write($.str(x) + '\n'), $.shift())
 
 export default IO
