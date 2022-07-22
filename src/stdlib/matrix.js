@@ -1,9 +1,10 @@
 import {_, SL} from '../bridge.js'
+import {reshape} from 'mathjs'
 
 let MATRIX = {}
 
 MATRIX["mat"] = $=>{
-  let X = $.itrlist($.listitr($.shift()))
+  let X = $.itrlist($.shift())
 }
 
 // reshape the stack using dimensions at index 0

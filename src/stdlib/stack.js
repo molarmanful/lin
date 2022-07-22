@@ -1,5 +1,4 @@
 import {$C, itr, _, SL} from '../bridge.js'
-import {reshape} from 'mathjs'
 
 let STACK = {}
 
@@ -20,19 +19,19 @@ STACK["denum"] = $=>{
 }
 
 // `dup` but with any index
-STACK["pick"] = $=> $.unshift($.get($.shift()))
+STACK["pick"] = $=> $.u1(a=> $.v1(x=> $.get(x), a))
 
 // `pop` but with any index
 STACK["nix"] = $=> $.splice($.shift())
 
 // `rot` but with any index
-STACK["roll"] = $=> $.unshift($.splice($.shift())[0])
+STACK["roll"] = $=> $.u1(a=> $.splice(a)[0])
 
 // `rot_` but with any index
 STACK["roll_"] = $=> $.splice($.shift() - 1, 0, $.shift())
 
 // swap index 1 with index given by index 0
-STACK["trade"] = $=> $.unshift($.splice($.shift() - 1, 1, $.shift())[0])
+STACK["trade"] = $=> $.u1(a=> $.splice(a - 1, 1, $.shift())[0])
 
 // push index 0
 STACK["dup"] = $=> $.unshift($.get(0))
@@ -50,10 +49,7 @@ STACK["rot_"] = $=> $.exec('rot rot', 1)
 STACK["swap"] = $=> $.unshift($.splice(1)[0])
 
 // pop index 1
-STACK["nip"] = $=>{
-  SL.swap($)
-  $.shift()
-}
+STACK["nip"] = $=> $.exec('swap pop', 1)
 
 // push index 0 to index 2
 STACK["tuck"] = $=>{

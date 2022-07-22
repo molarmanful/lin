@@ -37,152 +37,163 @@ class INTRP {
   }
 
   exec(x, y){
-    if(this.isarr(x)) x = x.join` ` 
-    else if(!this.isstr(x)) x += ''
 
-    let orig = x.orig
-    x = x.split`\n`[0]
+    if(this.isarr(x) || this.ismap(x))
+      this.unshift(x.map(a=>
+        this.quar($=>{
+          this.stack[this.st] = this.stack[this.iter.at(-1)].slice()
+          this.exec(a)
+          SL.enclose(this)
+        })
+      ))
 
-    if(orig && orig[0] == this.file && this.pkf.at(-1) && orig[0] != this.pkf.at(-1)?.file){
-      this.addf($=> this.pkf.pop())
-      this.pkf.push(0)
-    }
-
-    if(orig) this.tline(orig[1], orig[0])
-
-    // reuse stack frame
-    if(y) this.addf(...this.parse(x))
-
-    // new stack frame
     else {
-      this.addc(this.parse(x))
+      if(!this.isstr(x)) x += ''
 
-      while(this.code[0]?.length){
-        let a = this.getf()
+      let orig = x.orig
+      x = x.split`\n`[0]
 
-        if(this.step) console.clear()
-
-        // verbose mode
-        if(this.verbose && !this.lambda){
-          [
-            chalk.gray.dim(`———>{C:${
-                this.code.map(a=> a.length).join` `
-              }}{L:${
-                this.lns.map(([a, b])=> this.mname(a) + ' ' + b).join`;`
-              }}{S:${
-                (this.st + '').replace(/\n/g, '\\n')
-              }}`),
-            chalk.greenBright(a),
-            chalk.gray.dim('———')
-          ].map(a=> console.log(a))
-        }
-
-        // for internal JS calls from commands
-        if(this.isfun(a)) a()
-
-        // lambda mode
-        else if(this.lambda){
-          if(a.match(/^[()\[\]{}]+$/))
-            this.lambda += (a.match(/\(/g) || []).length - (a.match(/\)/g) || []).length
-          if(this.lambda > 0) this.paren.push(a)
-          else SL[')'](this)
-        }
-
-        // pkg mode
-        else if(this.pkg.at(-1)){
-          let {name, file, ids} = this.pkg.at(-1)
-          if(!(a in ids)) this.err(`unknown pkg fn "${name} ${a}"`)
-          this.addf($=> this.pkf.pop())
-          this.pkf.push(this.pkg.pop())
-          this.fmatch(a, this.pkf.at(-1))
-        }
-
-        // literals
-        else if(a?.[0] == '"'){
-          if(this.gl){
-            this.gl = 0
-            a = unesc(a)
-          }
-          this.unshift(a.slice(1, a.slice(-1) == '"' ? -1 : undefined))
-        }
-
-        // numbers
-        else if(this.isnum(+a)){
-          this.unshift(+a > Number.MAX_SAFE_INTEGER ? BigInt(a.replace(/\.\d*$/, '')) : +a)
-        }
-
-        else {
-
-          // brackets/parens only
-          if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `,1)
-
-          // magic dot
-          else if(this.gl){
-            this.gl = 0
-            if(a in DOT){
-              DOT[a](this)
-            }
-
-            else if(a.slice(0, 2) == '?!'){
-              this.unshift(a.slice(2))
-              SL['?!'](this)
-            }
-
-            else if(a.slice(0, 2) == '??'){
-              this.unshift(a.slice(2))
-              SL['??'](this)
-            }
-
-            else if(a[0] == '?'){
-              this.unshift(a.slice(1))
-              SL['?'](this)
-            }
-
-            else if(a[1] && a[0] == ':'){
-              this.unshift(a.slice(1))
-              SL[':'](this)
-            }
-
-            else if(a[1] && a[0] == '#'){
-              this.unshift(a.slice(1))
-              SL.sl(this)
-            }
-
-            else if(a[1] && a[0] == '\\'){
-              this.unshift(a.slice(1))
-              SL.sL(this)
-            }
-
-            else {
-              this.unshift(a)
-              SL.gl(this)
-            }
-          }
-
-          // ignore hashes
-          else if(a[1] && a[0] == '#'){}
-
-          // refs
-          else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
-
-          // matched functions
-          else if(a in this.ids) this.fmatch(a, this)
-
-          else this.err(`unknown fn "${a}"`)
-        }
-
-        // verbose mode
-        if(this.verbose && !this.lambda){
-          [
-            this.form(this.stack[this.st]),
-            chalk.gray.dim('>———')
-          ].map(a => console.log(a))
-        }
-
-        if(this.step && !this.lambda) if(rls.question("[ENTER to continue, a + ENTER to auto-step]") == 'a') this.step = 0
+      if(orig && orig[0] == this.file && this.pkf.at(-1) && orig[0] != this.pkf.at(-1)?.file){
+        this.addf($=> this.pkf.pop())
+        this.pkf.push(0)
       }
 
-      this.code.shift()
+      if(orig) this.tline(orig[1], orig[0])
+
+      // reuse stack frame
+      if(y) this.addf(...this.parse(x))
+
+      // new stack frame
+      else {
+        this.addc(this.parse(x))
+
+        while(this.code[0]?.length){
+          let a = this.getf()
+
+          if(this.step) console.clear()
+
+          // verbose mode
+          if(this.verbose && !this.lambda){
+            [
+              chalk.gray.dim(`———>{C:${
+                  this.code.map(a=> a.length).join` `
+                }}{L:${
+                  this.lns.map(([a, b])=> this.mname(a) + ' ' + b).join`;`
+                }}{S:${
+                  (this.st + '').replace(/\n/g, '\\n')
+                }}`),
+              chalk.greenBright(a),
+              chalk.gray.dim('———')
+            ].map(a=> console.log(a))
+          }
+
+          // for internal JS calls from commands
+          if(this.isfun(a)) a()
+
+          // lambda mode
+          else if(this.lambda){
+            if(a.match(/^[()\[\]{}]+$/))
+              this.lambda += (a.match(/\(/g) || []).length - (a.match(/\)/g) || []).length
+            if(this.lambda > 0) this.paren.push(a)
+            else SL[')'](this)
+          }
+
+          // pkg mode
+          else if(this.pkg.at(-1)){
+            let {name, file, ids} = this.pkg.at(-1)
+            if(!(a in ids)) this.err(`unknown pkg fn "${name} ${a}"`)
+            this.addf($=> this.pkf.pop())
+            this.pkf.push(this.pkg.pop())
+            this.fmatch(a, this.pkf.at(-1))
+          }
+
+          // literals
+          else if(a?.[0] == '"'){
+            if(this.gl){
+              this.gl = 0
+              a = unesc(a)
+            }
+            this.unshift(a.slice(1, a.slice(-1) == '"' ? -1 : undefined))
+          }
+
+          // numbers
+          else if(this.isnum(+a)){
+            this.unshift(+a > Number.MAX_SAFE_INTEGER ? BigInt(a.replace(/\.\d*$/, '')) : +a)
+          }
+
+          else {
+
+            // brackets/parens only
+            if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `,1)
+
+            // magic dot
+            else if(this.gl){
+              this.gl = 0
+              if(a in DOT){
+                DOT[a](this)
+              }
+
+              else if(a.slice(0, 2) == '?!'){
+                this.unshift(a.slice(2))
+                SL['?!'](this)
+              }
+
+              else if(a.slice(0, 2) == '??'){
+                this.unshift(a.slice(2))
+                SL['??'](this)
+              }
+
+              else if(a[0] == '?'){
+                this.unshift(a.slice(1))
+                SL['?'](this)
+              }
+
+              else if(a[1] && a[0] == ':'){
+                this.unshift(a.slice(1))
+                SL[':'](this)
+              }
+
+              else if(a[1] && a[0] == '#'){
+                this.unshift(a.slice(1))
+                SL.sl(this)
+              }
+
+              else if(a[1] && a[0] == '\\'){
+                this.unshift(a.slice(1))
+                SL.sL(this)
+              }
+
+              else {
+                this.unshift(a)
+                SL.gl(this)
+              }
+            }
+
+            // ignore hashes
+            else if(a[1] && a[0] == '#'){}
+
+            // refs
+            else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
+
+            // matched functions
+            else if(a in this.ids) this.fmatch(a, this)
+
+            else this.err(`unknown fn "${a}"`)
+          }
+
+          // verbose mode
+          if(this.verbose && !this.lambda){
+            [
+              this.form(this.stack[this.st]),
+              chalk.gray.dim('>———')
+            ].map(a => console.log(a))
+          }
+
+          if(this.step && !this.lambda) if(rls.question("[ENTER to continue, a + ENTER to auto-step]") == 'a') this.step = 0
+        }
+
+        this.code.shift()
+      }
     }
   }
 
@@ -196,10 +207,60 @@ class INTRP {
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
   }
 
-  strtag(x, l = [0, 0]){
+  u1(f){
+    this.unshift(f(this.shift()))
+  }
+
+  u2(f, s=1){
+    let X = this.shift()
+    let Y = this.shift()
+    this.unshift(s ? f(Y, X) : f(X, Y))
+  }
+
+  u3(f, s=1){
+    let X = this.shift()
+    let Y = this.shift()
+    let Z = this.shift()
+    this.unshift(s ? f(Z, Y, X) : f(X, Y, Z))
+  }
+
+  v1(f, x){
+    if(this.isarr(x) || this.ismap(x))
+      return x.map(a=> this.v1(f, a))
+    return this.prep(f(x))
+  }
+
+  v2(f, x, y){
+    let isi = a=> this.isarr(a) || this.ismap(a)
+    if(isi(x) && isi(y) && x.values().length == y.values().length)
+      return x.map((a, i)=> this.v2(f, a, y.get(i)))
+    if(isi(x)) return x.map(a=> this.v2(f, a, y))
+    if(isi(y)) return y.map(a=> this.v2(f, x, a))
+    else return this.prep(f(x, y))
+  }
+
+  v3(f, x, y, z){
+    let isi = a=> this.isarr(a) || this.ismap(a)
+    if(isi(x) && isi(y) && isi(z) && x.values().length == y.values().length && y.values().length == z.values().length)
+      return x.map((a, i)=> this.v3(f, a, y.get(i), z.get(i)))
+    if(isi(x) && isi(y) && x.values().length == y.values().length)
+      return x.map((a, i)=> this.v3(f, a, y.get(i), z))
+    if(isi(y) && isi(z) && y.values().length == z.values().length)
+      return y.map((a, i)=> this.v3(f, x, a, z.get(i)))
+    if(isi(x) && isi(z) && x.values().length == z.values().length)
+      return x.map((a, i)=> this.v3(f, a, y, z.get(i)))
+    if(isi(x)) return x.map(a=> this.v3(f, a, y, z))
+    if(isi(y)) return y.map(a=> this.v3(f, x, a, z))
+    if(isi(z)) return z.map(a=> this.v3(f, x, y, a))
+    else return this.prep(f(x, y, z))
+  }
+
+  prep(x){ return _.isBoolean(x) ? +x : this.strtag(x) }
+
+  strtag(x, l = [0]){
     if(this.isstr(x) && !x?.orig){
       let X = new String(x)
-      X.orig = [l[0] || this.file, l[1] || this.lns.at(-1)[1]]
+      X.orig = [l[0] || this.file, this.isnum(l[1]) ? 0 | l[1] : this.lns.at(-1)[1]]
       return X
     }
     return x
@@ -350,7 +411,7 @@ class INTRP {
 
   shift(){ return this.clone(this.strtag(this.stack[this.st].pop())) }
 
-  unshift(...x){ return this.stack[this.st].push(...x.map(a=> typeof a == 'boolean' ? +a : this.strtag(a))) }
+  unshift(...x){ return this.stack[this.st].push(...x.map(a=> this.prep(a))) }
 
   quar(f){
     this.iter.push(this.st)

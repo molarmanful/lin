@@ -3,10 +3,10 @@ import {RE2, unesc, _, itr, voca, SL} from '../bridge.js'
 let STR = {}
 
 // convert to string
-STR["str"] = $=> $.unshift($.str($.shift()))
+STR["str"] = $=> $.u1(a=> $.str(a))
 
 // convert to formatted representation
-STR["form"] = $=> $.unshift($.form([$.shift()]))
+STR["form"] = $=> $.u1(a=> $.form([a]))
 
 // construct multiline string by getting lines until index 0 is matched at the start of the string
 STR["lns"] = $=>{
@@ -27,180 +27,141 @@ STR["lns"] = $=>{
 
 // tag string with line number
 STR["tag"] = $=>{
-  let X = $.shift()
-  let X1 = Number(X)
-  if($.isnum(Number(X1))) $.unshift($.strtag($.untag($.shift()), [0, X1]))
-  else $.err(`bad tag number "${X}"`)
+  $.u2((a, b)=> $.v2((x, y)=>{
+    let y1 = 0 | Number(y)
+    if(!$.isnum(y1)) $.err(`bad tag number "${X}"`)
+    return $.strtag($.untag(x), [0, y1])
+  }, a, b))
 }
 
 // untag string
-STR["tag_"] = $=> $.unshift($.untag($.shift()))
+STR["tag_"] = $=> $.stack[$.st].set(-1, $.untag($.get(0)))
 
 // equivalent of `sprintf` - takes string and list
-STR["sf"] = $=>{
-  SL.swap($)
-  $.unshift(voca.vprintf($.shift(), $.shift()))
-}
+STR["sf"] = $=> $.u2(voca.vprintf)
 
 // unescape string at index 0
-STR["esc_"] = $=> $.unshift(unesc($.shift()))
+STR["esc_"] = $=> $.u1(a=> $.v1(unesc, a))
 
 // convert charcode to char
-STR[">char"] = $=> $.unshift(String.fromCodePoint($.shift()))
+STR[">char"] = $=> $.u1(a=> $.v1(String.fromCodePoint, a))
 
 // convert charcode list to string
-STR[">chars"] = $=> $.unshift(String.fromCodePoint(...$.shift()))
+STR[">chars"] = $=> $.u1(a=> String.fromCodePoint(...a))
 
 // convert char to charcode
-STR["<char"] = $=> $.unshift($.shift().codePointAt())
+STR["<char"] = $=> $.u1(a=> $.v1(x=> x.codePointAt(), a))
 
 // convert string to charcode list
-STR["<chars"] = $=> $.unshift(_.map($.shift(), a=> a.codePointAt()))
+STR["<chars"] = $=> $.u1(a=> _.map(a, b=> b.codePointAt()))
+
+// split string at index 1 over string at index 0
+STR["split"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.str(x).split(y), a, b))
+
+// join list over string at index 0
+STR["join"] = $=> $.u2((a, b)=> $.v1(x=> a.join($.str(x) + ''), b))
 
 // split with empty string
-STR[">cs"] = $=> $.unshift($.str($.shift()).split``)
+STR[">cs"] = $=> $.u1(a=> $.v1(x=> $.str(x).split``, a))
 
 // join with empty string
-STR["<cs"] = $=> $.unshift($.shift().join``)
+STR["<cs"] = $=> $.u1(a=> a.join``)
 
 // split with space
-STR[">ws"] = $=> $.unshift($.str($.shift()).split` `)
+STR[">ws"] = $=> $.u1(a=> $.v1(x=> $.str(x).split` `, a))
 
 // join with space
-STR["<ws"] = $=> $.unshift($.shift().join` `)
+STR["<ws"] = $=> $.u1(a=> a.join` `)
 
 // split with newline
-STR[">ls"] = $=> $.unshift($.str($.shift()).split`\n`)
+STR[">ls"] = $=> $.u1(a=> $.v1(x=> $.str(x).split`\n`, a))
 
 // join with newline
-STR["<ls"] = $=> $.unshift($.shift().join`\n`)
+STR["<ls"] = $=> $.u1(a=> a.join`\n`)
 
 // split into words
-STR["words"] = $=> $.unshift(voca.words($.shift()))
+STR["words"] = $=> $.u1(a=> $.v1(voca.words, a))
 
 // split into graphemes
-STR["graphms"] = $=> $.unshift(voca.graphemes($.shift()))
+STR["graphms"] = $=> $.u1(a=> $.v1(voca.graphemes, a))
 
 // lowercase
-STR[">a"] = $=> $.unshift($.shift().toLowerCase())
+STR[">a"] = $=> $.u1(a=> $.v1(x=> x.toLowerCase(), a))
 
 // UPPERCASE
-STR[">A"] = $=> $.unshift($.shift().toUpperCase())
+STR[">A"] = $=> $.u1(a=> $.v1(x=> x.toUpperCase(), a))
 
 // capitalize first letter
-STR[">Aa"] = $=> $.unshift(voca.capitalize($.shift()))
+STR[">Aa"] = $=> $.u1(a=> $.v1(voca.capitalize, a))
 
 // camelCase
-STR[">aA"] = $=> $.unshift(voca.camelCase($.shift()))
+STR[">aA"] = $=> $.u1(a=> $.v1(voca.camelCase, a))
 
 // kebab-case 
-STR[">a-a"] = $=> $.unshift(voca.kebabCase($.shift()))
+STR[">a-a"] = $=> $.u1(a=> $.v1(voca.kebabCase, a))
 
 // snake_case 
-STR[">a_a"] = $=> $.unshift(voca.snakeCase($.shift()))
+STR[">a_a"] = $=> $.u1(a=> $.v1(voca.snakeCase, a))
 
 // Title Case 
-STR[">AA"] = $=> $.unshift(voca.titleCase($.shift()))
+STR[">AA"] = $=> $.u1(a=> $.v1(voca.titleCase, a))
 
 // sWAP cASE
-STR[">aa"] = $=> $.unshift(voca.titleCase($.shift()))
-
+STR[">aa"] = $=> $.u1(a=> $.v1(voca.swapCase, a))
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
-STR["pad"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  let Z = $.shift()
-  $.unshift(_.pad(Z, X, Y))
-}
+STR["pad"] = $=> $.u3((a, b, c)=> $.v3(_.pad, a, c, b))
 
 // `pad` but only from the left
-STR["padl"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  let Z = $.shift()
-  $.unshift(_.padStart(Z, X, Y))
-}
+STR["padl"] = $=> $.u3((a, b, c)=> $.v3(_.padStart, a, c, b))
 
 // `pad` but only from the right
-STR["padr"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  let Z = $.shift()
-  $.unshift(_.padEnd(Z, X, Y))
-}
+STR["padr"] = $=> $.u3((a, b, c)=> $.v3(_.padEnd, a, c, b))
 
 // trim whitespace from both ends of the string
-STR["trim"] = $=> $.unshift(voca.trim($.shift()))
+STR["trim"] = $=> $.u1(a=> $.v1(voca.trim, a))
 
 // `trim` but only from the left
-STR["triml"] = $=> $.unshift(voca.trimLeft($.shift()))
+STR["trim"] = $=> $.u1(a=> $.v1(voca.trimLeft, a))
 
 // `trim` but only from the right
-STR["trimr"] = $=> $.unshift(voca.trimRight($.shift()))
+STR["trimr"] = $=> $.u1(a=> $.v1(voca.trimRight, a))
 
 // latinize
-STR["lat"] = $=> $.unshift(voca.latinise($.shift()))
+STR["lat"] = $=> $.u1(a=> $.v1(voca.latinise, a))
 
 // transliterate chars in index 2 from index 1 to index 0
-STR["tr"] = $=>{
-  let X = $.str($.shift()) + ''
-  let Y = $.str($.shift()) + ''
-  $.unshift(voca.tr($.shift(), Y, X))
-}
+STR["tr"] = $=> $.u3((a, b, c)=> $.v3(voca.tr, a, b, c))
 
 // `tr` but with chars at index 1 and object at index 0
-STR["tro"] = $=>{
-  SL.swap($)
-  $.unshift(voca.tr($.shift(), Object.fromEntries($.shift())))
-}
+STR["tro"] = $=> $.u2((a, b)=> $.v2(voca.tr, a, Object.fromEntries(b)))
 
 // new regex with flags at index 0
-STR["?"] = $=>{
-  SL.swap($)
-  $.unshift($.rex($.shift(), $.shift()))
-}
+STR["?"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.rex(x, y), a, b))
 
 // safe regex
-STR["?!"] = $=>{
-  SL.swap($)
-  $.unshift($.srex($.shift(), $.shift()))
-}
+STR["?!"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.srex(x, y), a, b))
 
 // unsafe regex
-STR["??"] = $=>{
-  SL.swap($)
-  $.unshift($.urex($.shift(), $.shift()))
-}
+STR["??"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.urex(x, y), a, b))
 
 // iterator of matches when regex at index 0 is applied to string at index 1
-STR["?m"] = $=>{
-  let X = $.arex($.shift(), 'g')
-  let Y = $.str($.shift()) + ''
-  $.unshift(Y.matchAll(X))
-}
+STR["?m"] = $=> $.u2((a, b)=> $.v2((x, y)=> ($.str(x) + '').matchAll($.arex(y, 'g')), a, b))
 
 // `?m` but detailed
 STR["?M"] = $=>{
-  let X = $.arex($.shift(), 'g')
-  let Y = $.str($.shift()) + ''
   let m = a=> new Map(Object.entries(a).map(([b, c])=> [b, $.isobj(c) ? m(c) : c]))
-  $.unshift(itr.map(m, Y.matchAll(X)))
+  $.u2((a, b)=> $.v2((x, y)=> itr.map(m, ($.str(x) + '').matchAll($.arex(y, 'g'))), a, b))
 }
 
 // `?m` with indices only
-STR["?i"] = $=>{
-  let X = $.arex($.shift(), 'g')
-  let Y = $.str($.shift()) + ''
-  $.unshift(itr.map(a=> a.index, Y.matchAll(X)))
-}
+STR["?i"] = $=>
+  $.u2((a, b)=> $.v2((x, y)=>
+    itr.map(a=> a.index, ($.str(x) + '').matchAll($.arex(y, 'g'))), a, b
+  ))
 
 // `?m` with truthiness
-STR["?t"] = $=>{
-  let X = $.arex($.shift(), 'g')
-  let Y = $.str($.shift()) + ''
-  $.unshift(+X.test(Y))
-}
+STR["?t"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.arex(y, 'g').test($.str(x) + ''), a, b))
 
 // replace matches of regex at index 1 on string at index 2 with string at index 0
 STR["?s"] = $=>{
@@ -209,13 +170,14 @@ STR["?s"] = $=>{
   let Z = $.str($.shift()) + ''
   $.unshift(Z.replace(Y, X))
 }
+STR["?s"] = $=>
+  $.u3((a, b, c)=> $.v3((x, y, z)=>
+    ($.str(x) + '').replace($.arex(y), $.str(z) + ''), a, b, c
+  ))
 
 // `?s` with replacement function
 STR["?S"] = $=>{
-  let X = $.str($.shift()) + ''
-  let Y = $.arex($.shift())
-  let Z = $.str($.shift()) + ''
-  $.unshift(Z.replace(Y, (m, ...c)=>{
+  let r = x=> (m, ...c)=>{
     let groups
     if($.isobj(c.at(-1))) groups = new Map(Object.entries(c.pop()))
     let input = c.pop()
@@ -223,10 +185,13 @@ STR["?S"] = $=>{
     return $.str($.quar(a=>{
       $.scope.push({index, input, groups})
       $.stack[$.st] = [c.reverse(), m]
-      $.exec(X)
+      $.exec(x)
       $.scope.pop()
     }))
-  }))
+  }
+  $.u3((a, b, c)=> $.v3((x, y, z)=>
+    ($.str(x) + '').replace($.arex(y), r($.str(z) + '')), a, b, c
+  ))
 }
 
 export default STR

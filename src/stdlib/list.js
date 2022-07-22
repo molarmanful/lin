@@ -19,42 +19,18 @@ LIST["'"] = $=>{
   let X = $.shift()
   let Y = $.shift()
   if($.isstr(Y) || $.isnum(Y)) Y = $.str(Y).split``
-  $.iter.push($.st)
-  $.st = $.iter.at(-1) + '\n'
-  $.stack[$.st] = [...Y]
-  $.addf(a=>{
-    Y = $.stack[$.st]
-    delete $.stack[$.iter.at(-1) + '\n']
-    $.st = $.iter.pop()
-    $.unshift(Y)
-  })
-  $.exec(X, 1)
-}
-
-// split string at index 1 over string at index 0
-LIST["split"] = $=>{
-  let X = $.shift()
-  $.unshift($.str($.shift()).split(X))
-}
-
-// join list over string at index 0
-LIST["join"] = $=>{
-  let X = $.shift()
-  $.unshift($.shift().join(X))
+  $.unshift($.quar(a=>{
+    $.stack[$.st] = [...Y]
+    $.exec(X)
+    LIST.enclose($)
+  }))
 }
 
 // pair top 2 items
-LIST[","] = $=>{
-  SL.swap($)
-  $.unshift([$.shift(), $.shift()])
-}
+LIST[","] = $=> $.u2((a, b)=> [a, b])
 
 // concatenate top 2 items as strings or lists
-LIST["++"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  $.unshift($.isarr(Y) ? _.concat(X, Y) : Y + $.str(X))
-}
+LIST["++"] = $=> $.u2((a, b)=> $.isarr(a) ? _.concat(a, b) : a + $.str(b))
 
 // get random item from list
 LIST["r:"] = $=> $.exec('dup len rng * 0| g:', 1)
@@ -106,12 +82,6 @@ LIST["dups"] = $=> $.unshift($.stack[$.st].slice())
 // set current stack to the list at index 0
 LIST["usurp"] = $=> $.stack[$.st] = [...$.shift()]
 
-// convert list to truth mask
-LIST["!s"] = $=>{
-  let m = x=> x.map(a=> $.isarr(a) ?  m(a) : $.tru(a) ? 1 : 0)
-  $.unshift(m($.shift()))
-}
-
 // use list at index 0 as replication mask for list at index 1
 LIST["repl"] = $=>{
   let m = (x, y)=>
@@ -120,8 +90,7 @@ LIST["repl"] = $=>{
       : $.tru(a) && i in x ?  _.range($.isnum(a) ? a : 1).map(b=> x[i])
       : []
     )
-  SL.swap($)
-  $.unshift(m($.shift(), $.shift()))
+  $.u2((a, b)=> $.v2(m, a, b))
 }
 
 export default LIST

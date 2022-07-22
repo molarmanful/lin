@@ -195,8 +195,6 @@ Command | Description
 <code>len</code> | length of index 0
 <code>dep</code> | depth of index 0
 <code>'</code> | `es` index 0 on list at index 1
-<code>split</code> | split string at index 1 over string at index 0
-<code>join</code> | join list over string at index 0
 <code>,</code> | pair top 2 items
 <code>++</code> | concatenate top 2 items as strings or lists
 <code>r:</code> | get random item from list
@@ -210,13 +208,13 @@ Command | Description
 <code>enclose</code> | enclose entire stack into a list
 <code>dups</code> | push entire stack as list
 <code>usurp</code> | set current stack to the list at index 0
-<code>!s</code> | convert list to truth mask
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
 
 ## LOGIC
 
 Command | Description
 --- | ---
+<code>!</code> | logical not
 <code>=</code> | equal
 <code>==</code> | strict equal
 <code>eq</code> | deep equal
@@ -291,10 +289,9 @@ Command | Description
 <code>asinh</code> | inverse hyperbolic sine
 <code>acosh</code> | inverse hyperbolic cosine
 <code>atanh</code> | inverse hyperbolic tangent
-<code>max</code> | push max
-<code>min</code> | push min
+<code>max</code> | push max of stack
+<code>min</code> | push min of stack
 <code>~</code> | bitwise not
-<code>!</code> | logical not
 <code>&</code> | bitwise and
 <code>\|</code> | bitwise or
 <code>$</code> | bitwise xor
@@ -305,9 +302,11 @@ Command | Description
 <code>trunc</code> | round towards 0
 <code>round</code> | round towards or away from 0 depending on < or >= .5
 <code>ceil</code> | round towards ∞
+<code>P?</code> | Miller-Rabin primality test
 <code>F</code> | factorial
 <code>P</code> | *n* permute *k*
 <code>C</code> | *n* choose *k*
+<code>catln</code> | nth Catalan number
 
 ## OBJ
 
@@ -396,6 +395,8 @@ Command | Description
 <code>>chars</code> | convert charcode list to string
 <code><char</code> | convert char to charcode
 <code><chars</code> | convert string to charcode list
+<code>split</code> | split string at index 1 over string at index 0
+<code>join</code> | join list over string at index 0
 <code>>cs</code> | split with empty string
 <code><cs</code> | join with empty string
 <code>>ws</code> | split with space
@@ -416,7 +417,7 @@ Command | Description
 <code>padl</code> | `pad` but only from the left
 <code>padr</code> | `pad` but only from the right
 <code>trim</code> | trim whitespace from both ends of the string
-<code>triml</code> | `trim` but only from the left
+<code>trim</code> | `trim` but only from the left
 <code>trimr</code> | `trim` but only from the right
 <code>lat</code> | latinize
 <code>tr</code> | transliterate chars in index 2 from index 1 to index 0

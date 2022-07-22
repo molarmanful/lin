@@ -11,11 +11,11 @@ Array.prototype.values = function(){
 }
 
 Array.prototype.get = function(i){
-  return this[i]
+  return i >= 0 ? this[i] : this[this.length + i]
 }
 
 Array.prototype.set = function(i, a){
-  return (this[i] = a)
+  return i >= 0 ? (this[i] = a) : (this[this.length + i] = a)
 }
 
 let omap = _.map.bind(_)
@@ -39,6 +39,7 @@ export {default as MIS} from '@stdlib/esm/math/iter/sequences.js'
 export {_}
 export {default as parse} from './parser.js'
 export {default as unesc} from './unesc.js'
+export {default as prime} from './prime.js'
 export {default as INTRP} from './int.js'
 export {default as SL} from './stdlib.js'
 export {default as DOT} from './stdlib/dot.js'

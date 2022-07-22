@@ -1,4 +1,4 @@
-import {RB, $C, _, SL} from '../bridge.js'
+import {prime, RB, $C, _, SL} from '../bridge.js'
 
 let NUM = {}
 
@@ -21,25 +21,19 @@ NUM["ns"] = $=> $.unshift(_.map($.str($.shift()), a=> +a))
 NUM["E"] = $=> $.exec('10 swap ^ *', 1)
 
 // negation
-NUM["_"] = $=> $.unshift(-$.shift())
+NUM["_"] = $=> $.u1(a=> $.v1(x=> -x, a))
 
 // addition
-NUM["+"] = $=> $.unshift($.shift() - -$.shift())
+NUM["+"] = $=> $.u2((a, b)=> $.v2((x, y)=> x - -y, a, b))
 
 // subtraction
-NUM["-"] = $=>{
-  SL.swap($)
-  $.unshift($.shift() - $.shift())
-}
+NUM["-"] = $=> $.u2((a, b)=> $.v2((x, y)=> x - y, a, b))
 
 // multiplication
-NUM["*"] = $=> $.unshift($.shift() * $.shift())
+NUM["*"] = $=> $.u2((a, b)=> $.v2((x, y)=> x * y, a, b))
 
 // division
-NUM["/"] = $=>{
-  SL.swap($)
-  $.unshift($.shift() / $.shift())
-}
+NUM["/"] = $=> $.u2((a, b)=> $.v2((x, y)=> x / y, a, b))
 
 // integer division
 NUM["//"] = $=>{
@@ -48,150 +42,132 @@ NUM["//"] = $=>{
 }
 
 // modulus
-NUM["%"] = $=>{
-  SL.swap($)
-  $.unshift($.mod($.shift(), $.shift()))
-}
+NUM["%"] = $=> $.u2((a, b)=> $.v2($.mod, a, b))
 
 // divmod
 NUM["/%"] = $=> $.exec('over over // rot_ %', 1)
 
 // exponentiation
-NUM["^"] = $=>{
-  SL.swap($)
-  $.unshift($.shift() ** $.shift())
-}
+NUM["^"] = $=> $.u2((a, b)=> $.v2((x, y)=> x ** y, a, b))
 
 // absolute value
-NUM["abs"] = $=> $.unshift(Math.abs($.shift()))
+NUM["abs"] = $=> $.u1(a=> $.v1(Math.abs, a))
 
 // sign function
-NUM["sign"] = $=> $.unshift(Math.sign($.shift()))
+NUM["sign"] = $=> $.u1(a=> $.v1(Math.sign, a))
 
 // push uniformly random number between 0 and 1
 NUM["rng"] = $=> $.unshift(RB.randu())
 
 // natural logarithm
-NUM["ln"] = $=> $.unshift(Math.ln($.shift()))
+NUM["ln"] = $=> $.u1(a=> $.v1(Math.ln, a))
 
 // base-2 logarithm
-NUM["logII"] = $=> $.unshift(Math.log2($.shift()))
+NUM["logII"] = $=> $.u1(a=> $.v1(Math.log2, a))
 
 // base-10 logarithm
-NUM["logX"] = $=> $.unshift(Math.log10($.shift()))
+NUM["logX"] = $=> $.u1(a=> $.v1(Math.log10, a))
 
 // logarithm with base at index 0
-NUM["log"] = $=>{
-  SL.swap($)
-  $.unshift(Math.log($.shift(), $.shift()))
-}
+NUM["log"] = $=> $.u2((a, b)=> $.v2(Math.log, a, b))
 
 // sine
-NUM["sin"] = $=> $.unshift(Math.sin($.shift()))
+NUM["sin"] = $=> $.u1(a=> $.v1(Math.sin, a))
 
 // cosine
-NUM["cos"] = $=> $.unshift(Math.cos($.shift()))
+NUM["cos"] = $=> $.u1(a=> $.v1(Math.cos, a))
 
 // tangent
-NUM["tan"] = $=> $.unshift(Math.tan($.shift()))
+NUM["tan"] = $=> $.u1(a=> $.v1(Math.tan, a))
 
 // hyperbolic sine
-NUM["sinh"] = $=> $.unshift(Math.sinh($.shift()))
+NUM["sinh"] = $=> $.u1(a=> $.v1(Math.sinh, a))
 
 // hyperbolic cosine
-NUM["cosh"] = $=> $.unshift(Math.cosh($.shift()))
+NUM["cosh"] = $=> $.u1(a=> $.v1(Math.cosh, a))
 
 // hyperbolic tangent
-NUM["tanh"] = $=> $.unshift(Math.tanh($.shift()))
+NUM["tanh"] = $=> $.u1(a=> $.v1(Math.tanh, a))
 
 // inverse sine
-NUM["asin"] = $=> $.unshift(Math.asin($.shift()))
+NUM["asin"] = $=> $.u1(a=> $.v1(Math.asin, a))
 
 // inverse cosine
-NUM["acos"] = $=> $.unshift(Math.acos($.shift()))
+NUM["acos"] = $=> $.u1(a=> $.v1(Math.acos, a))
 
 // inverse tangent
-NUM["atan"] = $=> $.unshift(Math.atan($.shift()))
+NUM["atan"] = $=> $.u1(a=> $.v1(Math.atan, a))
 
 // inverse tangent with coordinates (x,y) to (index 1, index 0)
-NUM["atant"] = $=>{
-  SL.swap($)
-  $.unshift(Math.atan2($.shift(), $.shift()))
-}
+NUM["atant"] = $=> $.u2((a, b)=> $.v2(Math.atan2, a, b))
 
 // inverse hyperbolic sine
-NUM["asinh"] = $=> $.unshift(Math.asinh($.shift()))
+NUM["asinh"] = $=> $.u1(a=> $.v1(Math.asinh, a))
 
 // inverse hyperbolic cosine
-NUM["acosh"] = $=> $.unshift(Math.acosh($.shift()))
+NUM["acosh"] = $=> $.u1(a=> $.v1(Math.acosh, a))
 
 // inverse hyperbolic tangent
-NUM["atanh"] = $=> $.unshift(Math.atanh($.shift()))
+NUM["atanh"] = $=> $.u1(a=> $.v1(Math.atanh, a))
 
-// push max
+// push max of stack
 NUM["max"] = $=> $.unshift(Math.max(...$.stack[$.st]))
 
-// push min
+// push min of stack
 NUM["min"] = $=> $.unshift(Math.min(...$.stack[$.st]))
 
 // bitwise not
-NUM["~"] = $=> $.unshift(~$.shift())
-
-// logical not
-NUM["!"] = $=> $.unshift(+!$.tru($.shift()))
+NUM["~"] = $=> $.u1(a=> $.v1(x=> ~x, a))
 
 // bitwise and
-NUM["&"] = $=> $.unshift($.shift() & $.shift())
+NUM["&"] = $=> $.u2((a, b)=> $.v2((x, y)=> x & y, a, b))
 
 // bitwise or
-NUM["|"] = $=> $.unshift($.shift() | $.shift())
+NUM["|"] = $=> $.u2((a, b)=> $.v2((x, y)=> x | y, a, b))
 
 // bitwise xor
-NUM["$"] = $=> $.unshift($.shift() ^ $.shift())
+NUM["$"] = $=> $.u2((a, b)=> $.v2((x, y)=> x ^ y, a, b))
 
 // bitwise left shift
-NUM["<<"] = $=>{
-  SL.swap($)
-  $.unshift($.shift() << $.shift())
-}
+NUM["<<"] = $=> $.u2((a, b)=> $.v2((x, y)=> x << y, a, b))
 
 // bitwise right shift, sign-propagating
-NUM[">>"] = $=> {
-  SL.swap($)
-  $.unshift($.shift() >> $.shift())
-}
+NUM[">>"] = $=> $.u2((a, b)=> $.v2((x, y)=> x >> y, a, b))
 
 // bitwise right shift, zero-fill
-NUM[">>>"] = $=>{
-  SL.swap($)
-  $.unshift($.shift() >>> $.shift())
-}
+NUM[">>>"] = $=> $.u2((a, b)=> $.v2((x, y)=> x >>> y, a, b))
 
 // round towards -∞
-NUM["floor"] = $=> $.unshift(Math.floor($.shift()))
+NUM["floor"] = $=> $.u1(a=> $.v1(Math.floor, a))
 
 // round towards 0
-NUM["trunc"] = $=> $.unshift(Math.trunc($.shift()))
+NUM["trunc"] = $=> $.u1(a=> $.v1(Math.trunc, a))
 
 // round towards or away from 0 depending on < or >= .5
-NUM["round"] = $=> $.unshift(Math.round($.shift()))
+NUM["round"] = $=> $.u1(a=> $.v1(Math.round, a))
 
 // round towards ∞
-NUM["ceil"] = $=> $.unshift(Math.ceil($.shift()))
+NUM["ceil"] = $=> $.u1(a=> $.v1(Math.ceil, a))
 
-// factorial
-NUM["F"] = $=> $.unshift(combs.factorial($.shift()))
-
-// *n* permute *k*
-NUM["P"] = $=>{
-  SL.swap($)
-  $.unshift($C.permutation($.shift(), $.shift()))
+// Miller-Rabin primality test
+NUM["P?"] = $=>{
+  $.u1(a=> $.v1(BigInt, a))
+  $.u1(a=> $.v1(x=> x > 1 && prime(x), a))
 }
 
+// factorial
+NUM["F"] = $=> $.u1(a=> $.v1($C.factorial, a))
+
+// *n* permute *k*
+NUM["P"] = $=> $.u2((a, b)=> $.v2($C.permutation, a, b))
+
 // *n* choose *k*
-NUM["C"] = $=>{
-  SL.swap($)
-  $.unshift($C.combination($.shift(), $.shift()))
+NUM["C"] = $=> $.u2((a, b)=> $.v2($C.combination, a, b))
+
+// nth Catalan number
+NUM["catln"] = $=>{
+  $.u1(a=> $.v1(BigInt, a))
+  $.u1(a=> $.v1(x=> $C.combination(2n * x, x) - $C.combination(2n * x, x + 1n), a))
 }
 
 export default NUM
