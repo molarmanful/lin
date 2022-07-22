@@ -8,17 +8,29 @@ LOGIC["!"] = $=> $.u1(a=> $.v1(x=> !$.untag(x), a))
 // equal
 LOGIC["="] = $=> $.u2((a, b)=> $.v2((x, y)=> $.untag(x) == $.untag(y), a, b))
 
+// `=` but non-vectorized
+LOGIC["=_"] = $=> $.u2((a, b)=> $.untag(a) == $.untag(b))
+
 // strict equal
 LOGIC["=="] = $=> $.u2((a, b)=> $.v2((x, y)=> $.untag(x) === $.untag(y), a, b))
 
+// `==` but non-vectorized
+LOGIC["==_"] = $=> $.u2((a, b)=> $.untag(a) === $.untag(b))
+
 // deep equal
-LOGIC["eq"] = $=> $.u2((a, b)=> $.v2((x, y)=> _.isEqual($.untag(x), $.untag(y)), a, b))
+LOGIC["eq"] = $=> $.u2((a, b)=> _.isEqual($.untag(a), $.untag(b)))
 
 // not equal
 LOGIC["!="] = $=> $.u2((a, b)=> $.v2((x, y)=> $.untag(x) != $.untag(y), a, b))
 
+// `!=` but non-vectorized
+LOGIC["!=_"] = $=> $.u2((a, b)=> $.untag(a) != $.untag(b))
+
 // strict not equal
 LOGIC["!=="] = $=> $.u2((a, b)=> $.v2((x, y)=> $.untag(x) !== $.untag(y), a, b))
+
+// `!==` but non-vectorized
+LOGIC["!==_"] = $=> $.u2((a, b)=> $.untag(a) !== $.untag(b))
 
 // greater than
 LOGIC[">"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.untag(x) > $.untag(y), a, b))

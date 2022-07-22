@@ -3,10 +3,10 @@ import {fs, rls, _, SL} from '../bridge.js'
 let IO = {}
 
 // read file at path given by index 0
-IO["read"] = $=> $.unshift(fs.readFileSync($.str($.shift()) + '') + '')
+IO["read"] = $=> $.u1(a=> $.v1(x=> fs.readFileSync($.str(x) + '') + '', a))
 
 // write string at index 1 to file at path given by index 0
-IO["write"] = $=>fs.writeFileSync($.str($.shift()) + '', $.str($.shift()) + '')
+IO["write"] = $=> fs.writeFileSync($.str($.shift()) + '', $.str($.shift()) + '')
 
 // push user input
 IO["in"] = $=> $.unshift(rls.question(''))
@@ -15,9 +15,9 @@ IO["in"] = $=> $.unshift(rls.question(''))
 IO["inh"] = $=> $.unshift(rls.question('', {hideEchoBack: true, mask: ''}))
 
 // output index 0 to STDOUT
-IO["out"] = $=> process.stdout.write($.str($.shift()) + '')
+IO["out"] = $=> $.v1(x=> process.stdout.write($.str(x) + ''), $.shift)
 
 // output index 0 as a line to STDOUT
-IO["outln"] = $=> process.stdout.write($.str($.shift()) + '\n')
+IO["outln"] = $=> $.v1(x=> process.stdout.write($.str(x) + '\n'), $.shift)
 
 export default IO

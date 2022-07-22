@@ -22,32 +22,26 @@ OBJ[":"] = $=>{
 OBJ[":|"] = $=> $.exec('dup gl swap :', 1)
 
 // get value for key given by index 0 within object at index 1
-OBJ["g:"] = $=>{
-  SL.swap($)
-  $.unshift($.gind($.shift(), $.shift()))
-}
+OBJ["g:"] = $=> $.u2((a, b)=> $.gind(a, b))
 
 // get keys of object/list at index 0
-OBJ["keys"] = $=> $.unshift([...$.shift().keys()])
+OBJ["keys"] = $=> $.u1(a=> [...a.keys()])
 
 // get values of object/list at index 0
-OBJ["vals"] = $=> $.unshift([...$.shift().values()])
+OBJ["vals"] = $=> $.u1(a=> [...a.values()])
 
 // remove key at index 0 from object at index 1
-OBJ["del"] = $=> delete $.stack[$.st][$.stack[$.st].length - 2][$.shift()]
+OBJ["del"] = $=> $.stack[$.st][$.stack[$.st].length - 2].delete($.untag($.shift()))
 
 // convert object to a list containing each key-value pair
-OBJ["enom"] = $=>{
-  let X = $.shift()
-  $.unshift(_.zip([...X.keys()], [...X.values()]))
-}
+OBJ["enom"] = $=> $.u1(a=> _.zip([...a.keys()], [...a.values()]))
 
 // convert `enom`-style list into object
 OBJ["denom"] = $=>{
-  $.unshift(new Map(
-    $.itrlist($.shift()).map(a=>
-      $.isarr(a) ? a.length > 1 ? a : a.concat(a) : [a, a]
-    ).filter(a=> a.length > 1)
+  $.u1(a=> new Map(
+    $.itrlist(a).map(b=>
+      $.isarr(b) ? b.length > 1 ? b : b.concat(b) : [b, b]
+    ).filter(b=> b.length > 1)
   ))
 }
 
@@ -65,7 +59,7 @@ OBJ["<json"] = $=>{
     $.isarr(x) ? x.map(P)
     : $.isobj(x) ? new Map(Object.entries(x)).map(P)
     : x
-  $.unshift(P(JSON.parse($.shift())))
+  $.u1(a=> $.v1(x=> P(JSON.parse(x)), a))
 }
 
 // serialize as JSON
@@ -74,7 +68,7 @@ OBJ[">json"] = $=>{
     $.isarr(x) ? x.map(S)
     : $.isobj(x) ? Object.fromEntries(Array.from(x, ([a, b])=> [$.str(a) + '', S(b)]))
     : x
-  $.unshift(JSON.stringify(S($.shift())))
+  $.u1(a=> JSON.stringify(S(a)))
 }
 
 export default OBJ

@@ -216,10 +216,14 @@ Command | Description
 --- | ---
 <code>!</code> | logical not
 <code>=</code> | equal
+<code>=_</code> | `=` but non-vectorized
 <code>==</code> | strict equal
+<code>==_</code> | `==` but non-vectorized
 <code>eq</code> | deep equal
 <code>!=</code> | not equal
+<code>!=_</code> | `!=` but non-vectorized
 <code>!==</code> | strict not equal
+<code>!==_</code> | `!==` but non-vectorized
 <code>></code> | greater than
 <code><</code> | less than
 <code>>=</code> | greater than or equal to

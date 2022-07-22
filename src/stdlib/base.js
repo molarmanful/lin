@@ -62,18 +62,18 @@ BASE["}$"] = $=>{
 }
 
 // push string at ID given by index 0
-BASE["gi"] = $=>{
-  let X = $.shift()
-  if(!(X in $.ids)) $.id(X)
-  $.unshift($.getid(X))
-}
+BASE["gi"] = $=>
+  $.u1(a=> $.v1(x=>{
+    if(!(x in $.ids)) $.id(x)
+    return $.getid(x)
+  }, a))
 
 // `gi` but follow scoping rules
-BASE["gl"] = $=>{
-  let X = $.shift()
-  if($.getscope(X) == undefined) $.id(X)
-  $.unshift($.getscope(X))
-}
+BASE["gl"] = $=>
+  $.u1(a=> $.v1(x=>{
+    if($.getscope(x) == undefined) $.id(x)
+    return $.getscope(x)
+  }, a))
 
 // magic dot
 BASE["."] = $=> $.gl++
@@ -82,7 +82,7 @@ BASE["."] = $=> $.gl++
 BASE["gs"] = $=> $.unshift($.form($.stack[$.st]))
 
 // push line at popped number (0-indexed)
-BASE["g@"] = $=> $.unshift($.gline($.shift()))
+BASE["g@"] = $=> $.u1(a=> $.v1(x=> $.gline(x), a))
 
 // push next line
 BASE["g;"] = $=> $.unshift($.gline($.lns.at(-1)[1] - -1))

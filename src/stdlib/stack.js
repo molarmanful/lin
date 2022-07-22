@@ -13,9 +13,11 @@ STACK["enum"] = $=> $.stack[$.st] = $.stack[$.st].map((a, b, c)=> [c.length - 1 
 
 // convert `enum`-style stack into a normal stack
 STACK["denum"] = $=>{
-  let X = _.sortBy($.stack[$.st].filter(a=> a.length > 1), a=> a[0])
-  $.stack[$.st] = []
-  X.map(a=> $.unshift(a[1]))
+  $.stack[$.st] = _.sortBy(
+    $.stack[$.st].map(b=>
+      $.isarr(b) ? b.length > 1 ? b : b.concat(b) : [b, b]
+    ).filter(b=> b.length > 1 && $.isnum(+b[0])), a=> -a[0]
+  ).map(a=> a[1])
 }
 
 // `dup` but with any index

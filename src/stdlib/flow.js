@@ -19,14 +19,14 @@ FLOW["e*"] = $=>{
 FLOW["e&"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  if($.tru(Y)) $.unshift(X), SL.es($)
+  if($.tru(Y)) $.exec(X, 1)
 }
 
 // `es` if index 0 is falsy
 FLOW["e|"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  if(!$.tru(Y)) $.unshift(X), SL.es($)
+  if(!$.tru(Y)) $.exec(X, 1)
 }
 
 // `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
@@ -34,8 +34,7 @@ FLOW["e?"] = $=>{
   let X = $.shift()
   let Y = $.shift()
   let Z = $.shift()
-  $.unshift($.tru(Z) ? Y : X)
-  SL.es($)
+  $.exec($.tru(Z) ? Y : X, 1)
 }
 
 // while `es` on index 1 is truthy, `es` on index 0

@@ -18,6 +18,10 @@ Array.prototype.set = function(i, a){
   return i >= 0 ? (this[i] = a) : (this[this.length + i] = a)
 }
 
+Array.prototype.delete = function(i){
+  this.splice(i, 1)
+}
+
 let omap = _.map.bind(_)
 _.map = (x, f)=> x instanceof Map ? x.map(f) : omap(x, f)
 

@@ -411,7 +411,7 @@ class INTRP {
 
   shift(){ return this.clone(this.strtag(this.stack[this.st].pop())) }
 
-  unshift(...x){ return this.stack[this.st].push(...x.map(a=> this.prep(a))) }
+  unshift(...x){ return this.stack[this.st].push(...x.map(a=> this.clone(this.prep(a)))) }
 
   quar(f){
     this.iter.push(this.st)
