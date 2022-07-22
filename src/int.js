@@ -225,6 +225,8 @@ class INTRP {
   }
 
   v1(f, x){
+    if(this.isitr(x))
+      return itr.map(a=> this.v1(f, a), x)
     if(this.isarr(x) || this.ismap(x))
       return x.map(a=> this.v1(f, a))
     return this.prep(f(x))
@@ -234,6 +236,8 @@ class INTRP {
     let isi = a=> this.isarr(a) || this.ismap(a)
     if(isi(x) && isi(y) && x.values().length == y.values().length)
       return x.map((a, i)=> this.v2(f, a, y.get(i)))
+    if(this.isitr(x)) return itr.map(a=> this.v2(f, a, y), x)
+    if(this.isitr(y)) return itr.map(a=> this.v2(f, x, a), y)
     if(isi(x)) return x.map(a=> this.v2(f, a, y))
     if(isi(y)) return y.map(a=> this.v2(f, x, a))
     else return this.prep(f(x, y))
@@ -243,6 +247,9 @@ class INTRP {
     let isi = a=> this.isarr(a) || this.ismap(a)
     if(isi(x) && isi(y) && isi(z) && x.values().length == y.values().length && y.values().length == z.values().length)
       return x.map((a, i)=> this.v3(f, a, y.get(i), z.get(i)))
+    if(this.isitr(x)) return itr.map(a=> this.v3(f, a, y, z), x)
+    if(this.isitr(y)) return itr.map(a=> this.v3(f, x, a, z), y)
+    if(this.isitr(z)) return itr.map(a=> this.v3(f, x, y, a), z)
     if(isi(x) && isi(y) && x.values().length == y.values().length)
       return x.map((a, i)=> this.v3(f, a, y.get(i), z))
     if(isi(y) && isi(z) && y.values().length == z.values().length)
