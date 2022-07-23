@@ -110,13 +110,13 @@ STR[">AA"] = $=> $.u1(a=> $.v1(voca.titleCase, a))
 STR[">aa"] = $=> $.u1(a=> $.v1(voca.swapCase, a))
 
 // pad string given by index 2 until length given by index 0 with string given by index 1
-STR["pad"] = $=> $.u3((a, b, c)=> $.v3(_.pad, a, c, b))
+STR["pad"] = $=> $.u3((a, b, c)=> $.v3((x, y, z)=> _.pad($.str(x) + '', $.str(y) + '', z), a, c, b))
 
 // `pad` but only from the left
-STR["padl"] = $=> $.u3((a, b, c)=> $.v3(_.padStart, a, c, b))
+STR["padl"] = $=> $.u3((a, b, c)=> $.v3((x, y, z)=> _.padStart($.str(x) + '', $.str(y) + '', z), a, c, b))
 
 // `pad` but only from the right
-STR["padr"] = $=> $.u3((a, b, c)=> $.v3(_.padEnd, a, c, b))
+STR["padr"] = $=> $.u3((a, b, c)=> $.v3((x, y, z)=> _.padEnd($.str(x) + '', $.str(y) + '', z), a, c, b))
 
 // trim whitespace from both ends of the string
 STR["trim"] = $=> $.u1(a=> $.v1(voca.trim, a))

@@ -1,4 +1,4 @@
-import {prime, RB, $C, _, SL} from '../bridge.js'
+import {prime, RB, $C, _, SL, itr} from '../bridge.js'
 
 let NUM = {}
 
@@ -15,7 +15,7 @@ NUM["n_"] = $=>{
 }
 
 // convert number to digit list
-NUM["ns"] = $=> $.unshift(_.map($.str($.shift()), a=> +a))
+NUM["ns"] = $=> $.u1(a=> $.v1(x=> _.map($.str(x) + '', y=> +y), a))
 
 // `(index 1)*10^(index 0)`
 NUM["E"] = $=> $.exec('10 swap ^ *', 1)
@@ -155,6 +155,10 @@ NUM["P?"] = $=>{
   $.u1(a=> $.v1(x=> x > 1 && prime(x), a))
 }
 
+let fac = _.memoize($C.factorial)
+let permn = _.memoize(([x, y])=> $C.permutation(x, y))
+let combn = _.memoize(([x, y])=> $C.combination(x, y))
+
 // factorial
 NUM["F"] = $=> $.u1(a=> $.v1($C.factorial, a))
 
@@ -164,10 +168,36 @@ NUM["P"] = $=> $.u2((a, b)=> $.v2($C.permutation, a, b))
 // *n* choose *k*
 NUM["C"] = $=> $.u2((a, b)=> $.v2($C.combination, a, b))
 
+let catln = x=>
+  typeof x != 'bigint' ? catln(BigInt(x))
+  : combn([2n * x, x]) - combn([2n * x, x + 1n])
+
 // nth Catalan number
-NUM["catln"] = $=>{
-  $.u1(a=> $.v1(BigInt, a))
-  $.u1(a=> $.v1(x=> $C.combination(2n * x, x) - $C.combination(2n * x, x + 1n), a))
+NUM["catln"] = $=> $.u1(a=> $.v1(catln, a))
+
+let irange = function*(k){
+  let n = 0n
+  while(n <= k) yield n++
 }
+let stir2 = (n, k)=>
+  [n, k].some(a=> typeof a != 'bigint') ? stir2(BigInt(n), BigInt(k))
+  : itr.pipe(
+      itr.map(j=> (-1n) ** (k - j) * combn([k, j]) * j ** n),
+      itr.reduce((a, b)=> a + b)
+    )(irange(k)) / fac(k)
+
+// Stirling S2 number at n and k
+NUM["stirII"] = $=> $.u2((a, b)=> $.v2(stir2, a, b))
+
+let stir2m = _.memoize(([n, k])=> stir2(n, k))
+let bell = n=>
+  typeof n != 'bigint' ? bell(BigInt(n))
+  : itr.pipe(
+      itr.map(k=> stir2m([n, k])),
+      itr.reduce((a, b)=> a + b)
+    )(irange(n))
+
+// nth Bell number
+NUM["belln"] = $=> $.u1((a)=> $.v1(bell, a))
 
 export default NUM

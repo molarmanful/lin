@@ -311,6 +311,8 @@ Command | Description
 <code>P</code> | *n* permute *k*
 <code>C</code> | *n* choose *k*
 <code>catln</code> | nth Catalan number
+<code>stirII</code> | Stirling S2 number at n and k
+<code>belln</code> | nth Bell number
 
 ## OBJ
 
