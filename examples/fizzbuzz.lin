@@ -1,6 +1,5 @@
 1 101range \; map
-.+.\n ; <cs.+ \pop e| outln
-[ .n 3% \\Fizz e| .n 5% \\Buzz e| ]
+.+ [3 5] % ! "Fizz""Buzz",.~ repl <cs.+ \pop e| outln
 
 
 
@@ -13,8 +12,8 @@ Outputs numbers from 1 to 100, replacing numbers divisible by 3 with Fizz, numbe
 
 On line 1:
 
-- `.+.\n` saves the element as *n*.
-- `.n 3% \\Fizz e| .n 5% \\Buzz e|` pushes "Fizz" on multiples of 3 and "Buzz" on multiples of 5.
-- `[...] <cs` joins the top of the stack to get either "Fizz," "Buzz," "FizzBuzz," or an empty string.
+- `.+` saves the element as *n*.
+- `.+ [3 5] % ! "Fizz""Buzz",.~ repl` pushes "Fizz" on multiples of 3 and "Buzz" on multiples of 5.
+- `<cs` joins the top of the stack to get either "Fizz," "Buzz," "FizzBuzz," or an empty string.
 - `.+ \pop e|` pops the top item if it is an empty string.
 - `outln` outputs the top item.
