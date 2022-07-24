@@ -1,4 +1,4 @@
-import {_, SL} from '../bridge.js'
+import {math, _, SL} from '../bridge.js'
 
 let LIST = {}
 
@@ -18,7 +18,8 @@ LIST["dep"] = $=>{
 LIST["'"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  if($.isstr(Y) || $.isnum(Y)) Y = $.str(Y).split``
+  if($.ismat(Y)) Y = Y.valueOf()
+  else if($.isstr(Y) || $.isnum(Y)) Y = $.str(Y).split``
   $.unshift($.quar(a=>{
     $.stack[$.st] = [...Y]
     $.exec(X)
@@ -91,6 +92,18 @@ LIST["repl"] = $=>{
       : []
     )
   $.u2(m)
+}
+
+// deep map on list with indices
+LIST["imap"] = $=>{
+  SL.swap($)
+  $.unshift($.each($.shift(), (x, f)=> math.map(x, f), x=> x, 0, 1))
+}
+
+// `imap` with filtering
+LIST["ifltr"] = $=>{
+  SL.swap($)
+  $.unshift($.each($.shift(), (x, f)=> math.filter(x, f), x=> x, 0, 1))
 }
 
 export default LIST

@@ -1,23 +1,21 @@
-import {_, SL} from '../bridge.js'
-import {reshape} from 'mathjs'
+import {math, _, SL, itr} from '../bridge.js'
 
 let MATRIX = {}
 
-MATRIX["mat"] = $=>{
-  let X = $.itrlist($.shift())
-}
+let mat = $=> x=> math.matrix($.itrlist(x))
 
-// reshape the stack using dimensions at index 0
-MATRIX["shape"] = $=>{
-  let X = $.itrlist($.shift())
-  SL.blob($)
-  $.stack[$.st] = [...reshape($.itrlist(itr.take(X.reduce((a, b)=> a * b, 1), itr.cycle($.listitr($.stack[$.st])))), X)]
+// convert to matrix
+MATRIX["mat"] = $=> $.u1(mat($))
+
+// matrix size
+MATRIX["dim"] = $=> $.u1(math.size)
+
+// fill with index 0 to create valid shape
+MATRIX["fl"] = $=>{
+  $.u2((a, b)=> math.resize(a, math.size(a), b))
 }
 
 // identity matrix with side length at index 0
-MATRIX["eye"] = $=>{
-  let X = $.shift()
-  $.unshift(_.range(X).map((a, i)=> _.range(X).map((b, j)=> +(i == j))))
-}
+MATRIX["eye"] = $=> $.u1(a=> $.v1(math.identity, a))
 
 export default MATRIX

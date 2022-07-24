@@ -125,6 +125,7 @@ BASE["type"] = $=>{
   let X = $.shift()
   $.unshift(
     $.isarr(X) ? 'arr'
+    : $.ismat(X) ? 'mat'
     : $.ismap(X) ? 'obj'
     : $.isstr(X) ? 'str'
     : $.isrex(X) ? 'rex'

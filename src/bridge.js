@@ -35,6 +35,7 @@ export {runOnThread as mth} from 'funthreads'
 export * as path from 'path'
 export {default as voca} from 'voca'
 export {default as RE2} from 're2'
+export * as math from 'mathjs'
 
 export {default as RB} from '@stdlib/esm/random/base.js'
 export {default as RI} from '@stdlib/esm/random/iter.js'

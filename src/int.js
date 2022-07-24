@@ -65,7 +65,8 @@ class INTRP {
 
       // new stack frame
       else {
-        this.addc(this.parse(x))
+        if(this.code[0]?.length == 0) this.addf(...this.parse(x))
+        else this.addc(this.parse(x))
 
         while(this.code[0]?.length){
           let a = this.getf()
@@ -92,8 +93,12 @@ class INTRP {
 
           // lambda mode
           else if(this.lambda){
-            if(a.match(/^[()\[\]{}]+$/))
-              this.lambda += (a.match(/\(/g) || []).length - (a.match(/\)/g) || []).length
+            if(a.match(/^[()\[\]{}]{2,}$/)){
+              this.addf(...a.slice(1))
+              a = a[0]
+            }
+            if(a == '(') this.lambda++
+            if(a == ')') this.lambda--
             if(this.lambda > 0) this.paren.push(a)
             else SL[')'](this)
           }
@@ -224,41 +229,41 @@ class INTRP {
     this.unshift(s ? f(Z, Y, X) : f(X, Y, Z))
   }
 
+  isi(x){ return this.isarr(x) || this.ismap(x) || this.ismat(x) }
+
   v1(f, x){
     if(this.isitr(x))
       return itr.map(a=> this.v1(f, a), x)
-    if(this.isarr(x) || this.ismap(x))
+    if(this.isi(x))
       return x.map(a=> this.v1(f, a))
-    return this.prep(f(x))
+    return this.prep(f(x, d))
   }
 
   v2(f, x, y){
-    let isi = a=> this.isarr(a) || this.ismap(a)
-    if(isi(x) && isi(y) && x.values().length == y.values().length)
+    if(this.isi(x) && this.isi(y) && x.values().length == y.values().length)
       return x.map((a, i)=> this.v2(f, a, y.get(i)))
     if(this.isitr(x)) return itr.map(a=> this.v2(f, a, y), x)
     if(this.isitr(y)) return itr.map(a=> this.v2(f, x, a), y)
-    if(isi(x)) return x.map(a=> this.v2(f, a, y))
-    if(isi(y)) return y.map(a=> this.v2(f, x, a))
+    if(this.isi(x)) return x.map(a=> this.v2(f, a, y))
+    if(this.isi(y)) return y.map(a=> this.v2(f, x, a))
     else return this.prep(f(x, y))
   }
 
   v3(f, x, y, z){
-    let isi = a=> this.isarr(a) || this.ismap(a)
-    if(isi(x) && isi(y) && isi(z) && x.values().length == y.values().length && y.values().length == z.values().length)
+    if(this.isi(x) && this.isi(y) && this.isi(z) && x.values().length == y.values().length && y.values().length == z.values().length)
       return x.map((a, i)=> this.v3(f, a, y.get(i), z.get(i)))
     if(this.isitr(x)) return itr.map(a=> this.v3(f, a, y, z), x)
     if(this.isitr(y)) return itr.map(a=> this.v3(f, x, a, z), y)
     if(this.isitr(z)) return itr.map(a=> this.v3(f, x, y, a), z)
-    if(isi(x) && isi(y) && x.values().length == y.values().length)
+    if(this.isi(x) && this.isi(y) && x.values().length == y.values().length)
       return x.map((a, i)=> this.v3(f, a, y.get(i), z))
-    if(isi(y) && isi(z) && y.values().length == z.values().length)
+    if(this.isi(y) && this.isi(z) && y.values().length == z.values().length)
       return y.map((a, i)=> this.v3(f, x, a, z.get(i)))
-    if(isi(x) && isi(z) && x.values().length == z.values().length)
+    if(this.isi(x) && this.isi(z) && x.values().length == z.values().length)
       return x.map((a, i)=> this.v3(f, a, y, z.get(i)))
-    if(isi(x)) return x.map(a=> this.v3(f, a, y, z))
-    if(isi(y)) return y.map(a=> this.v3(f, x, a, z))
-    if(isi(z)) return z.map(a=> this.v3(f, x, y, a))
+    if(this.isi(x)) return x.map(a=> this.v3(f, a, y, z))
+    if(this.isi(y)) return y.map(a=> this.v3(f, x, a, z))
+    if(this.isi(z)) return z.map(a=> this.v3(f, x, y, a))
     else return this.prep(f(x, y, z))
   }
 
@@ -385,6 +390,8 @@ class INTRP {
         a.length ?
           `[ ${this.form(a, ' ')} ]`
         : '[]'
+      : this.ismat(a) ?
+        `[ ${this.form(a.valueOf(), ' ')} ]%`
       : this.ismap(a) ?
         a.size ?
           `{ ${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `} }`
@@ -430,14 +437,14 @@ class INTRP {
     return A
   }
 
-  each(O, f=_.map, g=x=> x, s){
+  each(O, f=_.map, g=x=> x, s, ind){
     let X = this.shift()
     return f(O, (a, i)=>
       g(this.quar($=>{
-        this.stack[this.st] = s && itr.isIterable(a) ? [...a] : [a]
+        this.stack[this.st] = s && itr.isIterable(a) ? [...a] : ind ? [i, a] : [a]
         this.exec(X)
-      }))
-    )
+      })
+    ), X)
   }
 
   acc(O, ac=false, f=_.reduce, g=x=> x){
@@ -532,7 +539,7 @@ class INTRP {
 
   isrex(x){ return _.isRegExp(x) || x instanceof RE2 }
 
-  isitr(x){ return x && !this.isarl(x) && !this.ismap(x) && itr.isIterable(x) }
+  isitr(x){ return x && !this.isarl(x) && !this.ismap(x) && !this.ismat(x) && itr.isIterable(x) }
 
   ismap(x){ return x instanceof Map }
 
@@ -541,6 +548,8 @@ class INTRP {
   isnum(x){ return typeof x == 'bigint' || (_.isNumber(x) && !isNaN(x)) }
 
   isfun(x){ return _.isFunction(x) }
+
+  ismat(x){ return ['DenseMatrix', 'SparseMatrix'].includes(x?.type) }
 }
 
 export default INTRP

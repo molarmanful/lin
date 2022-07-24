@@ -106,6 +106,7 @@ Command | Description
 <code>$$_</code> | `usurp`
 <code>;</code> | `2e@`
 <code>;;</code> | `2_ e@`
+<code>%</code> | `mat`
 
 ## FLOW
 
@@ -209,6 +210,8 @@ Command | Description
 <code>dups</code> | push entire stack as list
 <code>usurp</code> | set current stack to the list at index 0
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
+<code>imap</code> | deep map on list with indices
+<code>ifltr</code> | `imap` with filtering
 
 ## LOGIC
 
@@ -234,7 +237,9 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>shape</code> | reshape the stack using dimensions at index 0
+<code>mat</code> | convert to matrix
+<code>dim</code> | matrix size
+<code>fl</code> | fill with index 0 to create valid shape
 <code>eye</code> | identity matrix with side length at index 0
 
 ## MODULE
@@ -364,6 +369,7 @@ Command | Description
 <code>blob</code> | deshape the stack
 <code>rows</code> | split stack into _n_ lists, where _n_ is index 0
 <code>cols</code> | split stack into lists of length _n_, where _n_ is index 0
+<code>shape</code> | reshape the stack using dimensions at index 0
 <code>zip</code> | group multiple arrays' items together by indices
 <code>wins</code> | split stack into consecutive slices given by index 0
 <code>map</code> | `es` on each individual item in the stack

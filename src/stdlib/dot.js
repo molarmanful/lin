@@ -79,4 +79,7 @@ DOT[";"] = $=> $.exec('2e@', 1)
 // `2_ e@`
 DOT[";;"] = $=> $.exec('2_ e@', 1)
 
+// `mat`
+DOT["%"] = SL.mat
+
 export default DOT

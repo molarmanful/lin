@@ -1,4 +1,4 @@
-import {$C, itr, _, SL} from '../bridge.js'
+import {math, $C, itr, _, SL} from '../bridge.js'
 
 let STACK = {}
 
@@ -124,6 +124,13 @@ STACK["rows"] = $=>{
 
 // split stack into lists of length _n_, where _n_ is index 0
 STACK["cols"] = $=> $.stack[$.st] = _.chunk($.stack[$.st], $.shift())
+
+// reshape the stack using dimensions at index 0
+STACK["shape"] = $=>{
+  let X = $.itrlist($.shift())
+  SL.blob($)
+  $.stack[$.st] = [...math.reshape($.itrlist(itr.take(X.reduce((a, b)=> a * b, 1), itr.cycle($.listitr($.stack[$.st])))), X)]
+}
 
 // group multiple arrays' items together by indices
 STACK["zip"] = $=>{
