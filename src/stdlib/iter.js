@@ -38,7 +38,7 @@ ITER["`it"] = $=>{
 ITER["`="] = $=> $.unshift(itr.equal(itrd($), itrd($)))
 
 // check if iterators are deeply equal
-ITER["`=*"] = $=> $.unshift(itr.deepEqual(itrd($), itrd($)))
+ITER["`eq"] = $=> $.unshift(itr.deepEqual(itrd($), itrd($)))
 
 // check if iterator at index 1 has sequence at index 0
 ITER["`?"] = $=> $.unshift(itr.includesSeq(itrd($), itrd($)))
@@ -97,13 +97,22 @@ ITER["`melt"] = $=> $.unshift(itr.flat($.shift(), itrd($)))
 // split iterator into consecutive slices given by index 0
 ITER["`xp"] = $=> $.unshift(itr.window($.shift(), itrd($)))
 
-ITER["`bi"] = $=>{
-  let [A, B] = itr.bisect($.shift(), itrd($))
-  $.unshift([A, B])
-}
+// split iterator in half at index
+ITER["`bi"] = $=>
+  $.u2((a, b)=>{
+    a = $.listitr(a)
+    return $.v1(x=>{
+      let [X, Y] = itr.bisect(x, a)
+      return [X, Y]
+    }, b)
+  })
 
 // split iterator into chunks of length given by index 0
-ITER["`chunk"] = $=> $.unshift(itr.batch($.shift(), itrd($)))
+ITER["`chunk"] = $=>
+  $.u2((a, b)=>{
+    a = $.listitr(a)
+    return $.v1(x=> itr.batch(x, a), b)
+  })
 
 // place index 0 between each element
 ITER["`btwn"] = $=> $.unshift(itr.interposeSeq(itrd($), itrd($)))
@@ -121,10 +130,18 @@ ITER["`^"] = $=> $.unshift(itr.first(itrd($)))
 ITER["`$"] = $=> $.unshift(itr.takeLast(itrd($)))
 
 // _n_th element, where _n_ is index 0
-ITER["`:"] = $=> $.exec('`d `^', 1)
+ITER["`:"] = $=>
+  $.u2((a, b)=>{
+    a = $.listitr(a)
+    return $.v1(x=> itr.first(itr.drop(x, a)), b)
+  })
 
 // take first _n_ elements, where _n_ is index 0
-ITER["`t"] = $=> $.unshift(itr.take($.shift(), itrd($)))
+ITER["`t"] = $=>
+  $.u2((a, b)=>{
+    a = $.listitr(a)
+    return $.v1(x=> itr.take(x, a), b)
+  })
 
 // `take` with sort predicate
 ITER["`t>"] = $=>{
@@ -134,7 +151,11 @@ ITER["`t>"] = $=>{
 }
 
 // drop first _n_ elements, where _n_ is index 0
-ITER["`d"] = $=> $.unshift(itr.drop($.shift(), itrd($)))
+ITER["`d"] = $=>
+  $.u2((a, b)=>{
+    a = $.listitr(a)
+    return $.v1(x=> itr.drop(x, a), b)
+  })
 
 // map with `es` of index 0 over each element
 ITER["`'"] = $=>{
@@ -224,7 +245,7 @@ ITER["`?'"] = $=>{
   $.unshift($.each(itrd($), (x, f)=> itr.find(f, x), $.tru))
 }
 
-// sort with comparison function
+// sort iterator with comparison function
 ITER["`>"] = $=>{
   SL.swap($)
   $.unshift($.cmp(itrd($), (x, f)=> itr.takeSorted(1 / 0, f, x)))

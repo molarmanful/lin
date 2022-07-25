@@ -1,14 +1,11 @@
-import {math, _, SL} from '../bridge.js'
+import {itr, math, _, SL} from '../bridge.js'
 
 let LIST = {}
 
 // length of index 0
-LIST["len"] = $=>{
-  let X = $.shift()
-  $.unshift(X.size || X.length)
-}
+LIST["len"] = $=> $.u1(a=> a?.size || a?.length || ($.isitr(a) && itr.size(a)))
 
-// depth of index 0
+// max depth of index 0
 LIST["dep"] = $=>{
   let D = x=> $.isobj(x) ? 1 + Math.max(0, ...$.ismap(x) ? _.map(x, D).values() : _.map(x, D)) : 0
   $.unshift(D($.shift()))
@@ -37,8 +34,8 @@ LIST["r:"] = $=> $.exec('dup len rng * 0| g:', 1)
 LIST["rep"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  if($.isstr(Y) || $.isnum(Y)) $.unshift(_.repeat(Y, X))
-  else $.unshift(_.range(X).flatMap(a=> Y))
+  if($.isstr(Y)) $.unshift($.v1(x=> _.repeat(Y, x), X))
+  else $.unshift($.v1(x=> _.range(x).flatMap(a=> Y), X))
 }
 
 // set union of lists at index 0 and index 1
@@ -86,24 +83,13 @@ LIST["dups"] = $=> $.unshift($.stack[$.st].slice())
 // set current stack to the list at index 0
 LIST["usurp"] = $=> $.stack[$.st] = [...$.shift()]
 
-// use list at index 0 as replication mask for list at index 1
-LIST["repl"] = $=>{
-  let m = (x, y)=>
-    y.flatMap((a, i)=>
-      $.isarr(a) ?  $.isarr(x[i]) ? [m(x[i], a)] : [x[i]]
-      : $.tru(a) && i in x ? _.range($.isnum(a) ? a : 1).map(b=> x[i])
-      : []
-    )
-  $.u2(m)
+// get insert index of index 0 from binary searching over `es` of index 1 on each element in list
+LIST["bins"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  let O = $.shift()
+  $.unshift(X)
+  $.unshift($.each(O, (x, f)=> _.sortedIndexBy(x, Y, f)))
 }
-
-// deep map on list with indices
-LIST["imap"] = $=>{
-  SL.swap($)
-  $.unshift($.each($.shift(), (x, f)=> $.imap(x, f), x=> x, 0, 1))
-}
-
-// depth map
-LIST["dmap"] = $=> $.u1(a=> $.imap(a, (b, i)=> i.length))
 
 export default LIST

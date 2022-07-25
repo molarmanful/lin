@@ -58,6 +58,12 @@ DOT[":"] = SL.find
 // `findi`
 DOT[":#"] = SL.findi
 
+// `sort`
+DOT[">"] = SL.sort
+
+// `sortc`
+DOT[">>"] = SL.sortc
+
 // `zip`
 DOT[","] = SL.zip
 
@@ -80,6 +86,9 @@ DOT[";"] = $=> $.exec('2e@', 1)
 DOT[";;"] = $=> $.exec('2_ e@', 1)
 
 // `mat`
-DOT["%"] = SL.mat
+DOT["^"] = SL.mat
+
+// `mat_`
+DOT["^_"] = SL.mat_
 
 export default DOT

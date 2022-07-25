@@ -80,14 +80,14 @@ STACK["dip"] = $=>{
 STACK["range"] = $=>{
   let X = $.shift()
   let Y = $.shift()
-  $.unshift(...$.range(Y, X))
+  $.unshift(...$.v2((x, y)=> $.range(x, y), Y, X))
 }
 
 // `range` from 0 to index 0
-STACK["rango"] = $=> $.unshift(...$.range(0, $.shift()))
+STACK["rango"] = $=> $.unshift(...$.v1(x=> $.range(0, x), $.shift()))
 
 // `range` from index 0 to 0
-STACK["orang"] = $=> $.unshift(...$.range($.shift(), 0))
+STACK["orang"] = $=> $.unshift(...$.v1(x=> $.range(x, 0), $.shift()))
 
 // shuffle stack
 STACK["shuf"] = $=> $.stack[$.st] = _.shuffle($.stack[$.st])
@@ -96,16 +96,12 @@ STACK["shuf"] = $=> $.stack[$.st] = _.shuffle($.stack[$.st])
 STACK["uniq"] = $=> $.stack[$.st] = _.uniq($.stack[$.st])
 
 // keep top _n_ items, where _n_ is index 0
-STACK["take"] = $=> {
-  let X = -$.shift()
-  $.stack[$.st] = (X < 0 ? _.takeRight : _.take)($.stack[$.st], Math.abs(X))
-}
+STACK["take"] = $=>
+  $.stack[$.st] = $.v1(x=> (x > 0 ? _.takeRight : _.take)($.stack[$.st], Math.abs(x)), $.shift())
 
 // pop top _n_ items, where _n_ is index 0
-STACK["drop"] = $=> {
-  let X = -$.shift()
-  $.stack[$.st] = (X < 0 ?_.dropRight : _.drop)($.stack[$.st], Math.abs(X))
-}
+STACK["drop"] = $=>
+  $.stack[$.st] = $.v1(x=> (x > 0 ? _.dropRight : _.drop)($.stack[$.st], Math.abs(x)), $.shift())
 
 // `wrap_` all items
 STACK["flat"] = $=> $.stack[$.st] = $.stack[$.st].flat()
@@ -116,10 +112,14 @@ STACK["blob"] = $=> $.stack[$.st] = $.stack[$.st].flat(1 / 0)
 // split stack into _n_ lists, where _n_ is index 0
 STACK["rows"] = $=>{
   let X = $.shift()
-  let Y = $.stack[$.st].length / X
-  let YY = Math.round(Y)
-  $.stack[$.st] = _.chunk($.stack[$.st], YY)
-  if(Y > YY) $.splice(1, 2, $.stack[$.st].slice(-2).flat())
+  $.stack[$.st] = $.v1(x=>{
+    let O = $.stack[$.st]
+    let Y = O.length / x
+    let YY = Math.round(Y)
+    O = _.chunk(O, YY)
+    if(Y > YY) O.splice(-2, 2, O.slice(-2).flat())
+    return O
+  }, X)
 }
 
 // split stack into lists of length _n_, where _n_ is index 0
@@ -143,17 +143,18 @@ STACK["zip"] = $=>{
 
 // split stack into consecutive slices given by index 0
 STACK["wins"] = $=>{
-  let X = $.shift()
-  $.stack[$.st] = $.stack[$.st].flatMap((a,i,s)=>
-    i > s.length - X ? [] : [s.slice(i, i + X)]
-  )
+  $.stack[$.st] = $.v1(x=> $.stack[$.st].flatMap((a,i,s)=>
+    i > s.length - x ? [] : [s.slice(i, i + x)]
+  ), $.shift())
 }
 
+let wrap = $=> x=> $.isarr(x) ? x : [x]
+
 // `es` on each individual item in the stack
-STACK["map"] = $=> $.stack[$.st] = $.each($.stack[$.st])
+STACK["map"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st]))
 
 // `map` and `flat`
-STACK["mapf"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.flatMap)
+STACK["mapf"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.flatMap))
 
 // `es` with accumulator and item; result of each `es` becomes the new accumulator
 STACK["fold"] = $=> $.stack[$.st] = [$.acc($.stack[$.st])]
@@ -176,13 +177,13 @@ STACK["scana"] = $=>{
 }
 
 // remove each item that is falsy after `es`
-STACK["filter"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.filter, $.tru)
+STACK["filter"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.filter, $.tru))
 
 // push 1 if any items return truthy after `es`, else push 0
-STACK["any"] = $=> $.unshift(+$.each($.stack[$.st], _.some, $.tru))
+STACK["any"] = $=> $.unshift($.each($.stack[$.st], _.some, $.tru))
 
 // push 1 if all items return truthy after `es`, else push 0
-STACK["all"] = $=> $.unshift(+$.each($.stack[$.st], _.every, $.tru))
+STACK["all"] = $=> $.unshift($.each($.stack[$.st], _.every, $.tru))
 
 // find first item that returns truthy after `es` or undefined on failure
 STACK["find"] = $=> $.unshift($.each($.stack[$.st], _.findLast, $.tru))
@@ -194,19 +195,19 @@ STACK["findi"] = $=>{
 }
 
 // `take` items until `es` returns falsy for an item
-STACK["takew"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.takeRightWhile, 0, $.tru)
+STACK["takew"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.takeRightWhile, 0, $.tru))
 
 // `drop` items until `es` returns falsy for an item
 STACK["dropw"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.dropRightWhile, 0, $.tru)
 
 // sort items based on `es`
-STACK["sort"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.sortBy)
+STACK["sort"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.sortBy))
 
 // sort items based on comparison function
-STACK["sortc"] = $=> $.stack[$.st] = $.cmp($.stack[$.st])
+STACK["sortc"] = $=> $.stack[$.st] = wrap($)($.cmp($.stack[$.st]))
 
 // separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
-STACK["part"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.partition, 0, $.tru)
+STACK["part"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.partition, 0, $.tru))
 
 // categorize items into keys after `es`ing index 0
 STACK["group"] = $=> $.stack[$.st] = [new Map(Object.entries($.each($.stack[$.st], _.groupBy)))]
@@ -216,16 +217,7 @@ STACK["table"] = $=>{
   let X = $.shift()
   let O = [...$C.CartesianProduct.from($.stack[$.st])]
   $.unshift(X)
-  $.stack[$.st] = $.each(O, _.map, x=> x, 1)
-}
-
-// get insert index of index 0 from binary searching over `es` of index 1 on each element in stack
-STACK["bins"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  let O = $.stack[$.st].slice()
-  $.unshift(X)
-  $.unshift(O.length - $.each(O, (x, f)=> _.sortedIndexBy(x, Y, f)))
+  $.stack[$.st] = wrap($)($.each(O, _.map, x=> x, 1))
 }
 
 export default STACK

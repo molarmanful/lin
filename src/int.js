@@ -1,4 +1,4 @@
-import {math, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
+import {voca, math, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -375,27 +375,26 @@ class INTRP {
       if(a?.orig){
         let m = this.mname(a.orig[0])
         let l = a.orig[1]
-        return a[0] == this.file ? `_(${m} ${l})` : `_${l}`
+        return voca.tr(a[0] == this.file ? `${m} ${l}` : `${l}`, '0123456789', '⁰¹²³⁴⁵⁶⁷⁸⁹')
       }
       return ''
     }
     return x.map(a=>
       a == Infinity ? '$I'
       : typeof a == 'bigint' ? a + 'N'
-      : this.isnum(a) ?
-        a < 0 ? -a + '_' : a + ''
+      : this.isnum(a) ? a + ''
       : this.isrex(a) ? JSON.stringify(a.source) + '?' + (a instanceof RE2 ? '!' : '?') + a.flags
       : this.isstr(a) ? JSON.stringify(a + '') + M(a)
-      : this.isarr(a) ?
-        a.length ?
-          `[ ${this.form(a, ' ')} ]`
-        : '[]'
       : this.ismat(a) ?
-        `[ ${this.form(a.valueOf(), ' ')} ]%`
+        `[${this.form(a.valueOf(), ' ')}]^${a.type == 'SparseMatrix' ? [...a].length : ''}`
       : this.ismap(a) ?
         a.size ?
-          `{ ${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `} }`
+          `{${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `}}`
         : '{}'
+      : this.isarr(a) ?
+        a.length ?
+          `[${this.form(a, ' ')}]`
+        : '[]'
       : this.isitr(a) ? '[...]`'
       : a == undefined ? '$U'
       : a
@@ -438,18 +437,18 @@ class INTRP {
   }
 
   each(O, f=_.map, g=x=> x, s, ind){
-    let X = this.shift()
-    return f(O, (a, i)=>
+    return this.v1(x=> f(O, (a, i)=>
       g(this.quar($=>{
         this.stack[this.st] = s && itr.isIterable(a) ? [...a] : ind ? [i, a] : [a]
-        this.exec(X)
+        this.exec(x)
       })
-    ), X)
+    )), this.shift())
   }
 
-  imap(x, F, f=(a, b)=> a.map(b), g=itr.map, d=[]){
-    if(this.isitr(x)) return g((a, i)=> this.imap(a, F, f, g, [...d, i]), x)
-    if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, f, g, [...d, i]))
+  imap(x, F, f=_.map, g=itr.map, d=[]){
+    if(this.isitr(x)) return g((a, i)=> this.imap(a, F, f, g, d.concat(i)), x)
+    if(this.ismat(x)) x = x.valueOf()
+    if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, f, g, d.concat(i)))
     return F(x, d)
   }
 
@@ -499,7 +498,11 @@ class INTRP {
 
   itrls(x){ return itr.toArray(x) }
 
-  itrlist(x){ return this.itrls(itr.map(a=> this.isitr(a) ? this.itrlist(a) : a, this.listitr(x))) }
+  itrlist(x){
+    return this.itrls(itr.map(a=>
+      this.isitr(a) ? this.itrlist(a) : this.isi(a) ? _.map(a, b=> this.itrlist(b)) : a, this.listitr(x)
+    ))
+  }
 
   mresolve(x){ return path.resolve(process.cwd(), x) }
 

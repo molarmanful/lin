@@ -16,6 +16,7 @@
 - [MATRIX](#MATRIX)
 - [MODULE](#MODULE)
 - [MULTISTACK](#MULTISTACK)
+- [NEST](#NEST)
 - [NUM](#NUM)
 - [OBJ](#OBJ)
 - [STACK](#STACK)
@@ -99,6 +100,8 @@ Command | Description
 <code>&</code> | `all`
 <code>:</code> | `find`
 <code>:#</code> | `findi`
+<code>></code> | `sort`
+<code>>></code> | `sortc`
 <code>,</code> | `zip`
 <code>$</code> | `wrap`
 <code>$$</code> | `enclose`
@@ -106,7 +109,8 @@ Command | Description
 <code>$$_</code> | `usurp`
 <code>;</code> | `2e@`
 <code>;;</code> | `2_ e@`
-<code>%</code> | `mat`
+<code>^</code> | `mat`
+<code>^_</code> | `mat_`
 
 ## FLOW
 
@@ -148,7 +152,7 @@ Command | Description
 <code>\`_\`</code> | convert from iterator to string
 <code>\`it</code> | create iterator from initial value and function 
 <code>\`=</code> | check if iterators are equal
-<code>\`=*</code> | check if iterators are deeply equal
+<code>\`eq</code> | check if iterators are deeply equal
 <code>\`?</code> | check if iterator at index 1 has sequence at index 0
 <code>\`?*</code> | `?` with multiple sequences
 <code>\`cyc</code> | create infinite cycle from index 0
@@ -164,6 +168,7 @@ Command | Description
 <code>\`flat</code> | flatten iterator
 <code>\`melt</code> | flatten iterator by max depth at index 0
 <code>\`xp</code> | split iterator into consecutive slices given by index 0
+<code>\`bi</code> | split iterator in half at index
 <code>\`chunk</code> | split iterator into chunks of length given by index 0
 <code>\`btwn</code> | place index 0 between each element
 <code>\`sp</code> | split iterator on sequence at index 0
@@ -188,14 +193,14 @@ Command | Description
 <code>\`&</code> | check if all elements are truthy after `es`ing index 0 over each element
 <code>\`\|</code> | check if any elements are truthy after `es`ing index 0 over each element
 <code>\`?'</code> | find first element that returns truthy after `es`ing index 0
-<code>\`></code> | sort with comparison function
+<code>\`></code> | sort iterator with comparison function
 
 ## LIST
 
 Command | Description
 --- | ---
 <code>len</code> | length of index 0
-<code>dep</code> | depth of index 0
+<code>dep</code> | max depth of index 0
 <code>'</code> | `es` index 0 on list at index 1
 <code>++</code> | concatenate top 2 items as strings or lists
 <code>r:</code> | get random item from list
@@ -211,9 +216,7 @@ Command | Description
 <code>enclose</code> | enclose entire stack into a list
 <code>dups</code> | push entire stack as list
 <code>usurp</code> | set current stack to the list at index 0
-<code>repl</code> | use list at index 0 as replication mask for list at index 1
-<code>imap</code> | deep map on list with indices
-<code>dmap</code> | depth map
+<code>bins</code> | get insert index of index 0 from binary searching over `es` of index 1 on each element in list
 
 ## LOGIC
 
@@ -239,11 +242,23 @@ Command | Description
 
 Command | Description
 --- | ---
+<code>sz</code> | matrix size
 <code>mat</code> | convert to matrix
 <code>mat_</code> | convert matrix to list
-<code>dim</code> | matrix size
-<code>fl</code> | fill with index 0 to create valid shape
+<code>d:</code> | get diagonal
+<code>fil</code> | autofill with index 0 to create validly-shaped matrix
+<code>>Zs</code> | generate matrix of 0s from size at index 0
 <code>eye</code> | identity matrix with side length at index 0
+<code>flt</code> | flatten matrix
+<code>>sz</code> | resize matrix
+<code>>sh</code> | reshape matrix
+<code>tsp</code> | transpose matrix
+<code>sqz</code> | squeeze matrix
+<code>det</code> | determinant
+<code>inv</code> | inverse
+<code>*kr</code> | Kronecker product
+<code>*dt</code> | dot product
+<code>*cr</code> | cross product
 
 ## MODULE
 
@@ -256,6 +271,7 @@ Command | Description
 Command | Description
 --- | ---
 <code>'s</code> | `es` index 1 on a stack with name given by index 0
+<code>Q</code> | `es` on a copy of stack, then retrieve
 <code>push</code> | push index 1 to another stack with name given by index 0
 <code>pushs</code> | push current stack to another stack with name given by index 0
 <code>pull</code> | push top item of another stack with name given by index 0
@@ -263,6 +279,13 @@ Command | Description
 <code>pulls</code> | pull stack with name given by index 0 to current stack
 <code>hijk</code> | set stack with name given by index 0 to current stack
 <code>absb</code> | set current stack to stack with name given by index 0
+
+## NEST
+
+Command | Description
+--- | ---
+<code>Imap</code> | deep map on list with indices
+<code>repl</code> | use list at index 0 as replication mask for list at index 1
 
 ## NUM
 
@@ -393,7 +416,6 @@ Command | Description
 <code>part</code> | separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
 <code>group</code> | categorize items into keys after `es`ing index 0
 <code>table</code> | map over cartesian product of stack
-<code>bins</code> | get insert index of index 0 from binary searching over `es` of index 1 on each element in stack
 
 ## STR
 

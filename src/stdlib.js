@@ -9,6 +9,7 @@ import LOGIC from './stdlib/logic.js'
 import MATRIX from './stdlib/matrix.js'
 import MODULE from './stdlib/module.js'
 import MULTISTACK from './stdlib/multistack.js'
+import NEST from './stdlib/nest.js'
 import NUM from './stdlib/num.js'
 import OBJ from './stdlib/obj.js'
 import STACK from './stdlib/stack.js'
@@ -26,6 +27,7 @@ let SL = {
   ...MATRIX,
   ...MODULE,
   ...MULTISTACK,
+  ...NEST,
   ...NUM,
   ...OBJ,
   ...STACK,
