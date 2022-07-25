@@ -224,4 +224,10 @@ ITER["`?'"] = $=>{
   $.unshift($.each(itrd($), (x, f)=> itr.find(f, x), $.tru))
 }
 
+// sort with comparison function
+ITER["`>"] = $=>{
+  SL.swap($)
+  $.unshift($.cmp(itrd($), (x, f)=> itr.takeSorted(1 / 0, f, x)))
+}
+
 export default ITER

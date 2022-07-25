@@ -7,6 +7,11 @@ let mat = $=> x=> math.matrix($.itrlist(x))
 // convert to matrix
 MATRIX["mat"] = $=> $.u1(mat($))
 
+// convert matrix to list
+MATRIX["mat_"] = $=>{
+  $.u1(a=> $.ismat(a) ? a.valueOf() : a)
+}
+
 // matrix size
 MATRIX["dim"] = $=> $.u1(math.size)
 

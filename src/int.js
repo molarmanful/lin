@@ -1,4 +1,4 @@
-import {DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
+import {math, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -236,7 +236,7 @@ class INTRP {
       return itr.map(a=> this.v1(f, a), x)
     if(this.isi(x))
       return x.map(a=> this.v1(f, a))
-    return this.prep(f(x, d))
+    return this.prep(f(x))
   }
 
   v2(f, x, y){
@@ -445,6 +445,12 @@ class INTRP {
         this.exec(X)
       })
     ), X)
+  }
+
+  imap(x, F, f=(a, b)=> a.map(b), g=itr.map, d=[]){
+    if(this.isitr(x)) return g((a, i)=> this.imap(a, F, f, g, [...d, i]), x)
+    if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, f, g, [...d, i]))
+    return F(x, d)
   }
 
   acc(O, ac=false, f=_.reduce, g=x=> x){

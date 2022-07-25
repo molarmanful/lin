@@ -23,7 +23,7 @@ Array.prototype.delete = function(i){
 }
 
 let omap = _.map.bind(_)
-_.map = (x, f)=> x instanceof Map ? x.map(f) : omap(x, f)
+_.map = (x, f)=> ['DenseMatrix', 'SparseMatrix'].includes(x?.type) || x instanceof Map ? x.map(f) : omap(x, f)
 
 export * as fs from 'fs'
 export * as cp from 'child_process'

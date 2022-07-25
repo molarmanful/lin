@@ -209,7 +209,7 @@ STACK["sortc"] = $=> $.stack[$.st] = $.cmp($.stack[$.st])
 STACK["part"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.partition, 0, $.tru)
 
 // categorize items into keys after `es`ing index 0
-STACK["group"] = $=> $.stack[$.st] = [$.each($.stack[$.st], _.groupBy)]
+STACK["group"] = $=> $.stack[$.st] = [new Map(Object.entries($.each($.stack[$.st], _.groupBy)))]
 
 // map over cartesian product of stack
 STACK["table"] = $=>{

@@ -188,6 +188,7 @@ Command | Description
 <code>\`&</code> | check if all elements are truthy after `es`ing index 0 over each element
 <code>\`\|</code> | check if any elements are truthy after `es`ing index 0 over each element
 <code>\`?'</code> | find first element that returns truthy after `es`ing index 0
+<code>\`></code> | sort with comparison function
 
 ## LIST
 
@@ -204,6 +205,7 @@ Command | Description
 <code>diff</code> | set difference of lists at index 0 and index 1
 <code>wrap</code> | wrap index 0 in a list
 <code>,</code> | `wrap` top 2 items
+<code>,,</code> | vectorized `,`
 <code>wraps</code> | wrap first _n_ items
 <code>wrap_</code> | opposite of `wrap`; take all items in list at index 0 and push to parent stack
 <code>enclose</code> | enclose entire stack into a list
@@ -211,7 +213,7 @@ Command | Description
 <code>usurp</code> | set current stack to the list at index 0
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
 <code>imap</code> | deep map on list with indices
-<code>ifltr</code> | `imap` with filtering
+<code>dmap</code> | depth map
 
 ## LOGIC
 
@@ -238,6 +240,7 @@ Command | Description
 Command | Description
 --- | ---
 <code>mat</code> | convert to matrix
+<code>mat_</code> | convert matrix to list
 <code>dim</code> | matrix size
 <code>fl</code> | fill with index 0 to create valid shape
 <code>eye</code> | identity matrix with side length at index 0

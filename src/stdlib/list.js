@@ -65,6 +65,9 @@ LIST["wrap"] = $=> $.u1(a=> [a])
 // `wrap` top 2 items
 LIST[","] = $=> $.u2((a, b)=> [a, b])
 
+// vectorized `,`
+LIST[",,"] = $=> $.u2((a, b)=> $.v2((x, y)=> [x, y], a, b))
+
 // wrap first _n_ items
 LIST["wraps"] = $=> $.u1(a=> $.splice(0, a))
 
@@ -97,13 +100,10 @@ LIST["repl"] = $=>{
 // deep map on list with indices
 LIST["imap"] = $=>{
   SL.swap($)
-  $.unshift($.each($.shift(), (x, f)=> math.map(x, f), x=> x, 0, 1))
+  $.unshift($.each($.shift(), (x, f)=> $.imap(x, f), x=> x, 0, 1))
 }
 
-// `imap` with filtering
-LIST["ifltr"] = $=>{
-  SL.swap($)
-  $.unshift($.each($.shift(), (x, f)=> math.filter(x, f), x=> x, 0, 1))
-}
+// depth map
+LIST["dmap"] = $=> $.u1(a=> $.imap(a, (b, i)=> i.length))
 
 export default LIST
