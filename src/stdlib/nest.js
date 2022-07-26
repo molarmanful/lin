@@ -1,4 +1,4 @@
-import {itr, _, SL} from '../bridge.js'
+import {__, itr, _, SL} from '../bridge.js'
 
 let NEST = {}
 
@@ -19,6 +19,55 @@ NEST["repl"] = $=>{
         : []
       )
   $.u2(m)
+}
+
+// lens get
+NEST["%g"] = $=>
+  $.u2((a, b)=>{
+    let O = a
+    $.imap(b, x=>{
+      if(O != void 0) O = $.gind(O, x)
+    })
+    return O
+  })
+
+// lens set
+NEST["%:"] = $=>
+  $.u3((a, b, c)=>{
+
+  })
+
+// lens map flag
+NEST["%a"] = $=> $.unshift(new $.LENS())
+
+// polymorphic map
+NEST["%'"] = $=>{
+  SL.swap($)
+  $.u1(a=> $.each(a, (x, f)=> __.map(f)(x), x=> x, 0, 1))
+}
+
+// polymorphic filter
+NEST["%#"] = $=>{
+  SL.swap($)
+  $.u1(a=> $.each(a, (x, f)=> __.filter(f)(x), x=> x, 0, 1))
+}
+
+// polymorphic find
+NEST["%?'"] = $=>{
+  SL.swap($)
+  $.u1(a=> $.each(a, (x, f)=> __.find(f)(x), x=> x, 0, 1))
+}
+
+// polymorphic any
+NEST["%|"] = $=>{
+  SL.swap($)
+  $.u1(a=> $.each(a, (x, f)=> __.some(f)(x), x=> x, 0, 1))
+}
+
+// polymorphic all
+NEST["%&"] = $=>{
+  SL.swap($)
+  $.u1(a=> !$.each(a, (x, f)=> __.some(__.not(f))(x), x=> x, 0, 1))
 }
 
 export default NEST

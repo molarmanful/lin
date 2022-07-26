@@ -13,6 +13,8 @@ ITER["}`"] = $=> $.exec('} `', 1)
 
 ITER["[]`"] = $=> $.exec('[] `', 1)
 
+ITER["{}`"] = $=> $.exec('{} `', 1)
+
 // convert to iterator recursively
 ITER["``"] = $=> $.u1(a=> $.listitrs(a))
 
@@ -92,10 +94,18 @@ ITER["`rev"] = $=> $.unshift(itr.reverse(itrd($)))
 ITER["`flat"] = $=> $.unshift(itr.flat(itrd($)))
 
 // flatten iterator by max depth at index 0
-ITER["`melt"] = $=> $.unshift(itr.flat($.shift(), itrd($)))
+ITER["`melt"] = $=>
+  $.u2((a, b)=>(
+    a = $.listitr(a),
+    $.v1(x=> itr.flat(x, a), b)
+  ))
 
 // split iterator into consecutive slices given by index 0
-ITER["`xp"] = $=> $.unshift(itr.window($.shift(), itrd($)))
+ITER["`xp"] = $=>
+  $.u2((a, b)=>(
+    a = $.listitr(a),
+    $.v1(x=> itr.window(x, a), b)
+  ))
 
 // split iterator in half at index
 ITER["`bi"] = $=>
@@ -109,10 +119,10 @@ ITER["`bi"] = $=>
 
 // split iterator into chunks of length given by index 0
 ITER["`chunk"] = $=>
-  $.u2((a, b)=>{
-    a = $.listitr(a)
-    return $.v1(x=> itr.batch(x, a), b)
-  })
+  $.u2((a, b)=>(
+    a = $.listitr(a),
+    $.v1(x=> itr.batch(x, a), b)
+  ))
 
 // place index 0 between each element
 ITER["`btwn"] = $=> $.unshift(itr.interposeSeq(itrd($), itrd($)))

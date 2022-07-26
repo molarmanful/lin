@@ -6,13 +6,14 @@ BASE["("] = $=> $.lambda = 1
 
 BASE["$("] = $=>{
   $.lambda = 1
+  $.scoped = 1
   SL['(']($)
 }
 
 BASE[")"] = $=>{
   let X = $.paren.join` `
   if($.scoped){
-    X = `\${ ${X} }$`
+    X = `\${ ${X} }`
     $.scoped = 0
   }
   $.unshift(X)
@@ -42,23 +43,27 @@ BASE["{"] = $=>{
   $.iter.push($.st)
   $.st = $.iter.at(-1) + '\n'
   $.stack[$.st] = []
+  $.curls.push(1)
 }
 
 BASE["}"] = $=>{
-  let X = $.objs.pop()
-  delete $.stack[$.iter.at(-1) + '\n']
-  $.st = $.iter.pop()
-  $.unshift(X)
+  let X = $.curls.pop()
+  if(X == 1){
+    let X = $.objs.pop()
+    delete $.stack[$.iter.at(-1) + '\n']
+    $.st = $.iter.pop()
+    $.unshift(X)
+  }
+  else if(X == 2){
+    $.scope.pop()
+    $.scopin--
+  }
 }
 
 // create new scope
 BASE["${"] = $=>{
   $.scope.push({})
-}
-
-// destroy current scope
-BASE["}$"] = $=>{
-  $.scope.pop()
+  $.curls.push(2)
 }
 
 // push string at ID given by index 0
@@ -71,7 +76,7 @@ BASE["gi"] = $=>
 // `gi` but follow scoping rules
 BASE["gl"] = $=>
   $.u1(a=> $.v1(x=>{
-    if($.getscope(x) == undefined) $.id(x)
+    if($.getscope(x) == void 0) $.id(x)
     return $.getscope(x)
   }, a))
 
@@ -125,6 +130,7 @@ BASE["type"] = $=>{
   let X = $.shift()
   $.unshift(
     $.isarr(X) ? 'arr'
+    : $.islen(X) ? 'len'
     : $.ismat(X) ? 'mat'
     : $.ismap(X) ? 'obj'
     : $.isstr(X) ? 'str'

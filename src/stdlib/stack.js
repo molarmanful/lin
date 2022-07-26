@@ -110,8 +110,7 @@ STACK["flat"] = $=> $.stack[$.st] = $.stack[$.st].flat()
 STACK["blob"] = $=> $.stack[$.st] = $.stack[$.st].flat(1 / 0)
 
 // split stack into _n_ lists, where _n_ is index 0
-STACK["rows"] = $=>{
-  let X = $.shift()
+STACK["rows"] = $=>
   $.stack[$.st] = $.v1(x=>{
     let O = $.stack[$.st]
     let Y = O.length / x
@@ -119,11 +118,10 @@ STACK["rows"] = $=>{
     O = _.chunk(O, YY)
     if(Y > YY) O.splice(-2, 2, O.slice(-2).flat())
     return O
-  }, X)
-}
+  }, $.shift())
 
 // split stack into lists of length _n_, where _n_ is index 0
-STACK["cols"] = $=> $.stack[$.st] = _.chunk($.stack[$.st], $.shift())
+STACK["cols"] = $=> $.stack[$.st] = $.v1(x=> _.chunk($.stack[$.st], x), $.shift())
 
 // reshape the stack using dimensions at index 0
 STACK["shape"] = $=>{
@@ -162,19 +160,37 @@ STACK["fold"] = $=> $.stack[$.st] = [$.acc($.stack[$.st])]
 // `fold` with initial accumulator
 STACK["folda"] = $=> $.stack[$.st] = [$.acc($.stack[$.st], 1)]
 
-// `fold` with intermediate values
-STACK["scan"] = $=>{
-  let X = []
-  let Y = $.acc($.stack[$.st], 0, _.reduce, (A, a)=> (X.push(a), A))
-  $.stack[$.st] = [...X, Y]
+let scan = (xs, f)=>{
+  let acc = xs.shift()
+  let l = xs.length
+  let res = Array(l)
+  let i = 0
+  while(i < l){
+    res[i] = acc
+    acc = f(acc, xs[i])
+    i++
+  }
+  res[i] = acc
+  return res
 }
 
-// `scan` with initial accumulator
-STACK["scana"] = $=>{
-  let X = []
-  $.acc($.stack[$.st], 1, _.reduce, (A, a)=> (X.push(A), A))
-  $.stack[$.st] = X
+let scana = (xs, f, acc)=>{
+  let l = xs.length
+  let res = Array(l)
+  let i = 0
+  while(i < l){
+    acc = f(acc, xs[i])
+    res[i] = acc
+    i++
+  }
+  return res
 }
+
+// `fold` with intermediate values
+STACK["scan"] = $=> $.stack[$.st] = wrap($)($.acc($.stack[$.st], 0, scan))
+
+// `scan` with initial accumulator
+STACK["scana"] = $=> $.stack[$.st] = wrap($)($.acc($.stack[$.st], 1, scana))
 
 // remove each item that is falsy after `es`
 STACK["filter"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.filter, $.tru))
@@ -186,19 +202,19 @@ STACK["any"] = $=> $.unshift($.each($.stack[$.st], _.some, $.tru))
 STACK["all"] = $=> $.unshift($.each($.stack[$.st], _.every, $.tru))
 
 // find first item that returns truthy after `es` or undefined on failure
-STACK["find"] = $=> $.unshift($.each($.stack[$.st], _.findLast, $.tru))
+STACK["find"] = $=> $.unshift($.each($.stack[$.st], _.find, $.tru))
 
 // `find` but returns index
 STACK["findi"] = $=>{
-  let X = $.each($.stack[$.st], _.findLastIndex, $.tru)
-  $.unshift(~X || undefined)
+  let X = $.each($.stack[$.st], _.findIndex, $.tru)
+  $.unshift($.v1(x=> ~x ? $.stack[$.st].length + ~x : void 0, X))
 }
 
 // `take` items until `es` returns falsy for an item
 STACK["takew"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.takeRightWhile, 0, $.tru))
 
 // `drop` items until `es` returns falsy for an item
-STACK["dropw"] = $=> $.stack[$.st] = $.each($.stack[$.st], _.dropRightWhile, 0, $.tru)
+STACK["dropw"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.dropRightWhile, 0, $.tru))
 
 // sort items based on `es`
 STACK["sort"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.sortBy))

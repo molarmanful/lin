@@ -27,7 +27,6 @@
 Command | Description
 --- | ---
 <code>${</code> | create new scope
-<code>}$</code> | destroy current scope
 <code>gi</code> | push string at ID given by index 0
 <code>gl</code> | `gi` but follow scoping rules
 <code>.</code> | magic dot
@@ -122,6 +121,7 @@ Command | Description
 <code>e\|</code> | `es` if index 0 is falsy
 <code>e?</code> | `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
 <code>ew</code> | while `es` on index 1 is truthy, `es` on index 0
+<code>e!</code> | try `es` on index 1 and catch with index 0
 <code>e@</code> | `es` next *n* lines, where *n* is index 0
 <code>@</code> | `es` current line
 <code>;</code> | `es` next line
@@ -286,6 +286,14 @@ Command | Description
 --- | ---
 <code>Imap</code> | deep map on list with indices
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
+<code>%g</code> | lens get
+<code>%:</code> | lens set
+<code>%a</code> | lens map flag
+<code>%'</code> | polymorphic map
+<code>%#</code> | polymorphic filter
+<code>%?'</code> | polymorphic find
+<code>%\|</code> | polymorphic any
+<code>%&</code> | polymorphic all
 
 ## NUM
 

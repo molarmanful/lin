@@ -50,6 +50,22 @@ FLOW["ew"] = $=>{
   $.exec(Y, 1)
 }
 
+// try `es` on index 1 and catch with index 0
+FLOW["e!"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  $.catch = 1
+  try {
+    $.exec(Y)
+    $.catch = 0
+  }
+  catch(e){
+    $.catch = 0
+    $.unshift(Error(e).message)
+    $.exec(X)
+  }
+}
+
 // `es` next *n* lines, where *n* is index 0
 FLOW["e@"] = $=> $.eline($.shift())
 

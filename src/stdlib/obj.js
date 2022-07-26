@@ -54,21 +54,9 @@ OBJ["el"] = $=>{
 }
 
 // parse JSON string
-OBJ["<json"] = $=>{
-  let P = x=>
-    $.isarr(x) ? x.map(P)
-    : $.isobj(x) ? new Map(Object.entries(x)).map(P)
-    : x
-  $.u1(a=> $.v1(x=> P(JSON.parse(x)), a))
-}
+OBJ["<json"] = $=> $.u1(a=> $.v1(x=> $.js2lin(JSON.parse(x)), a))
 
 // serialize as JSON
-OBJ[">json"] = $=>{
-  let S = x=>
-    $.isarr(x) ? x.map(S)
-    : $.isobj(x) ? Object.fromEntries(Array.from(x, ([a, b])=> [$.str(a) + '', S(b)]))
-    : x
-  $.u1(a=> JSON.stringify(S(a)))
-}
+OBJ[">json"] = $=> $.u1(a=> JSON.stringify($.lin2js(a)))
 
 export default OBJ

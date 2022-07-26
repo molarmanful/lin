@@ -8,7 +8,9 @@ let mat = $=> x=> math.matrix(x, 'sparse')
 MATRIX["sz"] = $=> $.u1(math.size)
 
 // convert to matrix
-MATRIX["mat"] = $=> $.u1(a=> mat($)($.itrlist(a)))
+MATRIX["mat"] = $=> $.u1(mat($))
+
+MATRIX["]^"] = $=> $.exec('] mat', 1)
 
 // convert matrix to list
 MATRIX["mat_"] = $=> $.u1(a=> $.ismat(a) ? a.valueOf() : a)

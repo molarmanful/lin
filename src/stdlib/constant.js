@@ -3,7 +3,7 @@ import {RI, MIS, itr, _} from '../bridge.js'
 let CONSTANT = {}
 
 // undefined
-CONSTANT["$U"] = $=> $.unshift(undefined)
+CONSTANT["$U"] = $=> $.unshift(void 0)
 
 // empty string
 CONSTANT["()"] = $=> $.unshift('')

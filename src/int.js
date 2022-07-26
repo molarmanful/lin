@@ -1,4 +1,5 @@
-import {voca, math, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL} from './bridge.js'
+import $ from '@stdlib/esm/stats/anova1.js'
+import {voca, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL, __} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -6,6 +7,12 @@ class PKG {
     this.file = f
     this.ids = _.cloneDeep(SL)
     this.lines = []
+  }
+}
+
+class LENS {
+  constructor(x){
+    this.x = x
   }
 }
 
@@ -26,10 +33,13 @@ class INTRP {
     this.step = opts.step
     this.scope = []
     this.scoped = 0
+    this.curls = []
     this.apos = 0
+    this.catch = 0
     this.objs = []
     this.file = file && this.mresolve(file)
     this.PKG = PKG
+    this.LENS = LENS
     this.pkg = []
     this.pkf = []
 
@@ -88,8 +98,11 @@ class INTRP {
             ].map(a=> console.log(a))
           }
 
+          // ignore lenses
+          if(this.islen(a)){}
+
           // for internal JS calls from commands
-          if(this.isfun(a)) a()
+          else if(this.isfun(a)) a()
 
           // lambda mode
           else if(this.lambda){
@@ -118,7 +131,7 @@ class INTRP {
               this.gl = 0
               a = unesc(a)
             }
-            this.unshift(a.slice(1, a.slice(-1) == '"' ? -1 : undefined))
+            this.unshift(a.slice(1, a.slice(-1) == '"' ? -1 : void 0))
           }
 
           // numbers
@@ -203,13 +216,36 @@ class INTRP {
   }
 
   err(x){
-    console.error(chalk.redBright(`ERR: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
-    process.exit(1)
+    if(this.catch) throw x + ''
+    else {
+      console.error(chalk.redBright(`ERR: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
+      process.exit(1)
+    }
   }
 
   warn(x){
     if(this.verbose)
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
+  }
+
+  js2lin(x){
+    let r = a=> this.js2lin(a)
+    return (
+      this.isarr(x) ? x.map(r)
+      : this.isobj(x) ? new Map(Object.entries(x)).map(r)
+      : x
+    )
+  }
+
+  lin2js(x){
+    let r = a=> this.lin2js(a)
+    return (
+      this.ismap(x) ? Object.fromEntries(Array.from(x, ([a, b])=> [$.str(a) + '', r(b)]))
+      : this.isitr(x) ? this.itrls(itr.map(r, x))
+      : this.ismat(x) ? x.valueOf().map(r)
+      : this.isarr(x) ? x.map(r)
+      : x
+    )
   }
 
   u1(f){
@@ -396,7 +432,8 @@ class INTRP {
           `[${this.form(a, ' ')}]`
         : '[]'
       : this.isitr(a) ? '[...]`'
-      : a == undefined ? '$U'
+      : this.islen(a) ? `{${a.x.name}}%`
+      : a == void 0 ? '$U'
       : a
     ).join(y)
   }
@@ -415,11 +452,11 @@ class INTRP {
   get(x){ return this.gind(this.stack[this.st], ~x) }
 
   clone(x){
-    return _.cloneDeepWith(x, a=> this.isitr(a) ? a : undefined)
+    return _.cloneDeepWith(x, a=> this.isitr(a) ? a : void 0)
   }
 
   splice(x, y=1, z){
-    return z != undefined ? this.stack[this.st].splice(~x, y, z) : this.stack[this.st].splice(~x, y)
+    return z != void 0 ? this.stack[this.st].splice(~x, y, z) : this.stack[this.st].splice(~x, y)
   }
 
   shift(){ return this.clone(this.strtag(this.stack[this.st].pop())) }
@@ -455,19 +492,19 @@ class INTRP {
   acc(O, ac=false, f=_.reduce, g=x=> x){
     let X = this.shift()
     let Y = ac && this.shift()
-    let F = (a, b)=>
+    let F = x=> (a, b)=>
       g(this.quar($=>{
-        this.stack[this.st] = [b, a]
-        this.exec(X)
+        this.stack[this.st] = [a, b]
+        this.exec(x)
       }), a)
-    return ac ? f(O, F, Y) : f(O, F)
+    return this.v1(ac ? x=> f(O, F(x), Y) : x=> f(O, F(x)), X)
   }
 
   cmp(O, f=(x, f)=> x.sort(f), g=x=> x){
     let X = this.shift()
     return f(O, (a, b)=>
       g(this.quar($=>{
-        this.stack[this.st] = [b, a]
+        this.stack[this.st] = [a, b]
         this.exec(X)
       })
     ))
@@ -559,6 +596,8 @@ class INTRP {
   isfun(x){ return _.isFunction(x) }
 
   ismat(x){ return ['DenseMatrix', 'SparseMatrix'].includes(x?.type) }
+
+  islen(x){ return x instanceof LENS}
 }
 
 export default INTRP
