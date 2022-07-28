@@ -91,7 +91,4 @@ DOT["^"] = SL.mat
 // `mat_`
 DOT["^_"] = SL.mat_
 
-// `%craft`
-DOT["%"] = SL['%craft']
-
 export default DOT

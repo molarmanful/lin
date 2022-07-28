@@ -111,7 +111,6 @@ Command | Description
 <code>;;</code> | `2_ e@`
 <code>^</code> | `mat`
 <code>^_</code> | `mat_`
-<code>%</code> | `%craft`
 
 ## FLOW
 
