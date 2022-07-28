@@ -111,6 +111,7 @@ Command | Description
 <code>;;</code> | `2_ e@`
 <code>^</code> | `mat`
 <code>^_</code> | `mat_`
+<code>%</code> | `%craft`
 
 ## FLOW
 
@@ -141,6 +142,7 @@ Command | Description
 <code>inh</code> | push user input without echoing
 <code>out</code> | output index 0 to STDOUT
 <code>outln</code> | output index 0 as a line to STDOUT
+<code>show</code> | `form outln`
 
 ## ITER
 
@@ -286,10 +288,11 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>Imap</code> | deep map on list with indices
+<code>imap</code> | deep map on list with indices
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
-<code>%g</code> | lens get
-<code>%:</code> | lens mod
+<code>walk</code> | traverse nested structure with function
+<code>%g</code> | lens view
+<code>%:</code> | lens modify
 <code>%a</code> | lens map
 <code>%f</code> | lens filter
 <code>%F</code> | lens find

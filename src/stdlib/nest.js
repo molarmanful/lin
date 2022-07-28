@@ -3,9 +3,9 @@ import {__, itr, _, SL} from '../bridge.js'
 let NEST = {}
 
 // deep map on list with indices
-NEST["Imap"] = $=>{
+NEST["imap"] = $=>{
   SL.swap($)
-  $.unshift($.each($.shift(), (x, f)=> $.imap(x, f), x=> x, 0, 1))
+  $.u1(a=> $.each(a, (x, f)=> $.imap(x, f), x=> x, 0, 1))
 }
 
 // use list at index 0 as replication mask for list at index 1
@@ -21,12 +21,23 @@ NEST["repl"] = $=>{
   $.u2(m)
 }
 
-NEST["walk"] = $=>{} // TODO: walk
+// traverse nested structure with function
+NEST["walk"] = $=>{
+  let m = (x, F, d=[])=>{
+    x = F(x, d)
+    if($.isitr(x)) return itr.map((a, i)=> m(a, F, d.concat(i)), x)
+    if($.ismat(x)) x = x.valueOf()
+    if($.isi(x)) return _.map(x, (a, i)=> m(a, F, d.concat(i)))
+    return x
+  }
+  SL.swap($)
+  $.u1(a=> $.each(a, (x, f)=> m(x, f), x=> x, 0, 1))
+}
 
-// lens get
+// lens view
 NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))
 
-// lens mod
+// lens modify
 NEST["%:"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c))
 
 // lens map

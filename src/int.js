@@ -255,17 +255,21 @@ class INTRP {
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
   }
 
+  tlen(f){
+    return a=>
+      this.tru(this.quar($=>{
+        this.stack[this.st] = [a]
+        this.exec(f)
+      }))
+  }
+
   tlens(f){
     return (
       !this.islen(f) ? 
         !this.isstr(f) ?
           this.ismap(f) ? Object.fromEntries(__.map(a=> this.tlens(a))(f).entries())
           : __.map(a=> this.tlens(a))
-        : a=>
-          this.tru(this.quar($=>{
-            this.stack[this.st] = [a]
-            this.exec(f)
-          }))
+        : this.tlen(f)
       : f
     )
   }
