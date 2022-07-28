@@ -1,4 +1,3 @@
-import $ from '@stdlib/esm/stats/anova1.js'
 import {voca, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL, __} from './bridge.js'
 
 class PKG {
@@ -11,8 +10,9 @@ class PKG {
 }
 
 class LENS {
-  constructor(x){
-    this.x = x
+  constructor(g, m){
+    this.get = g
+    this.mod = m
   }
 }
 
@@ -43,19 +43,41 @@ class INTRP {
     this.pkg = []
     this.pkf = []
 
+    this.lens = {
+      a: new LENS(x=> x, __.map),
+      f: f=>{
+        let g = __.matching(f)
+        return new LENS(g.get, g.mod)
+      },
+      F: f=>{
+        let g = __.findBy(f)
+        return new LENS(g.get, g.mod)
+      },
+      MX: f=>{
+        let g = __.maxBy(f)
+        return new LENS(g.get, g.mod)
+      },
+      MN: f=>{
+        let g = __.minBy(f)
+        return new LENS(g.get, g.mod)
+      },
+    }
+
     this.exec(this.lines[0])
   }
 
   exec(x, y){
 
-    if(this.isarr(x) || this.ismap(x))
-      this.unshift(x.map(a=>
-        this.quar($=>{
-          this.stack[this.st] = this.stack[this.iter.at(-1)].slice()
-          this.exec(a)
-          SL.enclose(this)
-        })
-      ))
+    if(this.isarr(x) || this.ismap(x) || this.ismat(x) || this.isitr(x)){
+      let F = a=> this.quar($=>{
+        this.stack[this.st] = this.stack[this.iter.at(-1)].slice()
+        this.exec(a)
+        SL.enclose(this)
+      })
+      if(this.ismat(x)) x = x.valueOf()
+      if(this.isitr(x)) this.unshift(itr.map(F, x))
+      else this.unshift(__.map(F)(x))
+    }
 
     else {
       if(!this.isstr(x)) x += ''
@@ -161,6 +183,11 @@ class INTRP {
                 SL['??'](this)
               }
 
+              else if(a[1] && a[0] == '='){
+                this.unshift(a.slice(1))
+                SL['>:'](this)
+              }
+
               else if(a[0] == '?'){
                 this.unshift(a.slice(1))
                 SL['?'](this)
@@ -228,6 +255,50 @@ class INTRP {
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
   }
 
+  tlens(f){
+    return (
+      !this.islen(f) ? 
+        !this.isstr(f) ?
+          this.ismap(f) ? Object.fromEntries(__.map(a=> this.tlens(a))(f).entries())
+          : __.map(a=> this.tlens(a))
+        : a=>
+          this.tru(this.quar($=>{
+            this.stack[this.st] = [a]
+            this.exec(f)
+          }))
+      : f
+    )
+  }
+
+  lpre(xs, ls){
+    if(this.ismat(xs)) xs = xs.valueOf()
+    else if(this.isitr(xs)) xs = this.itrlist(xs)
+    ls = __.map(x=> this.untag(x))(_.flattenDeep(ls))
+    return [xs, ls]
+  }
+
+  lget(xs, ls){
+    [xs, ls] = this.lpre(xs, ls)
+    return __.get(...ls)(xs)
+  }
+
+  lmod(xs, y, ls){
+    [xs, ls] = this.lpre(xs, ls)
+    let R = (xs, y, ls) =>{
+      if(xs != void 0){
+        if(ls.length == 0) return y(xs)
+        let [l, ...rs] = ls
+        if(this.islen(l)) return l.mod(a=> R(a, y, rs))(xs)
+        xs.set(l, R(xs.get(l), y, rs))
+        return xs
+      }
+    }
+    return R(xs, a=> this.quar($=>{
+      this.stack[this.st] = [a]
+      this.exec(y)
+    }), ls)
+  }
+
   js2lin(x){
     let r = a=> this.js2lin(a)
     return (
@@ -244,7 +315,7 @@ class INTRP {
       : this.isitr(x) ? this.itrls(itr.map(r, x))
       : this.ismat(x) ? x.valueOf().map(r)
       : this.isarr(x) ? x.map(r)
-      : x
+      : this.untag(x)
     )
   }
 
@@ -416,10 +487,10 @@ class INTRP {
       return ''
     }
     return x.map(a=>
-      a == Infinity ? '$I'
+      this.isrex(a) ? JSON.stringify(a.source) + '?' + (a instanceof RE2 ? '!' : '?') + a.flags
+      : a == Infinity ? '$I'
       : typeof a == 'bigint' ? a + 'N'
       : this.isnum(a) ? a + ''
-      : this.isrex(a) ? JSON.stringify(a.source) + '?' + (a instanceof RE2 ? '!' : '?') + a.flags
       : this.isstr(a) ? JSON.stringify(a + '') + M(a)
       : this.ismat(a) ?
         `[${this.form(a.valueOf(), ' ')}]^${a.type == 'SparseMatrix' ? [...a].length : ''}`
@@ -432,7 +503,7 @@ class INTRP {
           `[${this.form(a, ' ')}]`
         : '[]'
       : this.isitr(a) ? '[...]`'
-      : this.islen(a) ? `{${a.x.name}}%`
+      : this.islen(a) ? `{...}%`
       : a == void 0 ? '$U'
       : a
     ).join(y)
@@ -489,12 +560,12 @@ class INTRP {
     return F(x, d)
   }
 
-  acc(O, ac=false, f=_.reduce, g=x=> x){
+  acc(O, ac=0, f=_.reduce, ind, g=x=> x){
     let X = this.shift()
     let Y = ac && this.shift()
-    let F = x=> (a, b)=>
+    let F = x=> (a, b, i)=>
       g(this.quar($=>{
-        this.stack[this.st] = [a, b]
+        this.stack[this.st] = ind ? [i, a, b] : [a, b]
         this.exec(x)
       }), a)
     return this.v1(ac ? x=> f(O, F(x), Y) : x=> f(O, F(x)), X)

@@ -184,7 +184,7 @@ STR["?S"] = $=>{
     }))
   }
   $.u3((a, b, c)=> $.v3((x, y, z)=>
-    ($.str(x) + '').replace($.arex(y), r($.str(z) + '')), a, b, c
+    ($.str(x) + '').replace($.arex(y), r($.str(z))), a, b, c
   ))
 }
 

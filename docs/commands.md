@@ -38,6 +38,7 @@ Command | Description
 <code>si</code> | set global ID at index 0
 <code>sl</code> | `si` but follow scoping rules
 <code>sL</code> | `sl` but without overriding existing scoping rules
+<code>>:</code> | `gl`, `es` index 1, and `sL` in isolated stack
 <code>::</code> | bring ID at index 0 as string into global scope
 <code>type</code> | push type of index 0
 
@@ -228,6 +229,7 @@ Command | Description
 <code>==</code> | strict equal
 <code>==_</code> | `==` but non-vectorized
 <code>eq</code> | deep equal
+<code>eq!</code> | strict deep equal
 <code>!=</code> | not equal
 <code>!=_</code> | `!=` but non-vectorized
 <code>!==</code> | strict not equal
@@ -287,9 +289,15 @@ Command | Description
 <code>Imap</code> | deep map on list with indices
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
 <code>%g</code> | lens get
-<code>%:</code> | lens set
-<code>%a</code> | lens map flag
+<code>%:</code> | lens mod
+<code>%a</code> | lens map
+<code>%f</code> | lens filter
+<code>%F</code> | lens find
+<code>%Mx</code> | lens max
+<code>%Mn</code> | lens min
 <code>%'</code> | polymorphic map
+<code>%/</code> | polymorphic fold
+<code>%/a</code> | polymorphic fold with accumulator
 <code>%#</code> | polymorphic filter
 <code>%?'</code> | polymorphic find
 <code>%\|</code> | polymorphic any

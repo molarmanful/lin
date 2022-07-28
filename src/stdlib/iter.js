@@ -193,18 +193,37 @@ ITER["`/a"] = $=>{
 
 // `\`/` with intermediate values
 ITER["`\\"] = $=>{
-  let X = []
+  let scan = function*(f, xs){
+    let i = 0
+    let fr, acc
+    for(let x of xs){
+      if(!fr){
+        acc = x
+        fr = 1
+        continue
+      }
+      yield acc
+      acc = f(acc, x, i)
+      i++
+    }
+    yield acc
+  }
   SL.swap($)
-  let Y = $.acc(itrd($), 0, (x, f)=> itr.reduce(f, x), (A, a)=> (X.push(a), A))
-  $.unshift([...X, Y])
+  $.unshift($.acc(itrd($), 0, (x, f)=> scan(f, x)))
 }
 
 // `\`\\` with accumulator
 ITER["`\\a"] = $=>{
-  let X = []
+  let scana = function*(f, xs, acc){
+    let i = 0
+    for(let x of xs){
+      acc = f(acc, x, i)
+      yield acc
+      i++
+    }
+  }
   SL.rot($)
-  let Y = $.acc(itrd($), 1, (x, f)=> itr.reduce(f, x), (A, a)=> (X.push(A), A))
-  $.unshift(X)
+  $.unshift($.acc(itrd($), 1, (x, f, a)=> scana(f, x, a)))
 }
 
 // filter truthy results after `es`ing index 0 over each element

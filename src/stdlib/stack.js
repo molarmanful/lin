@@ -93,7 +93,7 @@ STACK["orang"] = $=> $.unshift(...$.v1(x=> $.range(x, 0), $.shift()))
 STACK["shuf"] = $=> $.stack[$.st] = _.shuffle($.stack[$.st])
 
 // remove all duplicates in current stack
-STACK["uniq"] = $=> $.stack[$.st] = _.uniq($.stack[$.st])
+STACK["uniq"] = $=> $.stack[$.st] = _.uniqBy($.stack[$.st], a=> $.untag(a))
 
 // keep top _n_ items, where _n_ is index 0
 STACK["take"] = $=>

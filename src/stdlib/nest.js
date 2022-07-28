@@ -21,29 +21,46 @@ NEST["repl"] = $=>{
   $.u2(m)
 }
 
+NEST["walk"] = $=>{} // TODO: walk
+
 // lens get
-NEST["%g"] = $=>
-  $.u2((a, b)=>{
-    let O = a
-    $.imap(b, x=>{
-      if(O != void 0) O = $.gind(O, x)
-    })
-    return O
-  })
+NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))
 
-// lens set
-NEST["%:"] = $=>
-  $.u3((a, b, c)=>{
+// lens mod
+NEST["%:"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c))
 
-  })
+// lens map
+NEST["%a"] = $=> $.unshift($.lens.a)
 
-// lens map flag
-NEST["%a"] = $=> $.unshift(new $.LENS())
+// lens filter
+NEST["%f"] = $=> $.u1(a=> $.lens.f($.tlens(a)))
+
+// lens find
+NEST["%F"] = $=> $.u1(a=> $.lens.F($.tlens(a)))
+
+// lens max
+NEST["%Mx"] = $=> $.u1(a=> $.lens.MX($.tlens(a)))
+
+// lens min
+NEST["%Mn"] = $=> $.u1(a=> $.lens.MN($.tlens(a)))
 
 // polymorphic map
 NEST["%'"] = $=>{
   SL.swap($)
   $.u1(a=> $.each(a, (x, f)=> __.map(f)(x), x=> x, 0, 1))
+}
+
+// polymorphic fold
+NEST["%/"] = $=>{
+  SL.swap($)
+  $.u1(a=> $.acc(a, 0, (x, f)=> __.reduce(f)(x), 1))
+}
+
+// polymorphic fold with accumulator
+NEST["%/a"] = $=>{
+  let folda = (x, f, a)=> (__.map((b, i)=> a = f(a, b, i))(x), a)
+  SL.swap($)
+  $.u1(a=> $.acc(a, 1, (x, f, y)=> folda(y, f, x), 1))
 }
 
 // polymorphic filter
