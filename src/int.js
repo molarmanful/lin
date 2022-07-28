@@ -564,6 +564,14 @@ class INTRP {
     return F(x, d)
   }
 
+  walk(x, F, d=[]){
+    x = F(x, d)
+    if(this.isitr(x)) return itr.map((a, i)=> this.walk(a, F, d.concat(i)), x)
+    if(this.ismat(x)) x = x.valueOf()
+    if(this.isi(x)) return _.map(x, (a, i)=> this.walk(a, F, d.concat(i)))
+    return x
+  }
+
   acc(O, ac=0, f=_.reduce, ind, g=x=> x){
     let X = this.shift()
     let Y = ac && this.shift()

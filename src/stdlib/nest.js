@@ -23,16 +23,17 @@ NEST["repl"] = $=>{
 
 // traverse nested structure with function
 NEST["walk"] = $=>{
-  let m = (x, F, d=[])=>{
-    x = F(x, d)
-    if($.isitr(x)) return itr.map((a, i)=> m(a, F, d.concat(i)), x)
-    if($.ismat(x)) x = x.valueOf()
-    if($.isi(x)) return _.map(x, (a, i)=> m(a, F, d.concat(i)))
-    return x
-  }
   SL.swap($)
-  $.u1(a=> $.each(a, (x, f)=> m(x, f), x=> x, 0, 1))
+  $.u1(a=> $.each(a, (x, f)=> $.walk(x, f), x=> x, 0, 1))
 }
+
+// get all paths
+NEST["paths"] = $=>
+  $.u1(a=>{
+    let A = []
+    $.walk(a, (x, d)=>(A.push(d), x))
+    return A
+  })
 
 // lens view
 NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))

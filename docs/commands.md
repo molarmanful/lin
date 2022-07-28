@@ -291,6 +291,7 @@ Command | Description
 <code>imap</code> | deep map on list with indices
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
 <code>walk</code> | traverse nested structure with function
+<code>paths</code> | get all paths
 <code>%g</code> | lens view
 <code>%:</code> | lens modify
 <code>%a</code> | lens map
