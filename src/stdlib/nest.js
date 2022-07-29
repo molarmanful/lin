@@ -11,7 +11,7 @@ NEST["imap"] = $=>{
   $.u1(a=> $.each(a, (x, f)=> $.imap(x, f), x=> x, 0, 1))
 }
 
-// deep map on list with indices
+// `imap` with depth limit
 NEST["dmap"] = $=>{
   let D = $.shift()
   SL.swap($)

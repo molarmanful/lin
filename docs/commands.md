@@ -295,7 +295,7 @@ Command | Description
 --- | ---
 <code>dep</code> | max depth of index 0
 <code>imap</code> | deep map on list with indices
-<code>dmap</code> | deep map on list with indices
+<code>dmap</code> | `imap` with depth limit
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
 <code>walk</code> | traverse nested structure with function
 <code>\`ps</code> | get all paths
