@@ -28,12 +28,15 @@ NEST["walk"] = $=>{
 }
 
 // get all paths
-NEST["paths"] = $=>
-  $.u1(a=>{
-    let A = []
-    $.walk(a, (x, d)=>(A.push(d), x))
-    return A
-  })
+NEST["`ps"] = $=> $.u1(a=> $.paths(a))
+
+// get all views
+NEST["`vs"] = $=> $.u1(a=> $.paths(a, 1))
+
+// get all paths and views
+NEST["`pvs"] = $=> $.u1(a=> $.paths(a, 2))
+
+NEST["%craft"] = $=> $.u2((a, b)=> new $.LENS(x=> $.tlen(a, x), f=> x=> f($.tlen(b, x))))
 
 // lens view
 NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))

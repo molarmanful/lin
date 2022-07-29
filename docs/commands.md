@@ -85,6 +85,7 @@ Command | Description
 --- | ---
 <code>.</code> | `lns`
 <code>+</code> | `dup`
+<code>+_</code> | `over`
 <code>-</code> | `pop`
 <code>~</code> | `swap`
 <code>@</code> | `rot`
@@ -99,7 +100,7 @@ Command | Description
 <code>\|</code> | `any`
 <code>&</code> | `all`
 <code>:</code> | `find`
-<code>:#</code> | `findi`
+<code>#:</code> | `findi`
 <code>></code> | `sort`
 <code>>></code> | `sortc`
 <code>,</code> | `zip`
@@ -111,6 +112,8 @@ Command | Description
 <code>;;</code> | `2_ e@`
 <code>^</code> | `mat`
 <code>^_</code> | `mat_`
+<code>%</code> | `%craft`
+<code>*</code> | `b*`
 
 ## FLOW
 
@@ -248,6 +251,8 @@ Command | Description
 <code>sz</code> | matrix size
 <code>mat</code> | convert to matrix
 <code>mat_</code> | convert matrix to list
+<code>>sp</code> | convert to sparse matrix
+<code>>dn</code> | convert to dense matrix
 <code>d:</code> | get diagonal
 <code>fil</code> | autofill with index 0 to create validly-shaped matrix
 <code>>Zs</code> | generate matrix of 0s from size at index 0
@@ -256,6 +261,8 @@ Command | Description
 <code>>sz</code> | resize matrix
 <code>>sh</code> | reshape matrix
 <code>tsp</code> | transpose matrix
+<code>m@</code> | rotate matrix clockwise
+<code>m@_</code> | rotate matrix counterclockwise
 <code>sqz</code> | squeeze matrix
 <code>det</code> | determinant
 <code>inv</code> | inverse
@@ -290,7 +297,9 @@ Command | Description
 <code>imap</code> | deep map on list with indices
 <code>repl</code> | use list at index 0 as replication mask for list at index 1
 <code>walk</code> | traverse nested structure with function
-<code>paths</code> | get all paths
+<code>\`ps</code> | get all paths
+<code>\`vs</code> | get all views
+<code>\`pvs</code> | get all paths and views
 <code>%g</code> | lens view
 <code>%:</code> | lens modify
 <code>%a</code> | lens map
@@ -369,6 +378,7 @@ Command | Description
 Command | Description
 --- | ---
 <code>:</code> | set a key-value pair in an object, where index 0 is the key and index 1 is the value
+<code>:\|</code> | `dup gl swap :`
 <code>g:</code> | get value for key given by index 0 within object at index 1
 <code>keys</code> | get keys of object/list at index 0
 <code>vals</code> | get values of object/list at index 0

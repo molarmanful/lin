@@ -2,7 +2,7 @@ import {math, _, SL, itr} from '../bridge.js'
 
 let MATRIX = {}
 
-let mat = $=> x=> math.matrix(x, 'sparse')
+let mat = $=> math.matrix
 
 // matrix size
 MATRIX["sz"] = $=> $.u1(math.size)
@@ -14,6 +14,12 @@ MATRIX["]^"] = $=> $.exec('] mat', 1)
 
 // convert matrix to list
 MATRIX["mat_"] = $=> $.u1(a=> $.ismat(a) ? a.valueOf() : a)
+
+// convert to sparse matrix
+MATRIX[">sp"] = $=> $.u1(a=> math.sparse(a))
+
+// convert to dense matrix
+MATRIX[">dn"] = $=> $.u1(a=> math.dense(a))
 
 // get diagonal
 MATRIX["d:"] = $=> $.u1(math.diag)
@@ -38,7 +44,18 @@ MATRIX[">sh"] = $=>
   $.u2((a, b)=> mat($)(math.reshape($.itrlist(itr.take(math.prod(b), itr.cycle(math.flatten(a)))), b)))
 
 // transpose matrix
-MATRIX["tsp"] = $=> $.u1(math.transpose)
+MATRIX["tsp"] = $=>
+  $.u1(a=>{
+    try{ a = math.transpose(a) }
+    catch(e){ a = _.zip(...$.itrlist(a)) }
+    return mat($)(a)
+  })
+
+// rotate matrix clockwise
+MATRIX["m@"] = $=> $.exec("tsp ( \\rev ' ) %' mat")
+
+// rotate matrix counterclockwise
+MATRIX["m@_"] = $=> $.exec("tsp \\rev ' mat")
 
 // squeeze matrix
 MATRIX["sqz"] = $=> $.u1(math.squeeze)

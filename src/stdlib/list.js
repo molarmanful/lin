@@ -17,11 +17,13 @@ LIST["'"] = $=>{
   let Y = $.shift()
   if($.ismat(Y)) Y = Y.valueOf()
   else if($.isstr(Y) || $.isnum(Y)) Y = $.str(Y).split``
-  $.unshift($.quar(a=>{
-    $.stack[$.st] = [...Y]
-    $.exec(X)
-    LIST.enclose($)
-  }))
+  $.unshift($.v1(x=>
+    $.quar($$=>{
+      $.stack[$.st] = [...Y]
+      $.exec(x)
+      LIST.enclose($)
+    }), X
+  ))
 }
 
 // concatenate top 2 items as strings or lists
@@ -71,7 +73,7 @@ LIST["wraps"] = $=> $.u1(a=> $.splice(0, a))
 // opposite of `wrap`; take all items in list at index 0 and push to parent stack
 LIST["wrap_"] = $=>{
   let X = $.shift()
-  $.unshift(...$.isarr(X) ? X : [X])
+  $.unshift(...$.ismat(X) ? X.valueOf() : $.isitr(X) ? $.listitr(X) : $.isi(X) ? X : [X])
 }
 
 // enclose entire stack into a list

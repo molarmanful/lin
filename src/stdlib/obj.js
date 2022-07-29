@@ -19,6 +19,7 @@ OBJ[":"] = $=>{
   }
 }
 
+// `dup gl swap :`
 OBJ[":|"] = $=> $.exec('dup gl swap :', 1)
 
 // get value for key given by index 0 within object at index 1

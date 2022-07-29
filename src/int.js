@@ -97,8 +97,7 @@ class INTRP {
 
       // new stack frame
       else {
-        if(this.code[0]?.length == 0) this.addf(...this.parse(x))
-        else this.addc(this.parse(x))
+        this.addc(this.parse(x))
 
         while(this.code[0]?.length){
           let a = this.getf()
@@ -296,10 +295,7 @@ class INTRP {
         return xs
       }
     }
-    return R(xs, a=> this.quar($=>{
-      this.stack[this.st] = [a]
-      this.exec(y)
-    }), ls)
+    return R(xs, a=> this.tlen(y, a), ls)
   }
 
   js2lin(x){
@@ -537,17 +533,18 @@ class INTRP {
 
   unshift(...x){ return this.stack[this.st].push(...x.map(a=> this.clone(this.prep(a)))) }
 
-  quar(f){
+  quar(f, s=' '){
     this.iter.push(this.st)
-    this.st = this.iter.at(-1) + ' '
+    this.st = this.iter.at(-1) + s
     f()
     let A = this.shift()
-    delete this.stack[this.iter.at(-1) + ' ']
+    delete this.stack[this.iter.at(-1) + s]
     this.st = this.iter.pop()
     return A
   }
 
   each(O, f=_.map, g=x=> x, s, ind){
+    if(this.ismat(O)) O = O.valueOf()
     return this.v1(x=> f(O, (a, i)=>
       g(this.quar($=>{
         this.stack[this.st] = s && itr.isIterable(a) ? [...a] : ind ? [i, a] : [a]
@@ -571,7 +568,21 @@ class INTRP {
     return x
   }
 
+  *paths(x, v=0, d=[]){
+    if(this.ismat(x)) x = x.valueOf()
+    yield v == 2 ? [x, d] : v == 1 ? x : d
+    if(this.ismap(x))
+      for(let [i, a] of x) yield* this.paths(a, v, d.concat(i))
+    else if(this.isitr(x)){
+      let i = 0
+      for(let a of x) yield* this.paths(a, v, d.concat(i++))
+    }
+    else if(this.isi(x))
+      for(let [i, a] of Object.entries(x)) yield* this.paths(a, v, d.concat(this.isnum(+i) ? +i : i))
+  }
+
   acc(O, ac=0, f=_.reduce, ind, g=x=> x){
+    if(this.ismat(O)) O = O.valueOf()
     let X = this.shift()
     let Y = ac && this.shift()
     let F = x=> (a, b, i)=>
@@ -583,6 +594,7 @@ class INTRP {
   }
 
   cmp(O, f=(x, f)=> x.sort(f), g=x=> x){
+    if(this.ismat(O)) O = O.valueOf()
     let X = this.shift()
     return f(O, (a, b)=>
       g(this.quar($=>{
@@ -603,24 +615,33 @@ class INTRP {
   }
 
   listitr(x){
-    return !this.isarl(x) && this.isnum(x?.length) ? itr.wrap(x)
+    return (
+      this.ismat(x) ? this.listitr(x.valueOf())
+      : !this.isarl(x) && this.isnum(x?.length) ? itr.wrap(x)
       : this.isitr(x) ? x
       : itr.wrap(this.isnum(x) ? [x] : x)
+    )
   }
 
   listitrs(x){
-    return !this.isarl(x) && this.isnum(x?.length) ? this.listitr(x)
+    return (
+      this.ismat(x) ? this.listitrs(x.valueOf())
+      : !this.isarl(x) && this.isnum(x?.length) ? this.listitr(x)
       : this.isitr(x) || this.isstr(x) ? x
       : this.isarr(x) ? this.listitr(_.map(x, this.listitrs))
       : x
+    )
   }
 
   itrls(x){ return itr.toArray(x) }
 
   itrlist(x){
-    return this.itrls(itr.map(a=>
-      this.isitr(a) ? this.itrlist(a) : this.isi(a) ? _.map(a, b=> this.itrlist(b)) : a, this.listitr(x)
-    ))
+    return (
+      this.ismat(x) ? this.itrlist(x.valueOf())
+      : this.isitr(x) ? this.itrls(itr.map(a=> this.itrlist(a), x))
+      : this.isi(x) ? __.map(a=> this.itrlist(a))(x)
+      : x
+    )
   }
 
   mresolve(x){ return path.resolve(process.cwd(), x) }

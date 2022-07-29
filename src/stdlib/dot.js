@@ -13,6 +13,9 @@ DOT["("] = $=> {
 // `dup`
 DOT["+"] = SL.dup
 
+// `over`
+DOT["+_"] = SL.over
+
 // `pop`
 DOT["-"] = SL.pop
 
@@ -56,7 +59,7 @@ DOT["&"] = SL.all
 DOT[":"] = SL.find
 
 // `findi`
-DOT[":#"] = SL.findi
+DOT["#:"] = SL.findi
 
 // `sort`
 DOT[">"] = SL.sort
@@ -90,5 +93,11 @@ DOT["^"] = SL.mat
 
 // `mat_`
 DOT["^_"] = SL.mat_
+
+// `%craft`
+DOT["%"] = SL['%craft']
+
+// `b*`
+DOT["*"] = SL['b:']
 
 export default DOT
