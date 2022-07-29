@@ -2,10 +2,20 @@ import {__, itr, _, SL} from '../bridge.js'
 
 let NEST = {}
 
+// max depth of index 0
+NEST["dep"] = $=> $.u1(a=> $.depth(a))
+
 // deep map on list with indices
 NEST["imap"] = $=>{
   SL.swap($)
   $.u1(a=> $.each(a, (x, f)=> $.imap(x, f), x=> x, 0, 1))
+}
+
+// deep map on list with indices
+NEST["dmap"] = $=>{
+  let D = $.shift()
+  SL.swap($)
+  $.u1(a=> $.each(a, (x, f)=> $.imap(x, f, D), x=> x, 0, 1))
 }
 
 // use list at index 0 as replication mask for list at index 1

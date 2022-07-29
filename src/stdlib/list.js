@@ -5,12 +5,6 @@ let LIST = {}
 // length of index 0
 LIST["len"] = $=> $.u1(a=> a?.size || a?.length || ($.isitr(a) && itr.size(a)))
 
-// max depth of index 0
-LIST["dep"] = $=>{
-  let D = x=> $.isobj(x) ? 1 + Math.max(0, ...$.ismap(x) ? _.map(x, D).values() : _.map(x, D)) : 0
-  $.unshift(D($.shift()))
-}
-
 // `es` index 0 on list at index 1
 LIST["'"] = $=>{
   let X = $.shift()

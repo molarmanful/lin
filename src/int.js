@@ -552,18 +552,27 @@ class INTRP {
       })
     )), this.shift())
   }
+  depth(x){
+    return (
+      $.isitr(x) ? 1
+      : $.isobj(x) ? 1 + Math.max(0, ...$.ismap(x) ? _.map(x, D).values() : _.map(x, D))
+      : 0
+    )
+  }
 
-  imap(x, F, f=_.map, g=itr.map, d=[]){
-    if(this.isitr(x)) return g((a, i)=> this.imap(a, F, f, g, d.concat(i)), x)
+  imap(x, F, D=1 / 0, f=_.map, g=itr.map, d=[]){
+    if(D < 0) D = this.depth(x) + D
+    if(!D) return F(x, d)
     if(this.ismat(x)) x = x.valueOf()
-    if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, f, g, d.concat(i)))
+    if(this.isitr(x)) return g((a, i)=> this.imap(a, F, D - 1, f, g, d.concat(i)), x)
+    if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, D - 1, f, g, d.concat(i)))
     return F(x, d)
   }
 
   walk(x, F, d=[]){
     x = F(x, d)
-    if(this.isitr(x)) return itr.map((a, i)=> this.walk(a, F, d.concat(i)), x)
     if(this.ismat(x)) x = x.valueOf()
+    if(this.isitr(x)) return itr.map((a, i)=> this.walk(a, F, d.concat(i)), x)
     if(this.isi(x)) return _.map(x, (a, i)=> this.walk(a, F, d.concat(i)))
     return x
   }
