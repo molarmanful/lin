@@ -28,6 +28,15 @@ DOT["@"] = SL.rot
 // `rot_`
 DOT["@_"] = SL.rot_
 
+// `range`
+DOT["->"] = SL.range
+
+// `rango`
+DOT[">"] = SL.rango
+
+// `orang`
+DOT["<"] = SL.orang
+
 // `map`
 DOT["'"] = SL.map
 
@@ -62,10 +71,10 @@ DOT[":"] = SL.find
 DOT["#:"] = SL.findi
 
 // `sort`
-DOT[">"] = SL.sort
+DOT["'>"] = SL.sort
 
 // `sortc`
-DOT[">>"] = SL.sortc
+DOT["'>>"] = SL.sortc
 
 // `zip`
 DOT[","] = SL.zip

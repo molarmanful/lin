@@ -404,12 +404,10 @@ class INTRP {
   print(x){ console.log(x); return x }
 
   id(x){
-    if(!(x in this.ids)){
-      let y = new RE2(`^ *#${x}`)
-      let line = this.lines.findIndex(a=> y.test(a))
-      if(~line){
-        this.ids[x] = this.strtag(this.lines[line].replace(y, ''), [0, line])
-      }
+    let y = new RE2(`^ *#${x}`)
+    let line = this.lines.findIndex(a=> y.test(a))
+    if(~line){
+      this.ids[x] = this.strtag(this.lines[line].replace(y, ''), [0, line])
     }
   }
 

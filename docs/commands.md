@@ -90,6 +90,9 @@ Command | Description
 <code>~</code> | `swap`
 <code>@</code> | `rot`
 <code>@_</code> | `rot_`
+<code>-></code> | `range`
+<code>></code> | `rango`
+<code><</code> | `orang`
 <code>'</code> | `map`
 <code>',</code> | `mapf`
 <code>/</code> | `fold`
@@ -101,8 +104,8 @@ Command | Description
 <code>&</code> | `all`
 <code>:</code> | `find`
 <code>#:</code> | `findi`
-<code>></code> | `sort`
-<code>>></code> | `sortc`
+<code>'></code> | `sort`
+<code>'>></code> | `sortc`
 <code>,</code> | `zip`
 <code>$</code> | `wrap`
 <code>$$</code> | `enclose`
