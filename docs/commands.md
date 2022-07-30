@@ -265,6 +265,7 @@ Command | Description
 <code>sqz</code> | squeeze matrix
 <code>det</code> | determinant
 <code>inv</code> | inverse
+<code>pnv</code> | Moore-Penrose inverse
 <code>*kr</code> | Kronecker product
 <code>*dt</code> | dot product
 <code>*cr</code> | cross product

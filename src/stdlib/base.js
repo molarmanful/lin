@@ -70,14 +70,16 @@ BASE["${"] = $=>{
 BASE["gi"] = $=>
   $.u1(a=> $.v1(x=>{
     if(!(x in $.ids)) $.id(x)
-    return $.getid(x)
+    let X = $.getid(x)
+    return $.isfun(X) ? x : X
   }, a))
 
 // `gi` but follow scoping rules
 BASE["gl"] = $=>
   $.u1(a=> $.v1(x=>{
     if($.getscope(x) == void 0) $.id(x)
-    return $.getscope(x)
+    let X = $.getscope(x)
+    return $.isfun(X) ? x : X
   }, a))
 
 // magic dot
@@ -136,7 +138,7 @@ BASE[">:"] = $=>{
 }
 
 // bring ID at index 0 as string into global scope
-BASE["::"] = $=> $.id($.shift())
+BASE["::"] = $=> $.v1(x=> $.id(x), $.shift())
 
 // push type of index 0
 BASE["type"] = $=>{

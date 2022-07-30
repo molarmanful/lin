@@ -10,9 +10,10 @@ class PKG {
 }
 
 class LENS {
-  constructor(g, m){
+  constructor(g, m, c=0){
     this.get = g
     this.mod = m
+    this.custom = c
   }
 }
 
@@ -143,7 +144,7 @@ class INTRP {
             if(!(a in ids)) this.err(`unknown pkg fn "${name} ${a}"`)
             this.addf($=> this.pkf.pop())
             this.pkf.push(this.pkg.pop())
-            this.fmatch(a, this.pkf.at(-1))
+            this.fmatch(a, this.pkf.at(-1), ids)
           }
 
           // literals
@@ -161,6 +162,8 @@ class INTRP {
           }
 
           else {
+
+            let A = this.gscope(a)
 
             // brackets/parens only
             if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `,1)
@@ -220,7 +223,7 @@ class INTRP {
             else if(a[1] && a[0] == '\\') this.unshift(a.slice(1))
 
             // matched functions
-            else if(a in this.ids) this.fmatch(a, this)
+            else if(A != void 0) this.fmatch(a, this, A)
 
             else this.err(`unknown fn "${a}"`)
           }
@@ -254,10 +257,12 @@ class INTRP {
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
   }
 
-  tlen(f, a){
+  tlen(f, a, F){
     return this.quar($=>{
+      this.scope.push({'%%': $=> $.u1(F)})
       this.stack[this.st] = [a]
       this.exec(f)
+      this.scope.shift()
     })
   }
 
@@ -310,7 +315,7 @@ class INTRP {
   lin2js(x){
     let r = a=> this.lin2js(a)
     return (
-      this.ismap(x) ? Object.fromEntries(Array.from(x, ([a, b])=> [$.str(a) + '', r(b)]))
+      this.ismap(x) ? Object.fromEntries(Array.from(x, ([a, b])=> [this.str(a) + '', r(b)]))
       : this.isitr(x) ? this.itrls(itr.map(r, x))
       : this.ismat(x) ? x.valueOf().map(r)
       : this.isarr(x) ? x.map(r)
@@ -338,14 +343,15 @@ class INTRP {
   isi(x){ return this.isarr(x) || this.ismap(x) || this.ismat(x) }
 
   v1(f, x){
-    if(this.isitr(x))
-      return itr.map(a=> this.v1(f, a), x)
-    if(this.isi(x))
-      return x.map(a=> this.v1(f, a))
+    if(this.ismat(x)) x = x.valueOf()
+    if(this.isitr(x)) return itr.map(a=> this.v1(f, a), x)
+    if(this.isi(x)) return x.map(a=> this.v1(f, a))
     return this.prep(f(x))
   }
 
   v2(f, x, y){
+    if(this.ismat(x)) x = x.valueOf()
+    if(this.ismat(y)) y = y.valueOf()
     if(this.isi(x) && this.isi(y) && x.values().length == y.values().length)
       return x.map((a, i)=> this.v2(f, a, y.get(i)))
     if(this.isitr(x)) return itr.map(a=> this.v2(f, a, y), x)
@@ -356,6 +362,9 @@ class INTRP {
   }
 
   v3(f, x, y, z){
+    if(this.ismat(x)) x = x.valueOf()
+    if(this.ismat(y)) y = y.valueOf()
+    if(this.ismat(z)) z = z.valueOf()
     if(this.isi(x) && this.isi(y) && this.isi(z) && x.values().length == y.values().length && y.values().length == z.values().length)
       return x.map((a, i)=> this.v3(f, a, y.get(i), z.get(i)))
     if(this.isitr(x)) return itr.map(a=> this.v3(f, a, y, z), x)
@@ -386,31 +395,29 @@ class INTRP {
 
   untag(x){ return this.isstr(x) ? x + '' : x }
 
-  fmatch(a, ctx){
-    if(ctx.ids[a] instanceof PKG) this.pkg.push(ctx.ids[a])
-    else if(ctx.ids[a] instanceof Function && a in SL) SL[a](ctx)
-    else this.exec(ctx.ids[a], 1)
+  fmatch(a, ctx, scp){
+    if(scp[a] instanceof PKG) this.pkg.push(scp[a])
+    else if(scp[a] instanceof Function) scp[a](ctx)
+    else this.exec(scp[a], 1)
   }
 
   print(x){ console.log(x); return x }
 
   id(x){
-    let y = new RE2(`^ *#${x}`)
-    let line = this.lines.findIndex(a=> a.match(y))
-    if(~line){
-      this.ids[x] = this.strtag(this.lines[line].replace(y, ''), [0, line])
+    if(!(x in this.ids)){
+      let y = new RE2(`^ *#${x}`)
+      let line = this.lines.findIndex(a=> y.test(a))
+      if(~line){
+        this.ids[x] = this.strtag(this.lines[line].replace(y, ''), [0, line])
+      }
     }
   }
 
-  getid(x){
-    let y = this.ids[x]
-    return this.isfun(y) ? x : y
-  }
+  getid(x){ return this.ids[x] }
 
-  getscope(x){
-    let y = _.findLast(this.scope, a=> x in a)
-    return y ? y[x] : this.getid(x)
-  }
+  getscope(x){ return this.gscope(x)?.[x] }
+
+  gscope(x){ return _.findLast([this.ids, ...this.scope], a=> x in a) }
 
   mod(x, y){ return (x % y + y) % y }
 
@@ -552,15 +559,16 @@ class INTRP {
       })
     )), this.shift())
   }
+
   depth(x){
     return (
-      $.isitr(x) ? 1
-      : $.isobj(x) ? 1 + Math.max(0, ...$.ismap(x) ? _.map(x, D).values() : _.map(x, D))
+      this.isitr(x) ? 1
+      : this.isobj(x) ? 1 + Math.max(0, ...this.ismap(x) ? _.map(x, D).values() : _.map(x, D))
       : 0
     )
   }
 
-  imap(x, F, D=1 / 0, f=_.map, g=itr.map, d=[]){
+  imap(x, F, D=1 / 0, f=(x, f)=> __.map(f)(x), g=itr.map, d=[]){
     if(D < 0) D = this.depth(x) + D
     if(!D) return F(x, d)
     if(this.ismat(x)) x = x.valueOf()

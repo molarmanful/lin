@@ -66,6 +66,9 @@ MATRIX["det"] = $=> $.u1(math.det)
 // inverse
 MATRIX["inv"] = $=> $.u1(math.inv)
 
+// Moore-Penrose inverse
+MATRIX["pnv"] = $=> $.u1(math.pinv)
+
 // Kronecker product
 MATRIX["*kr"] = $=> $.u2(math.kron)
 

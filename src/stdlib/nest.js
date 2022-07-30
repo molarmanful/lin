@@ -46,7 +46,7 @@ NEST["`vs"] = $=> $.u1(a=> $.paths(a, 1))
 // get all paths and views
 NEST["`pvs"] = $=> $.u1(a=> $.paths(a, 2))
 
-NEST["%craft"] = $=> $.u2((a, b)=> new $.LENS(x=> $.tlen(a, x), f=> x=> f($.tlen(b, x))))
+NEST["%craft"] = $=> $.u2((a, b)=> new $.LENS(x=> $.tlen(a, x), f=> x=> $.tlen(b, x, f)))
 
 // lens view
 NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))
