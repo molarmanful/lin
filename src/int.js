@@ -541,6 +541,7 @@ class INTRP {
   quar(f, s=' '){
     this.iter.push(this.st)
     this.st = this.iter.at(-1) + s
+    this.stack[this.st] = []
     f()
     let A = this.shift()
     delete this.stack[this.iter.at(-1) + s]
@@ -566,13 +567,13 @@ class INTRP {
     )
   }
 
-  imap(x, F, D=1 / 0, f=(x, f)=> __.map(f)(x), g=itr.map, d=[]){
+  imap(x, F, D=1 / 0, f=(x, f)=> __.map(f)(x), g=itr.map, post=x=> x, d=[]){
     if(D < 0) D = this.depth(x) + D
     if(!D) return F(x, d)
     if(this.ismat(x)) x = x.valueOf()
-    if(this.isitr(x)) return g((a, i)=> this.imap(a, F, D - 1, f, g, d.concat(i)), x)
-    if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, D - 1, f, g, d.concat(i)))
-    return F(x, d)
+    if(this.isitr(x)) return g((a, i)=> this.imap(a, F, D - 1, f, g, post, d.concat(i)), x)
+    if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, D - 1, f, g, post, d.concat(i)))
+    return post(F(x, d))
   }
 
   walk(x, F, d=[]){

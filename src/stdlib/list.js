@@ -56,10 +56,10 @@ LIST["diff"] = $=>{
 LIST["wrap"] = $=> $.u1(a=> [a])
 
 // `wrap` top 2 items
-LIST[","] = $=> $.u2((a, b)=> [a, b])
+LIST[","] = $=> $.u2((a, b)=> $.v2((x, y)=> [x, y], a, b))
 
-// vectorized `,`
-LIST[",,"] = $=> $.u2((a, b)=> $.v2((x, y)=> [x, y], a, b))
+// `,` but non-vectorized
+LIST[",_"] = $=> $.u2((a, b)=> [a, b])
 
 // wrap first _n_ items
 LIST["wraps"] = $=> $.u1(a=> $.splice(0, a))

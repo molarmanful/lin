@@ -91,25 +91,25 @@ NEST["%/a"] = $=>{
 // polymorphic filter
 NEST["%#"] = $=>{
   SL.swap($)
-  $.u1(a=> $.each(a, (x, f)=> __.filter(f)(x), x=> x, 0, 1))
+  $.u1(a=> $.each(a, (x, f)=> __.filter(f)(x), x=> $.tru(x), 0, 1))
 }
 
 // polymorphic find
 NEST["%?'"] = $=>{
   SL.swap($)
-  $.u1(a=> $.each(a, (x, f)=> __.find(f)(x), x=> x, 0, 1))
+  $.u1(a=> $.each(a, (x, f)=> __.find(f)(x), x=> $.tru(x), 0, 1))
 }
 
 // polymorphic any
 NEST["%|"] = $=>{
   SL.swap($)
-  $.u1(a=> $.each(a, (x, f)=> __.some(f)(x), x=> x, 0, 1))
+  $.u1(a=> $.each(a, (x, f)=> __.some(f)(x), x=> $.tru(x), 0, 1))
 }
 
 // polymorphic all
 NEST["%&"] = $=>{
   SL.swap($)
-  $.u1(a=> !$.each(a, (x, f)=> __.some(__.not(f))(x), x=> x, 0, 1))
+  $.u1(a=> !$.each(a, (x, f)=> __.some(__.not(f))(x), x=> $.tru(x), 0, 1))
 }
 
 export default NEST

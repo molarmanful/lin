@@ -3,7 +3,22 @@ import {_} from '../bridge.js'
 let LOGIC = {}
 
 // logical not
-LOGIC["!"] = $=> $.u1(a=> $.v1(x=> !$.untag(x), a))
+LOGIC["!"] = $=> $.u1(a=> $.v1(x=> !$.tru(x), a))
+
+// `!` but non-vectorized
+LOGIC["!_"] = $=> $.u1(a=> !$.tru(a))
+
+// logical and
+LOGIC["&&"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.tru(x) && $.tru(y), a, b))
+
+// `&&` but non-vectorized
+LOGIC["&&_"] = $=> $.u2((a, b)=> $.tru(a) || $.tru(b))
+
+// logical or
+LOGIC["||_"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.tru(x) || $.tru(y), a, b))
+
+// `||` but non-vectorized
+LOGIC["||_"] = $=> $.u2((a, b)=> $.tru(a) || $.tru(b))
 
 // equal
 LOGIC["="] = $=> $.u2((a, b)=> $.v2((x, y)=> $.untag(x) == $.untag(y), a, b))
@@ -54,5 +69,8 @@ LOGIC["<=>"] = $=>
     y = $.untag(y),
     x < y ? 1 : x > y ? -1 : 0
   ), a, b))
+
+// `<=> _`
+LOGIC[">=<"] = $=> $.exec('<=> _', 1)
 
 export default LOGIC

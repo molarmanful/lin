@@ -127,6 +127,7 @@ Command | Description
 <code>e&</code> | `es` if index 0 is truthy
 <code>e\|</code> | `es` if index 0 is falsy
 <code>e?</code> | `es` on index 1 if index 2 is truthy; otherwise, `es` on index 0
+<code>e=</code> | `e?` but using object; keys are conditions
 <code>ew</code> | while `es` on index 1 is truthy, `es` on index 0
 <code>e!</code> | try `es` on index 1 and catch with index 0
 <code>e@</code> | `es` next *n* lines, where *n* is index 0
@@ -217,7 +218,7 @@ Command | Description
 <code>diff</code> | set difference of lists at index 0 and index 1
 <code>wrap</code> | wrap index 0 in a list
 <code>,</code> | `wrap` top 2 items
-<code>,,</code> | vectorized `,`
+<code>,_</code> | `,` but non-vectorized
 <code>wraps</code> | wrap first _n_ items
 <code>wrap_</code> | opposite of `wrap`; take all items in list at index 0 and push to parent stack
 <code>enclose</code> | enclose entire stack into a list
@@ -230,6 +231,11 @@ Command | Description
 Command | Description
 --- | ---
 <code>!</code> | logical not
+<code>!_</code> | `!` but non-vectorized
+<code>&&</code> | logical and
+<code>&&_</code> | `&&` but non-vectorized
+<code>\|\|_</code> | logical or
+<code>\|\|_</code> | `\|\|` but non-vectorized
 <code>=</code> | equal
 <code>=_</code> | `=` but non-vectorized
 <code>==</code> | strict equal
@@ -245,6 +251,7 @@ Command | Description
 <code>>=</code> | greater than or equal to
 <code><=</code> | less than or equal to
 <code><=></code> | comparison function (-1 for less than, 0 for equal, 1 for greater than)
+<code>>=<</code> | `<=> _`
 
 ## MATRIX
 
@@ -252,6 +259,7 @@ Command | Description
 --- | ---
 <code>sz</code> | matrix size
 <code>mat</code> | convert to matrix
+<code>mtr</code> | convert multiline string to matrix
 <code>mat_</code> | convert matrix to list
 <code>>sp</code> | convert to sparse matrix
 <code>>dn</code> | convert to dense matrix
@@ -272,6 +280,10 @@ Command | Description
 <code>*kr</code> | Kronecker product
 <code>*dt</code> | dot product
 <code>*cr</code> | cross product
+<code>^++</code> | concat matrices
+<code>^+</code> | `^++` on last axis
+<code>srt</code> | sort matrix
+<code>stn</code> | stencil matrix with Moore neighborhood
 
 ## MODULE
 

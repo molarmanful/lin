@@ -193,28 +193,28 @@ STACK["scan"] = $=> $.stack[$.st] = wrap($)($.acc($.stack[$.st], 0, scan))
 STACK["scana"] = $=> $.stack[$.st] = wrap($)($.acc($.stack[$.st], 1, scana))
 
 // remove each item that is falsy after `es`
-STACK["filter"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.filter, $.tru))
+STACK["filter"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.filter, x=> $.tru(x)))
 
 // push 1 if any items return truthy after `es`, else push 0
-STACK["any"] = $=> $.unshift($.each($.stack[$.st], _.some, $.tru))
+STACK["any"] = $=> $.unshift($.each($.stack[$.st], _.some, x=> $.tru(x)))
 
 // push 1 if all items return truthy after `es`, else push 0
-STACK["all"] = $=> $.unshift($.each($.stack[$.st], _.every, $.tru))
+STACK["all"] = $=> $.unshift($.each($.stack[$.st], _.every, x=> $.tru(x)))
 
 // find first item that returns truthy after `es` or undefined on failure
-STACK["find"] = $=> $.unshift($.each($.stack[$.st], _.find, $.tru))
+STACK["find"] = $=> $.unshift($.each($.stack[$.st], _.find, x=> $.tru(x)))
 
 // `find` but returns index
 STACK["findi"] = $=>{
-  let X = $.each($.stack[$.st], _.findIndex, $.tru)
+  let X = $.each($.stack[$.st], _.findIndex, x=> $.tru(x))
   $.unshift($.v1(x=> ~x ? $.stack[$.st].length + ~x : void 0, X))
 }
 
 // `take` items until `es` returns falsy for an item
-STACK["takew"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.takeRightWhile, 0, $.tru))
+STACK["takew"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.takeRightWhile, 0, x=> $.tru(x)))
 
 // `drop` items until `es` returns falsy for an item
-STACK["dropw"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.dropRightWhile, 0, $.tru))
+STACK["dropw"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.dropRightWhile, 0, x=> $.tru(x)))
 
 // sort items based on `es`
 STACK["sort"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.sortBy))
@@ -223,7 +223,7 @@ STACK["sort"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.sortBy))
 STACK["sortc"] = $=> $.stack[$.st] = wrap($)($.cmp($.stack[$.st]))
 
 // separate items into 2 lists based on whether they return truthy after `es` (top list holds truthy values, bottom list holds falsy values)
-STACK["part"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.partition, 0, $.tru))
+STACK["part"] = $=> $.stack[$.st] = wrap($)($.each($.stack[$.st], _.partition, 0, x=> $.tru(x)))
 
 // categorize items into keys after `es`ing index 0
 STACK["group"] = $=> $.stack[$.st] = [new Map(Object.entries($.each($.stack[$.st], _.groupBy)))]

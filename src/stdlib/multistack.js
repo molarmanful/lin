@@ -14,7 +14,7 @@ MULTISTACK["'s"] = $=>{
 
 // `es` on a copy of stack, then retrieve
 MULTISTACK["Q"] = $=>
-$.u1(a=> $.v1(x=> $.quar(y=>{
+  $.u1(a=> $.v1(x=> $.quar(y=>{
     $.stack[$.st] = $.stack[$.iter.at(-1)].slice()
     $.exec(x)
   }), a))

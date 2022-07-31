@@ -1,4 +1,4 @@
-import {_, SL} from '../bridge.js'
+import {_, SL, __} from '../bridge.js'
 
 let FLOW = {}
 
@@ -37,17 +37,28 @@ FLOW["e?"] = $=>{
   $.exec($.tru(Z) ? Y : X, 1)
 }
 
+// `e?` but using object; keys are conditions
+FLOW["e="] = $=>{
+  let X = $.shift()
+  __.find((a, i)=>{
+    $.unshift(i)
+    SL.Q($)
+    if($.tru($.shift())){
+      $.exec(a, 1)
+      return 1
+    }
+  })(X)
+}
+
 // while `es` on index 1 is truthy, `es` on index 0
 FLOW["ew"] = $=>{
   let X = $.shift()
-  let Y = $.shift()
-  $.addf(a=>{
-    if($.tru($.shift())){
-      $.addf(a=> $.unshift(Y, X), 'ew')
-      $.exec(X, 1)
-    }
-  })
-  $.exec(Y, 1)
+  let Y = $.get(0)
+  SL.Q($)
+  if($.tru($.shift())){
+    $.addf(a=> $.unshift(Y, X), 'ew')
+    $.exec(X, 1)
+  }
 }
 
 // try `es` on index 1 and catch with index 0

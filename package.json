@@ -22,7 +22,6 @@
   "homepage": "https://github.com/molarmanful/lin#readme",
   "dependencies": {
     "@stdlib/esm": "^0.0.3",
-    "bigint-crypto-utils": "^3.0.24",
     "chalk": "^5.0.1",
     "command-line-args": "^5.2.1",
     "command-line-usage": "^6.1.3",
