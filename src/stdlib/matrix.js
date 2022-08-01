@@ -101,18 +101,30 @@ MATRIX["srt"] = $=>{
   $.unshift(math.reshape($.each(math.flatten(X), _.sortBy), N))
 }
 
-// stencil matrix with Moore neighborhood
+// stencil matrix with specified neighborhood
 MATRIX["stn"] = $=>{
+  let X = $.shift()
   SL.swap($)
   $.u1(a=>{
     a = $.itrlist(a)
     let D = [...math.size(a)]
     let d = D.length
-    let S = [...new $C.BaseN([-1, 0, 1], d)].filter(x=> x.some(y=> y))
     let F = (x, f)=>
-      $.imap(x, (y, i)=> f(y, S.map(z=> math.add(z, i).reduce((a, b)=> a?.[b], a), 2)), 2)
+      $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> a?.[b], a), 2)), 2)
     return $.each(a, F, x=> x, 0, 1)
   })
 }
+
+// Moore ("queen") neighborhood
+MATRIX["^Qr"] = $=> $.u2((a, b)=> $.v2((x, y)=> [...new $C.BaseN(_.range(-y, y + 1), x)], a, b))
+
+// `1 ^Qn`
+MATRIX["^Q"] = $=> $.exec("1 ^Qr", 1)
+
+// von Neumann ("rook") neighborhood
+MATRIX["^Rr"] = $=> $.u2((a, b)=> $.v2((x, y)=> [...new $C.BaseN(_.range(-y, y + 1), x)].filter(c=> c.filter(d=> d).length == 1), a, b))
+
+// `1 ^Rn`
+MATRIX["^R"] = $=> $.exec("1 ^Rr", 1)
 
 export default MATRIX

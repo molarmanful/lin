@@ -283,7 +283,11 @@ Command | Description
 <code>^++</code> | concat matrices
 <code>^+</code> | `^++` on last axis
 <code>srt</code> | sort matrix
-<code>stn</code> | stencil matrix with Moore neighborhood
+<code>stn</code> | stencil matrix with specified neighborhood
+<code>^Qr</code> | Moore ("queen") neighborhood
+<code>^Q</code> | `1 ^Qn`
+<code>^Rr</code> | von Neumann ("rook") neighborhood
+<code>^R</code> | `1 ^Rn`
 
 ## MODULE
 
@@ -397,11 +401,13 @@ Command | Description
 <code>:</code> | set a key-value pair in an object, where index 0 is the key and index 1 is the value
 <code>:\|</code> | `dup gl swap :`
 <code>g:</code> | get value for key given by index 0 within object at index 1
+<code>_:</code> | `g:` but non-vectorized
 <code>keys</code> | get keys of object/list at index 0
 <code>vals</code> | get values of object/list at index 0
 <code>del</code> | remove key at index 0 from object at index 1
 <code>enom</code> | convert object to a list containing each key-value pair
 <code>denom</code> | convert `enom`-style list into object
+<code>:,</code> | merge lists of keys and values into object
 <code>el</code> | check if index 0 is in list/object at index 1
 <code><json</code> | parse JSON string
 <code>>json</code> | serialize as JSON

@@ -19,11 +19,16 @@ OBJ[":"] = $=>{
   }
 }
 
+OBJ["):"] = $=> $.exec("):", 1)
+
 // `dup gl swap :`
 OBJ[":|"] = $=> $.exec('dup gl swap :', 1)
 
 // get value for key given by index 0 within object at index 1
 OBJ["g:"] = $=> $.u2((a, b)=> $.gind(a, b))
+
+// `g:` but non-vectorized
+OBJ["_:"] = $=> $.u2((a, b)=> $.oget(a, b))
 
 // get keys of object/list at index 0
 OBJ["keys"] = $=> $.u1(a=> [...a.keys()])
@@ -38,13 +43,15 @@ OBJ["del"] = $=> $.stack[$.st][$.stack[$.st].length - 2].delete($.untag($.shift(
 OBJ["enom"] = $=> $.u1(a=> _.zip([...a.keys()], [...a.values()]))
 
 // convert `enom`-style list into object
-OBJ["denom"] = $=>{
+OBJ["denom"] = $=>
   $.u1(a=> new Map(
     $.itrlist(a).map(b=>
       $.isarr(b) ? b.length > 1 ? b : b.concat(b) : [b, b]
     ).filter(b=> b.length > 1)
   ))
-}
+
+// merge lists of keys and values into object
+OBJ[":,"] = $=> $.u2((a, b)=> new Map(_.zip($.itrls(a), $.itrls(b))))
 
 // check if index 0 is in list/object at index 1
 OBJ["el"] = $=>{

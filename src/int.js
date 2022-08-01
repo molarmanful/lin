@@ -1,3 +1,4 @@
+import $ from '@stdlib/esm/stats/anova1.js'
 import {voca, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL, __} from './bridge.js'
 
 class PKG {
@@ -255,6 +256,11 @@ class INTRP {
   warn(x){
     if(this.verbose)
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
+  }
+
+  oget(o, x){
+    let O = o?.entries ? [...o.entries()] : Object.entries(o)
+    return O.find(([i, a])=> _.isEqual(i, x))[1]
   }
 
   tlen(f, a, F){
@@ -649,7 +655,13 @@ class INTRP {
     )
   }
 
-  itrls(x){ return itr.toArray(x) }
+  itrls(x){ 
+    return (
+      this.ismat(x) ? x.valueOf()
+      : this.isitr(x) ? itr.toArray(x)
+      : x
+    )
+  }
 
   itrlist(x){
     return (
