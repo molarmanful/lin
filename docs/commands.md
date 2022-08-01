@@ -259,7 +259,8 @@ Command | Description
 --- | ---
 <code>sz</code> | matrix size
 <code>mat</code> | convert to matrix
-<code>mtr</code> | convert multiline string to matrix
+<code>m>f</code> | pretty-convert matrix to string
+<code>s>m</code> | convert multiline string to matrix
 <code>mat_</code> | convert matrix to list
 <code>>sp</code> | convert to sparse matrix
 <code>>dn</code> | convert to dense matrix
@@ -284,6 +285,7 @@ Command | Description
 <code>^+</code> | `^++` on last axis
 <code>srt</code> | sort matrix
 <code>stn</code> | stencil matrix with specified neighborhood
+<code>stm</code> | `stn` with wraparound
 <code>^Qr</code> | Moore ("queen") neighborhood
 <code>^Q</code> | `1 ^Qn`
 <code>^Rr</code> | von Neumann ("rook") neighborhood

@@ -10,8 +10,14 @@ MATRIX["sz"] = $=> $.u1(a=> [...math.size(a)])
 // convert to matrix
 MATRIX["mat"] = $=> $.u1(mat($))
 
+// pretty-convert matrix to string
+MATRIX["m>f"] = $=>
+  $.u1(a=>{
+    let S = math.size(a)
+  })
+
 // convert multiline string to matrix
-MATRIX["mtr"] = $=>
+MATRIX["s>m"] = $=>
   $.u1(a=> $.v1(x=>(
     x.split`\n`.map(y=> $.quar($$=>{
       $.exec(y)
@@ -101,28 +107,46 @@ MATRIX["srt"] = $=>{
   $.unshift(math.reshape($.each(math.flatten(X), _.sortBy), N))
 }
 
+let stencil = ($, X, F=(a, b)=> a?.[b])=> (x, f)=>
+  $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> F(a, b), x))), 2)
+
 // stencil matrix with specified neighborhood
 MATRIX["stn"] = $=>{
   let X = $.shift()
   SL.swap($)
-  $.u1(a=>{
-    a = $.itrlist(a)
-    let D = [...math.size(a)]
-    let d = D.length
-    let F = (x, f)=>
-      $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> a?.[b], a), 2)), 2)
-    return $.each(a, F, x=> x, 0, 1)
-  })
+  $.u1(a=>(
+    a = $.itrlist(a),
+    $.each(a, stencil($, X), x=> x, 0, 1)
+  ))
+}
+
+// `stn` with wraparound
+MATRIX["stm"] = $=>{
+  let X = $.shift()
+  SL.swap($)
+  $.u1(a=>(
+    a = $.itrlist(a),
+    $.each(a, stencil($, X, (a, b)=> a?.[math.mod(b, a.length)]), x=> x, 0, 1)
+  ))
 }
 
 // Moore ("queen") neighborhood
-MATRIX["^Qr"] = $=> $.u2((a, b)=> $.v2((x, y)=> [...new $C.BaseN(_.range(-y, y + 1), x)], a, b))
+MATRIX["^Qr"] = $=>
+  $.u2((a, b)=> $.v2((x, y)=>
+    [...new $C.BaseN(_.range(-y, y + 1), x)].map(c=> c.reverse()), a, b
+  ))
 
 // `1 ^Qn`
 MATRIX["^Q"] = $=> $.exec("1 ^Qr", 1)
 
 // von Neumann ("rook") neighborhood
-MATRIX["^Rr"] = $=> $.u2((a, b)=> $.v2((x, y)=> [...new $C.BaseN(_.range(-y, y + 1), x)].filter(c=> c.filter(d=> d).length == 1), a, b))
+MATRIX["^Rr"] = $=>
+  $.u2((a, b)=> $.v2((x, y)=>
+    [...new $C.BaseN(_.range(-y, y + 1), x)]
+      .filter(c=> c.filter(d=> d).length == 1)
+      .map(c=> c.reverse()),
+    a, b
+  ))
 
 // `1 ^Rn`
 MATRIX["^R"] = $=> $.exec("1 ^Rr", 1)
