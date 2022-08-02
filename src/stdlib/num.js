@@ -1,18 +1,21 @@
-import {prime, RB, $C, _, SL, itr} from '../bridge.js'
+import {math, prime, RB, $C, _, SL, itr} from '../bridge.js'
 
 let NUM = {}
 
 // convert to bigint
-NUM["N"] = $=>{
-  let X = $.shift()
-  $.unshift(BigInt($.isarr(X) ? X.join`` : X))
-}
+NUM["N"] = $=> $.u1(a=> BigInt($.isarr(a) ? a.join`` : a))
+
+// `N` but vectorized
+NUM["NN"] = $=> $.u1(a=> $.v1(BigInt, a))
 
 // convert to number
 NUM["n_"] = $=>{
   let X = $.shift()
   $.unshift(Number($.isarr(X) ? X.join`` : X))
 }
+
+// `n_` but vectorized
+NUM["nn"] = $=> $.u1(a=> $.v1(Number, a))
 
 // convert number to digit list
 NUM["ns"] = $=> $.u1(a=> $.v1(x=> _.map($.str(x) + '', y=> +y), a))
@@ -35,14 +38,16 @@ NUM["*"] = $=> $.u2((a, b)=> $.v2((x, y)=> x * y, a, b))
 // division
 NUM["/"] = $=> $.u2((a, b)=> $.v2((x, y)=> x / y, a, b))
 
-// integer division
-NUM["//"] = $=>{
-  if(typeof $.get(0) == 'bigint') SL['/']($)
-  $.exec('/ trunc', 1)
+let div = (x, y)=>{
+  try { return Math.trunc(x / y) }
+  catch(e){ return x / y }
 }
 
+// integer division
+NUM["//"] = $=> $.u2((a, b)=> $.v2(div, a, b))
+
 // modulus
-NUM["%"] = $=> $.u2((a, b)=> $.v2($.mod, a, b))
+NUM["%"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.mod(x, y), a, b))
 
 // divmod
 NUM["/%"] = $=> $.exec('over over // rot_ %', 1)
@@ -199,5 +204,18 @@ let bell = n=>
 
 // nth Bell number
 NUM["belln"] = $=> $.u1((a)=> $.v1(bell, a))
+
+// convert decimal number to base-n digit list
+NUM[">b"] = $=>{
+  let f = (x, y, z=[])=> x > 0 ? f(div(x, y), y, [$.mod(x, y), ...z]) : z
+  $.u2((a, b)=> $.v2((x, y)=> x == 0 ? [0] : f(x, y), a, b))
+}
+
+// convert base-n digit list to decimal number
+NUM["<b"] = $=>
+  $.u2((a, b)=> $.v1(x=>
+    math.sum($.itrls(a).reverse().map((y, i)=> y * x ** i)),
+    b
+  ))
 
 export default NUM

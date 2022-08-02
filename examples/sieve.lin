@@ -1,11 +1,11 @@
-\SIEVE :: ;
-"n:"out in 1+.\n { 1 1: }.\s SIEVE clr ;
+\SIEVE :: { 1 1: }.\s ;
+"n:"out in 1+.\n SIEVE ;
 1 .n.-> ( .s.+_ g: \\_ e& ).' ;
-( 0absb ( ns len ).' max.\m ) 1's ( \ .m pad ).' ;
-10cols \<ws.'.$$ <ls outln
+10cols.$$ m>s outln
 
-#SIEVE .n .5^ 0| 1 .-> (.\a .s .a g: \; e| ).'
-$` ( 2+ .a * ) `' ( .n <= ) `t' ( .s 1 .@ :.\s ) `' `_
+#SIEVE ; clr
+  .n .5^ 0| 1 .-> (.\a .s .a g: \; e| ).'
+    $` ( 2+ .a * ) `' ( .n <= ) `t' ( .s 1 .@ :.\s ) `' `_
 
 
 

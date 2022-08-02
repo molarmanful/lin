@@ -5,15 +5,46 @@ let MATRIX = {}
 let mat = $=> math.matrix
 
 // matrix size
-MATRIX["sz"] = $=> $.u1(a=> [...math.size(a)])
+MATRIX["sz"] = $=> $.u1(a=> $.sz(a))
 
 // convert to matrix
 MATRIX["mat"] = $=> $.u1(mat($))
 
-// pretty-convert matrix to string
-MATRIX["m>f"] = $=>
+let mstr = ($, a, f=x=> $.form([x]))=>{
+  let S = $.sz(a)
+  let D = S.length
+  let A = $.imap(a, f, D)
+  if(D > 1){
+    let M
+    $.imap(A, x=> M = _.zipWith(M, ...x, (...y)=> _.maxBy(y, z=> z?.length)), D - 2)
+    A = $.imap(A, x=> _.zipWith(x, M, (y, z)=> _.padStart(y, z.length, ' ')), D - 1)
+  }
+  return itr.execPipe(
+    itr.range(),
+    itr.map(x=> x ? '\n'.repeat(x) : ' '),
+    itr.take(D),
+    itr.reduce(A, (x, y)=> $.imap(x, z=> z.join(y), -1))
+  )
+}
+
+// convert matrix to string
+MATRIX["m>s"] = $=> $.u1(a=> mstr($, a, x=> $.str(x) + ''))
+
+// convert matrix to `form`ed string
+MATRIX["m>f"] = $=> $.u1(a=> mstr($, a))
+
+// convert matrix to "character" representation
+MATRIX["m>c"] = $=>
   $.u1(a=>{
-    let S = math.size(a)
+    let S = $.sz(a)
+    let D = S.length
+    a = $.imap(a, x=> $.str(x) + '', D)
+    return itr.execPipe(
+      itr.range(),
+      itr.map(x=> x ? '\n'.repeat(x) : ''),
+      itr.take(S.length),
+      itr.reduce(a, (x, y)=> $.imap(x, z=> z.join(y), -1))
+    )
   })
 
 // convert multiline string to matrix
@@ -102,13 +133,32 @@ MATRIX["^+"] = $=> $.u2(math.concat)
 // sort matrix
 MATRIX["srt"] = $=>{
   SL.swap($)
-  let X = $.shift()
-  let N = math.size(X)
-  $.unshift(math.reshape($.each(math.flatten(X), _.sortBy), N))
+  $.u1(a=> math.reshape($.each(math.flatten(a), _.sortBy), math.size(a)))
 }
 
+// construct matrix from size and function
+MATRIX["^it"] = $=> $.u1(a=> $.each(a, math.matrixFromFunction))
+
+// split matrix into submatrices at index 0
+MATRIX["spl"] = $=>
+  $.u2((a, b)=>{
+    let r = x=> x.slice().reverse()
+    let A = $.sz(a)
+    b = r(math.resize(r(b), [A.length], 1))
+    let B = [...$C.CartesianProduct.from(r(b).map(x=> _.range(x)))]
+    let C = [...$C.CartesianProduct.from(_.zipWith(r(b), r(A), (x, y)=> _.range(0, y ?? 1, x)))]
+    let G = (x, i)=>{
+      try { return math.subset(x, math.index(...i)) }
+      catch(e){}
+    }
+    return math.reshape(
+      C.map(x=> B.map(y=> G(a, r(math.add(x, y))))),
+      [...math.ceil(math.dotDivide(A, b)), ...b]
+    )
+  })
+
 let stencil = ($, X, F=(a, b)=> a?.[b])=> (x, f)=>
-  $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> F(a, b), x))), 2)
+  $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> F(a, b), x))))
 
 // stencil matrix with specified neighborhood
 MATRIX["stn"] = $=>{

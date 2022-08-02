@@ -1,5 +1,4 @@
-import $ from '@stdlib/esm/stats/anova1.js'
-import {voca, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL, __} from './bridge.js'
+import {math, voca, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL, __} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -256,6 +255,11 @@ class INTRP {
   warn(x){
     if(this.verbose)
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
+  }
+
+  sz(x){
+    try { return x.size() }
+    catch(e){ return math.size(x) }
   }
 
   oget(o, x){
@@ -568,13 +572,15 @@ class INTRP {
   depth(x){
     return (
       this.isitr(x) ? 1
-      : this.isobj(x) ? 1 + Math.max(0, ...this.ismap(x) ? _.map(x, D).values() : _.map(x, D))
+      : this.isobj(x) ?
+        1 + Math.max(0, ...this.ismap(x) ? _.map(x, a=> this.depth(a)).values()
+        : _.map(x, a=> this.depth(a)))
       : 0
     )
   }
 
   imap(x, F, D=1 / 0, f=(x, f)=> __.map(f)(x), g=itr.map, post=x=> x, d=[]){
-    if(D < 0) D = this.depth(x) + D
+    if(D < 0) D += this.depth(x)
     if(!D) return F(x, d)
     if(this.ismat(x)) x = x.valueOf()
     if(this.isitr(x)) return g((a, i)=> this.imap(a, F, D - 1, f, g, post, d.concat(i)), x)

@@ -131,7 +131,7 @@ STR["trimr"] = $=> $.u1(a=> $.v1(voca.trimRight, a))
 STR["lat"] = $=> $.u1(a=> $.v1(voca.latinise, a))
 
 // transliterate chars in index 2 from index 1 to index 0
-STR["tr"] = $=> $.u3((a, b, c)=> $.v3(voca.tr, a, b, c))
+STR["tr"] = $=> $.u3((a, b, c)=> $.v3((x, y, z)=> voca.tr(x, $.untag(y), $.untag(z)), a, b, c))
 
 // `tr` but with chars at index 1 and object at index 0
 STR["tro"] = $=> $.u2((a, b)=> $.v2(voca.tr, a, Object.fromEntries(b)))

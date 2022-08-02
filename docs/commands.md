@@ -259,7 +259,9 @@ Command | Description
 --- | ---
 <code>sz</code> | matrix size
 <code>mat</code> | convert to matrix
-<code>m>f</code> | pretty-convert matrix to string
+<code>m>s</code> | convert matrix to string
+<code>m>f</code> | convert matrix to `form`ed string
+<code>m>c</code> | convert matrix to "character" representation
 <code>s>m</code> | convert multiline string to matrix
 <code>mat_</code> | convert matrix to list
 <code>>sp</code> | convert to sparse matrix
@@ -284,6 +286,8 @@ Command | Description
 <code>^++</code> | concat matrices
 <code>^+</code> | `^++` on last axis
 <code>srt</code> | sort matrix
+<code>^it</code> | construct matrix from size and function
+<code>spl</code> | split matrix into submatrices at index 0
 <code>stn</code> | stencil matrix with specified neighborhood
 <code>stm</code> | `stn` with wraparound
 <code>^Qr</code> | Moore ("queen") neighborhood
@@ -343,7 +347,9 @@ Command | Description
 Command | Description
 --- | ---
 <code>N</code> | convert to bigint
+<code>NN</code> | `N` but vectorized
 <code>n_</code> | convert to number
+<code>nn</code> | `n_` but vectorized
 <code>ns</code> | convert number to digit list
 <code>E</code> | `(index 1)*10^(index 0)`
 <code>_</code> | negation
@@ -395,6 +401,8 @@ Command | Description
 <code>catln</code> | nth Catalan number
 <code>stirII</code> | Stirling S2 number at n and k
 <code>belln</code> | nth Bell number
+<code>>b</code> | convert decimal number to base-n digit list
+<code><b</code> | convert base-n digit list to decimal number
 
 ## OBJ
 

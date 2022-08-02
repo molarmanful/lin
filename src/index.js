@@ -12,7 +12,6 @@ let odefs = [
   {name: 'verbose', alias: 'v', type: Boolean, description: 'Output detailed debugging info.'},
   {name: 'step', alias: 's', type: Boolean, description: 'Step-by-step verbose mode.'},
   {name: 'impl', alias: 'i', type: Boolean, description: 'Output stack contents on completion.'},
-  // {name: 'itrlim', alias: 'l', type: Number,typeLabel: '<limit>', description: 'Maximum number of items to pretty-print in iterators.'}
 ]
 let opts = commandLineArgs(odefs)
 

@@ -1,0 +1,16 @@
+[ \DISP \GEN ] :: 2^Q.#n ;
+( rng 2* 0| ) [20 20] ^it >sp ;
+."\033c"out DISP GEN @
+
+#DISP ;
+  .+ [4 2] spl \; 2dmap m>c outln
+    tsp flt.( 4_ roll.~ rev ) 2<b 10240+ >char
+
+#GEN ;
+  (.~ () %# len.+ 4=.@ & - 3= ) .n stm
+
+
+
+# EXPLANATION
+
+Simulates Conway's Game of Life with Braille Unicode output.

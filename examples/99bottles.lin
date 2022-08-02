@@ -1,12 +1,11 @@
-\Pl :: ;
-"of beer".\x "on the wall".\y ;
+\PL :: "of beer".\x "on the wall".\y ;
 99 .< \;.'
-.+.\n Pl.\b ;
-[ .n .b .x ].+.( .y ) ( <ws outln ) 2e* ;
-"Take one down, pass it around"outln ;
-[ .n 1-.+ (.-"No more") e| Pl .x .y n\ ] <ws outln
+  .+.\n PL.\b ;
+  [ .n .b .x ].+.( .y ) ( <ws outln ) 2e* ;
+  "Take one down, pass it around"outln ;
+  [ .n 1-.+ (.-"No more") e| PL .x .y n\ ] <ws outln
 
-#Pl \bottle.+_ 1= ( \s ++ ) e|
+#PL \bottle.+_ 1= ( \s ++ ) e|
 
 
 
