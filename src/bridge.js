@@ -26,6 +26,7 @@ let omap = _.map.bind(_)
 _.map = (x, f)=> ['DenseMatrix', 'SparseMatrix'].includes(x?.type) || x instanceof Map ? x.map(f) : omap(x, f)
 
 export * as fs from 'fs'
+export * as fsp from 'fs/promises'
 export * as cp from 'child_process'
 export * as rls from 'readline-sync'
 export * as $C from 'js-combinatorics'

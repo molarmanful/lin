@@ -1,4 +1,4 @@
-import {fs, rls, _, SL} from '../bridge.js'
+import {fs, fsp, rls, _, SL} from '../bridge.js'
 
 let IO = {}
 
@@ -6,7 +6,7 @@ let IO = {}
 IO["read"] = $=> $.u1(a=> $.v1(x=> fs.readFileSync($.str(x) + '') + '', a))
 
 // write string at index 1 to file at path given by index 0
-IO["write"] = $=> fs.writeFileSync($.str($.shift()) + '', $.str($.shift()) + '')
+IO["write"] = $=> fsp.writeFile($.str($.shift()) + '', $.str($.shift()) + '')
 
 // push user input
 IO["in"] = $=> $.unshift(rls.question(''))
