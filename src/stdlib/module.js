@@ -7,6 +7,8 @@ let imp = $=>{
   let X = $.mname(F)
   if(X.match(/["\d. ]/)) $.err(`bad pkg name "${X}"`)
   let I = new INTRP(fs.readFileSync(F) + '', F)
+  I.child = 1
+  I.run()
   if(!('__PKG' in I.ids)) $.err(`not a pkg "${X}"`)
   I.ids.__PKG.name = X
   I.ids.__PKG.file = F

@@ -39,10 +39,6 @@ export {default as RE2} from 're2'
 export * as math from 'mathjs'
 export * as __ from 'shades'
 
-export {default as RB} from '@stdlib/esm/random/base.js'
-export {default as RI} from '@stdlib/esm/random/iter.js'
-export {default as MIS} from '@stdlib/esm/math/iter/sequences.js'
-
 export {_}
 export {default as parse} from './parser.js'
 export {default as unesc} from './unesc.js'

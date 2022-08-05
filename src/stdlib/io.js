@@ -23,4 +23,7 @@ IO["outln"] = $=> $.v1(x=> process.stdout.write($.str(x) + '\n'), $.shift())
 // `form outln`
 IO["show"] = $=> $.exec('form outln', 1)
 
+// clear TTY
+IO["wipe"] = $=> console.clear()
+
 export default IO

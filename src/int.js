@@ -32,6 +32,8 @@ class INTRP {
     this.code = []
     this.verbose = opts.verbose
     this.step = opts.step
+    this.impl = opts.impl
+    this.child = 0
     this.scope = []
     this.scoped = 0
     this.curls = []
@@ -63,8 +65,18 @@ class INTRP {
         return new LENS(g.get, g.mod)
       },
     }
+  }
 
+  run(){
     this.exec(this.lines[0])
+
+    if(this.impl)
+      _.map(this.stack, (a, i)=>{
+        [
+          chalk.gray.dim(`---{${i}}`),
+          this.form(a)
+        ].map(a=> console.log(a))
+      })
   }
 
   exec(x, y){
@@ -244,11 +256,20 @@ class INTRP {
     }
   }
 
+  exit(c){
+    console.log('called')
+    if(this.child){
+      this.code = []
+      delete this
+    }
+    else process.exit(c)
+  }
+
   err(x){
-    if(this.catch) throw x + ''
+    if(this.catch) throw x
     else {
       console.error(chalk.redBright(`ERR: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
-      process.exit(1)
+      this.exit(1)
     }
   }
 

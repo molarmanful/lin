@@ -65,6 +65,7 @@ Command | Description
 <code>$\`R</code> | infinite list of uniformly random numbers between 0 and 1
 <code>$A</code> | uppercase alphabet
 <code>$a</code> | lowercase alphabet
+<code>$cwd</code> | current working directory
 
 ## COUNT
 
@@ -149,6 +150,7 @@ Command | Description
 <code>out</code> | output index 0 to STDOUT
 <code>outln</code> | output index 0 as a line to STDOUT
 <code>show</code> | `form outln`
+<code>wipe</code> | clear TTY
 
 ## ITER
 
@@ -241,7 +243,7 @@ Command | Description
 <code>==</code> | strict equal
 <code>==_</code> | `==` but non-vectorized
 <code>eq</code> | deep equal
-<code>eq!</code> | strict deep equal
+<code>eqq</code> | strict deep equal
 <code>!=</code> | not equal
 <code>!=_</code> | `!=` but non-vectorized
 <code>!==</code> | strict not equal

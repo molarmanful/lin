@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 // modules
-import {_, fs, fsp, INTRP, chalk} from './bridge.js'
+import {_, fs, INTRP, chalk} from './bridge.js'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
-import * as repl from 'repl'
+import inquirer from 'inquirer'
+import inqcmd from 'inquirer-command-prompt'
+import {parse} from 'shell-quote'
 
 let odefs = [
   {name: 'help', alias: 'h', type: Boolean, description: 'Show this guide.'},
@@ -18,22 +20,21 @@ let odefs = [
 let opts = commandLineArgs(odefs, {partial: true})
 
 let exec = o=>{
-  if(!('eval' in o) && !exists(o.file)){
-    if(exists(o.file + '.lin')) o.file += '.lin'
+  if(!('eval' in o) && !isfl(o.file)){
+    if(isfl(o.file + '.lin')) o.file += '.lin'
     else {
-      console.error(chalk.redBright(`ERR: bad file "${o.file}"`))
-      return 0
+      console.error(chalk.redBright(`ERR: unknown "${o.file}"`))
+      return o.child ? 0 : process.exit(1)
     }
   }
+
   owarn(opts)
-  let I = new INTRP('eval' in o ? o.eval || '' : fs.readFileSync(o.file) + '', o.file, {verbose: o.verbose || o.step, step: o.step})
-  if(o.impl)
-    _.map(I.stack, (a, i)=>{
-      [
-        chalk.gray.dim(`---{${i}}`),
-        I.form(a)
-      ].map(a=> console.log(a))
-    })
+
+  return new INTRP(
+    'eval' in o ? o.eval || '' : fs.readFileSync(o.file) + '',
+    o.file,
+    {verbose: o.verbose || o.step, step: o.step, impl: o.impl}
+  )
 }
 
 let owarn = o=>{
@@ -41,7 +42,8 @@ let owarn = o=>{
     console.warn(chalk.yellowBright(`WRN: unknown opts ${o._unknown.join` `}`))
 }
 
-let exists = x=> fs.existsSync(x) && fs.statSync(x).isFile()
+let isfl = x=> fs.existsSync(x) && fs.statSync(x).isFile()
+let isdr = x=> fs.existsSync(x) && fs.statSync(x).isDirectory()
 
 let cmds = {
   ':h': {
@@ -57,7 +59,7 @@ let cmds = {
   },
   ':c': {
     d: 'clear',
-    f(){ console.log('\x1bc') }
+    f(){ console.clear() },
   },
 }
 
@@ -82,20 +84,36 @@ if(opts.help)
     }
   ]))
 
-else if(opts.shell || !Object.keys(opts).length)
-  repl.start({
-    prompt: 'lin > ',
-    ignoreUndefined: true,
-    completer(l){return [[], l]},
-    eval(c, ctx, fl, f){
-      c = c.trim().split(/\s+/)
-      let opts = commandLineArgs(odefs, {partial: true, argv: c})
-      if(opts.file in cmds){
-        cmds[opts.file].f()
-      }
-      else exec(opts)
-      f(null)
-    },
-  })
+else if(opts.shell || !Object.keys(opts).length){
+  inquirer.registerPrompt('command', inqcmd)
 
-else exec(opts)
+  while(1){
+    let {c} = await inquirer.prompt([{
+      type: 'command',
+      prefix: chalk.reset.bold.magentaBright('ƒ'),
+      message: chalk.reset.magenta('→'),
+      name: 'c',
+      context: 0,
+    }])
+    let opts = commandLineArgs(odefs, {partial: true, argv: parse(c)})
+
+    if(!Object.keys(opts).length){}
+    else if(opts.file in cmds) cmds[opts.file].f()
+    else {
+      opts.child = 1
+      let I = exec(opts)
+      if(I){
+        let S = $=>{ console.log('called'); I.exit(128) }
+        // process.on('SIGINT', S)
+        I.child = 1
+        I.run()
+        // process.off('SIGINT', S)
+      }
+    }
+  }
+}
+
+else {
+  let I = exec(opts)
+  I.run()
+}

@@ -72,7 +72,7 @@ FLOW["e!"] = $=>{
   }
   catch(e){
     $.catch = 0
-    $.unshift(Error(e).message)
+    $.unshift(e instanceof Error ? e.message : e)
     $.exec(X)
   }
 }
@@ -96,6 +96,6 @@ FLOW["err"] = $=> $.err($.shift())
 FLOW["break"] = $=> $.code.shift()
 
 // exit with code at index 0
-FLOW["exit"] = $=> process.exit($.shift())
+FLOW["exit"] = $=> $.exit($.shift())
 
 export default FLOW

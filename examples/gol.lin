@@ -1,6 +1,6 @@
 [ \DISP \GEN ] :: 2^Q.#n ;
 ( rng 2* 0| ) [20 20] ^it >sp ;
-."\033c"out DISP GEN @
+wipe DISP GEN @
 
 #DISP ;
   .+ [4 2] spl \; 2dmap m>c outln

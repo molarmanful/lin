@@ -36,7 +36,7 @@ LOGIC["==_"] = $=> $.u2((a, b)=> $.untag(a) === $.untag(b))
 LOGIC["eq"] = $=> $.u2((a, b)=> _.isEqualWith(a, b, (x, y)=> $.untag(x) == $.untag(y)))
 
 // strict deep equal
-LOGIC["eq!"] = $=> $.u2((a, b)=> _.isEqualWith(a, b, (x, y)=> $.untag(x) === $.untag(y)))
+LOGIC["eqq"] = $=> $.u2((a, b)=> _.isEqualWith(a, b, (x, y)=> $.untag(x) === $.untag(y)))
 
 // not equal
 LOGIC["!="] = $=> $.u2((a, b)=> $.v2((x, y)=> $.untag(x) != $.untag(y), a, b))
