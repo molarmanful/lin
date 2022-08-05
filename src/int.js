@@ -343,11 +343,11 @@ class INTRP {
     )
   }
 
-  lin2js(x){
+  lin2js(x, b=1){
     let r = a=> this.lin2js(a)
     return (
-      this.ismap(x) ? Object.fromEntries(Array.from(x, ([a, b])=> [this.str(a) + '', r(b)]))
-      : this.isitr(x) ? this.itrls(itr.map(r, x))
+      this.ismap(x) ? Object.fromEntries(x.map(r))
+      : b && this.isitr(x) ? this.itrls(itr.map(r, x))
       : this.ismat(x) ? x.valueOf().map(r)
       : this.isarr(x) ? x.map(r)
       : this.untag(x)

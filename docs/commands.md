@@ -243,7 +243,6 @@ Command | Description
 <code>==</code> | strict equal
 <code>==_</code> | `==` but non-vectorized
 <code>eq</code> | deep equal
-<code>eqq</code> | strict deep equal
 <code>!=</code> | not equal
 <code>!=_</code> | `!=` but non-vectorized
 <code>!==</code> | strict not equal
