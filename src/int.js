@@ -178,7 +178,7 @@ class INTRP {
             let A = this.gscope(a)
 
             // brackets/parens only
-            if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `,1)
+            if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `, 1)
 
             // magic dot
             else if(this.gl){
@@ -257,7 +257,6 @@ class INTRP {
   }
 
   exit(c){
-    console.log('called')
     if(this.child){
       this.code = []
       delete this
@@ -327,11 +326,20 @@ class INTRP {
         if(ls.length == 0) return y(xs)
         let [l, ...rs] = ls
         if(this.islen(l)) return l.mod(a=> R(a, y, rs))(xs)
+        if(rs.length == 0){
+          xs.set(l, y(xs.get(l)))
+          return xs
+        }
         xs.set(l, R(xs.get(l), y, rs))
         return xs
       }
     }
-    return R(xs, a=> this.tlen(y, a), ls)
+    return (
+      R(xs, a=> this.quar($=>{
+        this.stack[this.st] = [a]
+        this.exec(y)
+      }), ls)
+    )
   }
 
   js2lin(x){

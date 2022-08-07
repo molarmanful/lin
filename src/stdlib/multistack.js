@@ -1,4 +1,4 @@
-import {_, mth} from '../bridge.js'
+import {_, SL} from '../bridge.js'
 
 let MULTISTACK = {}
 
@@ -18,6 +18,19 @@ MULTISTACK["Q"] = $=>
     $.stack[$.st] = $.stack[$.iter.at(-1)].slice()
     $.exec(x)
   }), a))
+
+// `gl`, `es` index 1, and `sL` in isolated stack
+MULTISTACK[">:"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  $.v2((x, y)=> $.quar($$=>{
+    $.stack[$.st] = [y]
+    SL.gl($)
+    $.exec(x)
+    $.unshift(y)
+    SL.sL($)
+  }), Y, X)
+}
 
 // push index 1 to another stack with name given by index 0
 MULTISTACK["push"] = $=>{
@@ -59,29 +72,5 @@ MULTISTACK["hijk"] = $=> $.stack[$.shift()] = $.stack[$.st]
 
 // set current stack to stack with name given by index 0
 MULTISTACK["absb"] = $=> $.stack[$.st] = $.stack[$.shift()]
-
-MULTISTACK["thr"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  let Z = $.shift()
-  let W = $.shift()
-  mth(async $=>{
-    let {path, fn} = global.threadData
-    let {INT} = await import(path)
-    INT.run(fn)
-    return INT.stack[INT.st]
-  }, {
-    path: new URL('../bridge.js', import.meta.url).href,
-    fn: W
-  })
-    .then(r=>{
-      $.stack[X] = r
-      $.exec(Z)
-    })
-    .catch(e=>{
-      $.stack[X] = [e]
-      $.exec(Y, 1)
-    })
-}
 
 export default MULTISTACK

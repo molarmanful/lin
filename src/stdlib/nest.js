@@ -52,7 +52,8 @@ NEST["%craft"] = $=> $.u2((a, b)=> new $.LENS(x=> $.tlen(a, x), f=> x=> $.tlen(b
 NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))
 
 // lens modify
-NEST["%:"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c))
+NEST["%:"] = $=>
+  $.u3((a, b, c)=> $.lmod(a, b, c))
 
 // lens map
 NEST["%a"] = $=> $.unshift($.lens.a)

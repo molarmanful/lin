@@ -32,12 +32,12 @@ export * as rls from 'readline-sync'
 export * as $C from 'js-combinatorics'
 export * as itr from 'iter-tools-es'
 export {default as chalk} from 'chalk'
-export {runOnThread as mth} from 'funthreads'
 export * as path from 'path'
 export {default as voca} from 'voca'
 export {default as RE2} from 're2'
 export * as math from 'mathjs'
 export * as __ from 'shades'
+export {default as sh} from 'shelljs'
 
 export {_}
 export {default as parse} from './parser.js'

@@ -124,19 +124,6 @@ BASE["sL"] = $=>{
   else $.ids[X] = Y
 }
 
-// `gl`, `es` index 1, and `sL` in isolated stack
-BASE[">:"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  $.unshift($.v2((x, y)=> $.quar(a=>{
-    $.stack[$.st] = []
-    $.unshift(y)
-    SL.gl($)
-    $.exec(x)
-  }), Y, X), X)
-  SL.sL($)
-}
-
 // bring ID at index 0 as string into global scope
 BASE["::"] = $=> $.v1(x=> $.id(x), $.shift())
 

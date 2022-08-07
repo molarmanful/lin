@@ -38,7 +38,6 @@ Command | Description
 <code>si</code> | set global ID at index 0
 <code>sl</code> | `si` but follow scoping rules
 <code>sL</code> | `sl` but without overriding existing scoping rules
-<code>>:</code> | `gl`, `es` index 1, and `sL` in isolated stack
 <code>::</code> | bring ID at index 0 as string into global scope
 <code>type</code> | push type of index 0
 
@@ -308,6 +307,7 @@ Command | Description
 --- | ---
 <code>'s</code> | `es` index 1 on a stack with name given by index 0
 <code>Q</code> | `es` on a copy of stack, then retrieve
+<code>>:</code> | `gl`, `es` index 1, and `sL` in isolated stack
 <code>push</code> | push index 1 to another stack with name given by index 0
 <code>pushs</code> | push current stack to another stack with name given by index 0
 <code>pull</code> | push top item of another stack with name given by index 0

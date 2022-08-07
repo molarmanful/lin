@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
 // modules
-import {_, fs, INTRP, chalk} from './bridge.js'
+import {rls, _, sh, fs, INTRP, chalk} from './bridge.js'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
-import inquirer from 'inquirer'
-import inqcmd from 'inquirer-command-prompt'
+import * as rlp from 'readline/promises'
 import {parse} from 'shell-quote'
 
 let odefs = [
@@ -20,8 +19,8 @@ let odefs = [
 let opts = commandLineArgs(odefs, {partial: true})
 
 let exec = o=>{
-  if(!('eval' in o) && !isfl(o.file)){
-    if(isfl(o.file + '.lin')) o.file += '.lin'
+  if(!('eval' in o) && !sh.test('-f', o.file)){
+    if(sh.test('-f', o.file + '.lin')) o.file += '.lin'
     else {
       console.error(chalk.redBright(`ERR: unknown "${o.file}"`))
       return o.child ? 0 : process.exit(1)
@@ -41,9 +40,6 @@ let owarn = o=>{
   if(o._unknown)
     console.warn(chalk.yellowBright(`WRN: unknown opts ${o._unknown.join` `}`))
 }
-
-let isfl = x=> fs.existsSync(x) && fs.statSync(x).isFile()
-let isdr = x=> fs.existsSync(x) && fs.statSync(x).isDirectory()
 
 let cmds = {
   ':h': {
@@ -85,16 +81,23 @@ if(opts.help)
   ]))
 
 else if(opts.shell || !Object.keys(opts).length){
-  inquirer.registerPrompt('command', inqcmd)
-
+  let hist = []
   while(1){
-    let {c} = await inquirer.prompt([{
-      type: 'command',
-      prefix: chalk.reset.bold.magentaBright('ƒ'),
-      message: chalk.reset.magenta('→'),
-      name: 'c',
-      context: 0,
-    }])
+    chalk.reset()
+    let r = rlp.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      history: hist,
+    })
+
+    let c = await r.question(`${chalk.bold.magentaBright('ƒ')} ${chalk.magenta('→')} `)
+    hist.push(c)
+
+    await new Promise(res=>{
+      r.once('close', res)
+      r.close()
+    })
+
     let opts = commandLineArgs(odefs, {partial: true, argv: parse(c)})
 
     if(!Object.keys(opts).length){}
@@ -103,10 +106,11 @@ else if(opts.shell || !Object.keys(opts).length){
       opts.child = 1
       let I = exec(opts)
       if(I){
-        let S = $=>{ console.log('called'); I.exit(128) }
+        // let S = $=>{ console.log('called'); I.exit(128) }
         // process.on('SIGINT', S)
         I.child = 1
         I.run()
+        console.log()
         // process.off('SIGINT', S)
       }
     }
