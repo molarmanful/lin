@@ -101,28 +101,25 @@ BASE["g;;"] = $=> $.unshift($.gline($.lns.at(-1)[1] - 1))
 BASE["L"] = $=> $.exec('$L +',1)
 
 // set global ID at index 0
-BASE["si"] = $=> $.ids[$.shift()] = $.shift()
+BASE["si"] = $=> $.v1(x=> $.ids[x] = $.shift(), $.shift())
 
 // `si` but follow scoping rules
-BASE["sl"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  if($.scope.length) $.scope[$.scope.length - 1][X] = Y
-  else $.ids[X] = Y
-}
+BASE["sl"] = $=>
+  $.v1(x=>{
+    let Y = $.shift()
+    if($.scope.length) $.scope[$.scope.length - 1][x] = Y
+    else $.ids[x] = Y
+  }, $.shift())
 
 // `sl` but without overriding existing scoping rules
-BASE["sL"] = $=>{
-  let X = $.shift()
-  let Y = $.shift()
-  if($.scope.length){
-    let i = _.findLastIndex($.scope, a=> X in a)
-    if(~i) $.scope[i][X] = Y
-    else if(X in $.ids) $.ids[X] = Y
-    else $.scope[$.scope.length - 1][X] = Y
-  }
-  else $.ids[X] = Y
-}
+BASE["sL"] = $=>
+  $.v1(x=>{
+    let Y = $.shift()
+    let i = _.findLastIndex($.scope, a=> x in a)
+    if(~i) $.scope[i][x] = Y
+    else if(x in $.ids) $.ids[x] = Y
+    else $.scope[$.scope.length - 1][x] = Y
+  }, $.shift())
 
 // bring ID at index 0 as string into global scope
 BASE["::"] = $=> $.v1(x=> $.id(x), $.shift())
