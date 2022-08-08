@@ -26,6 +26,8 @@
 
 Command | Description
 --- | ---
+<code>$(</code> | scoped lambda
+<code>$[</code> | pattern binding mode
 <code>${</code> | create new scope
 <code>gi</code> | push string at ID given by index 0
 <code>gl</code> | `gi` but follow scoping rules
@@ -38,6 +40,7 @@ Command | Description
 <code>si</code> | set global ID at index 0
 <code>sl</code> | `si` but follow scoping rules
 <code>sL</code> | `sl` but without overriding existing scoping rules
+<code>=></code> | bind stack to variables
 <code>::</code> | bring ID at index 0 as string into global scope
 <code>type</code> | push type of index 0
 
@@ -85,8 +88,10 @@ Command | Description
 --- | ---
 <code>.</code> | `lns`
 <code>+</code> | `dup`
+<code>*</code> | `dups`
 <code>+_</code> | `over`
 <code>-</code> | `pop`
+<code>_</code> | `clr`
 <code>~</code> | `swap`
 <code>@</code> | `rot`
 <code>@_</code> | `rot_`

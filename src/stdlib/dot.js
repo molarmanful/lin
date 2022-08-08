@@ -13,11 +13,17 @@ DOT["("] = $=> {
 // `dup`
 DOT["+"] = SL.dup
 
+// `dups`
+DOT["*"] = SL.dups
+
 // `over`
 DOT["+_"] = SL.over
 
 // `pop`
 DOT["-"] = SL.pop
+
+// `clr`
+DOT["_"] = SL.clr
 
 // `swap`
 DOT["~"] = SL.swap
