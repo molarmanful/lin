@@ -39,6 +39,7 @@ class INTRP {
     this.curls = []
     this.apos = 0
     this.catch = 0
+    this.bind = 0
     this.objs = []
     this.file = file && this.mresolve(file)
     this.PKG = PKG

@@ -27,7 +27,6 @@ _.map = (x, f)=> ['DenseMatrix', 'SparseMatrix'].includes(x?.type) || x instance
 
 export * as fs from 'fs'
 export * as fsp from 'fs/promises'
-export * as cp from 'child_process'
 export * as rls from 'readline-sync'
 export * as $C from 'js-combinatorics'
 export * as itr from 'iter-tools-es'

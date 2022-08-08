@@ -19,7 +19,7 @@ let parse = x=>{
     }
 
     // number
-    else if(a.match(/[0-9]/)){
+    else if(a.match(/\d/)){
       if(tree.length && last.type == 'num')
         last.value += a
       else tree.push({type: 'num', value: a})

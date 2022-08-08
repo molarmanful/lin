@@ -1,4 +1,4 @@
-import {_, SL} from '../bridge.js'
+import {parse, _, SL} from '../bridge.js'
 
 let BASE = {}
 
