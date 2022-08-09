@@ -1,4 +1,4 @@
-import {math, voca, DOT, RE2, unesc, chalk, rls, itr, _, path, parse, SL, __} from './bridge.js'
+import {rust, math, voca, DOT, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -238,7 +238,10 @@ class INTRP {
             ].map(a => console.log(a))
           }
 
-          if(this.step && !this.lambda) if(rls.question("[ENTER to continue, a + ENTER to auto-step]") == 'a') this.step = 0
+          if(this.step && !this.lambda){
+            process.stdout.write("[ENTER to continue, a + ENTER to auto-step] ")
+            if(rust.rline() == 'a') this.step = 0
+          } 
         }
 
         this.code.shift()

@@ -1,4 +1,4 @@
-import {fs, fsp, rls, _, SL} from '../bridge.js'
+import {fs, fsp, _, SL, rust} from '../bridge.js'
 
 let IO = {}
 
@@ -9,10 +9,10 @@ IO["read"] = $=> $.u1(a=> $.v1(x=> fs.readFileSync($.str(x) + '') + '', a))
 IO["write"] = $=> fsp.writeFile($.str($.shift()) + '', $.str($.shift()) + '')
 
 // push user input
-IO["in"] = $=> $.unshift(rls.question(''))
+IO["in"] = $=> $.unshift(rust.rline())
 
 // push user input without echoing
-IO["inh"] = $=> $.unshift(rls.question('', {hideEchoBack: true, mask: ''}))
+IO["inh"] = $=> $.unshift(rust.rline_pw())
 
 // output index 0 to STDOUT
 IO["out"] = $=> $.v1(x=> process.stdout.write($.str(x) + ''), $.shift())

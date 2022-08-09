@@ -1,4 +1,4 @@
-import {math, prime, $C, _, SL, itr} from '../bridge.js'
+import {math, rust, $C, _, SL, itr} from '../bridge.js'
 
 let NUM = {}
 
@@ -157,7 +157,7 @@ NUM["ceil"] = $=> $.u1(a=> $.v1(Math.ceil, a))
 // Miller-Rabin primality test
 NUM["P?"] = $=>{
   $.u1(a=> $.v1(BigInt, a))
-  $.u1(a=> $.v1(x=> x > 1 && prime(x), a))
+  $.u1(a=> $.v1(x=> x > 1 && rust.isprime($.str(x) + ''), a))
 }
 
 let fac = _.memoize($C.factorial)

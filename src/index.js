@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // modules
-import {rls, _, sh, fs, INTRP, chalk} from './bridge.js'
+import {_, sh, fs, INTRP, chalk} from './bridge.js'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 import * as rlp from 'readline/promises'

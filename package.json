@@ -8,6 +8,7 @@
     "lin": "./src/index.js"
   },
   "scripts": {
+    "install": "cd ./native && npm install",
     "test": "mocha --recursive"
   },
   "repository": {
@@ -29,7 +30,6 @@
     "lodash-es": "^4.17.21",
     "mathjs": "^10.6.4",
     "re2": "^1.17.7",
-    "readline-sync": "^1.4.10",
     "shades": "^2.1.0",
     "shell-quote": "^1.7.3",
     "shelljs": "^0.8.5",

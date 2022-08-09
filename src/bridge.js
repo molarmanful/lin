@@ -27,7 +27,6 @@ _.map = (x, f)=> ['DenseMatrix', 'SparseMatrix'].includes(x?.type) || x instance
 
 export * as fs from 'fs'
 export * as fsp from 'fs/promises'
-export * as rls from 'readline-sync'
 export * as $C from 'js-combinatorics'
 export * as itr from 'iter-tools-es'
 export {default as chalk} from 'chalk'
@@ -41,7 +40,7 @@ export {default as sh} from 'shelljs'
 export {_}
 export {default as parse} from './parser.js'
 export {default as unesc} from './unesc.js'
-export {default as prime} from './prime.js'
+export {default as rust} from './native.cjs'
 export {default as INTRP} from './int.js'
 export {default as SL} from './stdlib.js'
 export {default as DOT} from './stdlib/dot.js'

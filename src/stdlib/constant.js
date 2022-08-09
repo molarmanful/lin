@@ -1,4 +1,4 @@
-import {math, prime, itr, _} from '../bridge.js'
+import {math, rust, itr, _} from '../bridge.js'
 
 let CONSTANT = {}
 
@@ -48,7 +48,7 @@ CONSTANT["$T"] = $=> $.unshift(Date.now())
 CONSTANT["$`"] = $=> $.unshift(itr.range())
 
 // infinite list of primes
-CONSTANT["$`P"] = $=> $.unshift(itr.filter(a=> prime(a), itr.range({start: 2})))
+CONSTANT["$`P"] = $=> $.unshift(itr.filter(a=> rust.isprime(a + ''), itr.range({start: 2})))
 
 // infinite list of uniformly random numbers between 0 and 1
 CONSTANT["$`R"] = $=> $.unshift(itr.map(a=> math.random(), itr.range()))
