@@ -8,7 +8,7 @@
     "lin": "./src/index.js"
   },
   "scripts": {
-    "install": "cd ./native && npm install",
+    "postinstall": "cd ./native && npm install",
     "test": "mocha --recursive"
   },
   "repository": {
