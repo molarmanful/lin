@@ -1,9 +1,9 @@
-\PL :: "of beer".\x "on the wall".\y ;
-99 .< \;.'
-  .+.\n PL.\b ;
-  [ .n .b .x ].+.( .y ) ( <ws outln ) 2e* ;
+\PL :: "of beer".#x "on the wall".#y ;
+99 .< $(.#n ; ).'
+  .n PL.#b ;
+  [.n.b.x ].+.(.y ) ( <ws outln ) 2e* ;
   "Take one down, pass it around"outln ;
-  [ .n 1-.+ (.-"No more") e| PL .x .y n\ ] <ws outln
+  [.n 1-.+ (.-"No more") e| PL .x.y n\ ] <ws outln
 
 #PL \bottle.+_ 1= ( \s ++ ) e|
 
@@ -13,13 +13,28 @@
 
 Outputs lyrics for the song "99 Bottles of Beer on the Wall."
 
-- `( of beer ) .\x ( on the wall ) .\y` stores repeated phrases for later.
-- `99orang \; map` executes the line 3 for each *n* from 99 to 1.
+    99 .< $(.#n ; ).'
 
-On line 3:
+For each *n* from 99 to 1...
 
-- `.+.\n P.\b` stores "bottle" or "bottles" depending on whether *n* is 1.
-- `[ .n .b .x ].+.( .y ) ( <ws outln ) 2e* ;` first 2 lines of chorus.
-- `"Take one down, pass it around" outln ;` third line of chorus.
-- `.n 1-.+ (.-"No more") e|` decrements *n* and replaces it with "No more" if 0.
-- `[ ... P .x .y n\ ] <ws outln` last line of chorus.
+    .n PL.#b
+
+Stores "bottle" or "bottles" depending on whether *n* is 1.
+
+    [.n.b.x ].+.(.y ) ( <ws outln ) 2e*
+
+
+First 2 lines of chorus.
+
+    "Take one down, pass it around"outln
+
+
+Third line of chorus.
+
+    .n 1-.+ (.-"No more") e|
+
+Decrements *n* and replaces it with "No more" if 0.
+
+    [... PL .x .y n\ ] <ws outln
+
+Last line of chorus.

@@ -7,5 +7,10 @@ g;.+ outln out
 
 Outputs its own source code.
 
-- `g;` gets the second line as a string.
-- `.+ outln out` outputs 2 copies of the string separated by a newline.
+    g;
+
+Gets the second line as a string.
+
+    .+ outln out
+
+Outputs 2 copies of the string separated by a newline.

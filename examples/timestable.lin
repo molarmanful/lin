@@ -6,5 +6,10 @@
 
 Outputs the multiplication table from 1 to 12.
 
-- `[ 12 .> 1+ ].+ \* table` creates the table using a Cartesian product.
-- `12cols.$$ m>f outln` reshapes the table and prints it.
+    [ 12 .> 1+ ].+ \* table
+
+Creates the table using a Cartesian product.
+
+    12cols.$$ m>f outln
+
+Reshapes the table and prints it.

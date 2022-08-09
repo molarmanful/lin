@@ -10,9 +10,10 @@ class PKG {
 }
 
 class LENS {
-  constructor(g, m, c=0){
-    this.get = g
-    this.mod = m
+  constructor({get, mod, traversal}, c=0){
+    this.get = get
+    this.mod = mod
+    this.traversal = traversal
     this.custom = c
   }
 }
@@ -48,23 +49,11 @@ class INTRP {
     this.pkf = []
 
     this.lens = {
-      a: new LENS(x=> x, __.map),
-      f: f=>{
-        let g = __.matching(f)
-        return new LENS(g.get, g.mod)
-      },
-      F: f=>{
-        let g = __.findBy(f)
-        return new LENS(g.get, g.mod)
-      },
-      MX: f=>{
-        let g = __.maxBy(f)
-        return new LENS(g.get, g.mod)
-      },
-      MN: f=>{
-        let g = __.minBy(f)
-        return new LENS(g.get, g.mod)
-      },
+      a: new LENS(__.all()),
+      f: f=> new LENS(__.matching(f)),
+      F: f=> new LENS(__.findBy(f)),
+      MX: f=> new LENS(__.maxBy(f)),
+      MN: f=> new LENS(__.minBy(f)),
     }
   }
 
@@ -311,7 +300,7 @@ class INTRP {
   lpre(xs, ls){
     if(this.ismat(xs)) xs = xs.valueOf()
     else if(this.isitr(xs)) xs = this.itrlist(xs)
-    ls = __.map(x=> this.untag(x))(_.flattenDeep(ls))
+    ls = __.map(x=> this.untag(x))(_.flattenDeep([this.itrlist(ls)]))
     return [xs, ls]
   }
 
@@ -320,33 +309,31 @@ class INTRP {
     return __.get(...ls)(xs)
   }
 
-  lmod(xs, y, ls){
+  lmod(xs, y, ls, s){
     [xs, ls] = this.lpre(xs, ls)
-    let R = (xs, y, ls) =>{
+    let R = (xs, y, ls, s) =>{
+      if(ls.length == 0) return y(xs)
       if(xs != void 0){
-        if(ls.length == 0) return y(xs)
         let [l, ...rs] = ls
-        if(this.islen(l)) return l.mod(a=> R(a, y, rs))(xs)
-        if(rs.length == 0){
-          xs.set(l, y(xs.get(l)))
-          return xs
-        }
-        xs.set(l, R(xs.get(l), y, rs))
+        if(this.islen(l)) return l.mod(a=> R(a, y, rs, s))(xs)
+        if(rs.length == 0) s == 2 ? xs.delete(l) : xs.set(l, y(xs.get(l)))
+        else xs.set(l, R(xs.get(l), y, rs, s))
         return xs
       }
     }
     return (
-      R(xs, a=> this.quar($=>{
+      R(xs, s ? $=> y : a=> this.quar($=>{
         this.stack[this.st] = [a]
         this.exec(y)
-      }), ls)
+      }), ls, s)
     )
   }
 
   js2lin(x){
     let r = a=> this.js2lin(a)
     return (
-      this.isarr(x) ? x.map(r)
+      x == null ? void 0
+      : this.isarr(x) ? x.map(r)
       : this.isobj(x) ? new Map(Object.entries(x)).map(r)
       : x
     )
@@ -355,7 +342,8 @@ class INTRP {
   lin2js(x, b=1){
     let r = a=> this.lin2js(a)
     return (
-      this.ismap(x) ? Object.fromEntries(x.map(r))
+      x == void 0 ? null 
+      : this.ismap(x) ? Object.fromEntries(x.map(r))
       : b && this.isitr(x) ? this.itrls(itr.map(r, x))
       : this.ismat(x) ? x.valueOf().map(r)
       : this.isarr(x) ? x.map(r)

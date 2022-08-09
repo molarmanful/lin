@@ -1,4 +1,4 @@
-1N 1N ;
+1N.+ ;
 .+_ outln.~.+_ + @
 
 
@@ -7,7 +7,18 @@
 
 This outputs Fibonacci numbers.
 
-- `1N 1N` serves as the initial condition.
-- `.+_ outln` duplicates the second from top of stack and outputs it.
-- `.~.+_ +` adds the top 2 Fibonacci numbers.
-- `@` executes the line again.
+    1N.+
+
+Initial condition.
+
+    .+_ outln
+
+Duplicates the second from top of stack and outputs it.
+
+    .~.+_ +
+
+Adds the top 2 Fibonacci numbers.
+
+    @
+
+Executes the line again.

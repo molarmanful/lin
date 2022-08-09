@@ -46,14 +46,23 @@ NEST["`vs"] = $=> $.u1(a=> $.paths(a, 1))
 // get all paths and views
 NEST["`pvs"] = $=> $.u1(a=> $.paths(a, 2))
 
-NEST["%craft"] = $=> $.u2((a, b)=> new $.LENS(x=> $.tlen(a, x), f=> x=> $.tlen(b, x, f)))
+NEST["%craft"] = $=>
+  $.u2((a, b)=> new $.LENS({
+    get: x=> $.tlen(a, x),
+    mod: f=> x=> $.tlen(b, x, f),
+  }))
 
 // lens view
 NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))
 
 // lens modify
-NEST["%:"] = $=>
-  $.u3((a, b, c)=> $.lmod(a, b, c))
+NEST["%:"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c))
+
+// lens set
+NEST["%s"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c, 1))
+
+// lens remove
+// NEST["%_"] = $=> $.u2((a, b)=> $.lmod(a, void 0, b, 2))
 
 // lens map
 NEST["%a"] = $=> $.unshift($.lens.a)

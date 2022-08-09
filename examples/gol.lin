@@ -1,5 +1,5 @@
 [ \DISP \GEN ] :: 2^Q.#n ;
-( rng 2* 0| ) [20 20] ^it >sp ;
+( rng 2*0| ) [20 20] ^it >sp ;
 wipe DISP GEN @
 
 #DISP ;
@@ -14,3 +14,39 @@ wipe DISP GEN @
 # EXPLANATION
 
 Simulates Conway's Game of Life with Braille Unicode output.
+
+    ( rng 2*0| ) [20 20] ^it >sp
+
+Random 20x20 binary matrix.
+
+    wipe DISP GEN @
+
+Infinitely displays and generates the matrix.
+
+## DISP
+
+    .+ [4 2] spl 
+
+Splits the matrix into 4x2 chunks.
+
+    \; 2dmap
+
+For each chunk...
+
+    tsp flt.( 4_ roll.~ rev ) 2<b 10240+ >char
+
+Converts the chunk to a braille char.
+
+    m>c outln
+
+Outputs.
+
+## GEN
+
+    (...) .n stm
+
+For each cell and its neighbors...
+
+    .~ () %# len.+ 4=.@ & - 3=
+
+Get the next cell using a magic formula.
