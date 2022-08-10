@@ -36,11 +36,11 @@ export {default as RE2} from 're2'
 export * as math from 'mathjs'
 export * as __ from 'shades'
 export {default as sh} from 'shelljs'
+export * as rust from '@molarmanful/lin-bindings'
 
 export {_}
 export {default as parse} from './parser.js'
 export {default as unesc} from './unesc.js'
-export {default as rust} from './native.cjs'
 export {default as INTRP} from './int.js'
 export {default as SL} from './stdlib.js'
 export {default as DOT} from './stdlib/dot.js'
