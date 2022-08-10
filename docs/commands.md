@@ -118,7 +118,6 @@ Command | Description
 <code>^</code> | `mat`
 <code>^_</code> | `mat_`
 <code>%</code> | `%craft`
-<code>*</code> | `b*`
 
 ## FLOW
 
