@@ -8,8 +8,12 @@
     "lin": "./src/index.js"
   },
   "scripts": {
-    "postinstall": "cd ./native && npm install",
-    "test": "mocha --recursive"
+    "test": "ava"
+  },
+  "ava": {
+    "files": [
+      "test/**/*"
+    ]
   },
   "repository": {
     "type": "git",
