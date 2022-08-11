@@ -1,4 +1,6 @@
 import _ from 'lodash-es'
+import {Temporal, Intl, toTemporalInstant} from '@js-temporal/polyfill'
+import sh from 'shelljs'
 
 Map.prototype.map = function(f){
   let X = new Map(this)
@@ -22,8 +24,12 @@ Array.prototype.delete = function(i){
   this.splice(i, 1)
 }
 
+Date.prototype.toTemporalInstant = toTemporalInstant
+
 let omap = _.map.bind(_)
 _.map = (x, f)=> ['DenseMatrix', 'SparseMatrix'].includes(x?.type) || x instanceof Map ? x.map(f) : omap(x, f)
+
+sh.config.fatal = true
 
 export * as fs from 'fs'
 export * as fsp from 'fs/promises'
@@ -35,10 +41,9 @@ export {default as voca} from 'voca'
 export {default as RE2} from 're2'
 export * as math from 'mathjs'
 export * as __ from 'shades'
-export {default as sh} from 'shelljs'
 export * as rust from '@molarmanful/lin-bindings'
 
-export {_}
+export {_, Temporal, Intl, sh}
 export {default as parse} from './parser.js'
 export {default as unesc} from './unesc.js'
 export {default as INTRP} from './int.js'

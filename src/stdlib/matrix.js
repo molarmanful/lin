@@ -92,8 +92,7 @@ MATRIX[">sh"] = $=>
 // transpose matrix
 MATRIX["tsp"] = $=>
   $.u1(a=>{
-    try{ a = math.transpose(a) }
-    catch(e){ a = _.zip(...$.itrlist(a)) }
+    a = $.try($$=> math.transpose(a), e=> _.zip(...$.itrlist(a)))
     return mat($)(a)
   })
 
@@ -137,7 +136,7 @@ MATRIX["srt"] = $=>{
 }
 
 // construct matrix from size and function
-MATRIX["^it"] = $=> $.u1(a=> $.each(a, math.matrixFromFunction))
+MATRIX["^it"] = $=> $.u1(a=> $.each(math.zeros(a).valueOf(), (x, f)=> $.imap(x, (y, i)=> f(i))))
 
 // split matrix into submatrices at index 0
 MATRIX["spl"] = $=>

@@ -1,4 +1,4 @@
-import {math, rust, itr, _} from '../bridge.js'
+import {Temporal, math, rust, itr, _} from '../bridge.js'
 
 let CONSTANT = {}
 
@@ -41,8 +41,8 @@ CONSTANT["$Pi"] = $=> $.unshift(Math.PI)
 // Infinity
 CONSTANT["$I"] = $=> $.unshift(Infinity)
 
-// milliseconds since January 1, 1970 00:00:00.000
-CONSTANT["$T"] = $=> $.unshift(Date.now())
+// nanoseconds since Unix epoch
+CONSTANT["$T"] = $=> $.unshift(Temporal.Now.instant().epochNanoseconds)
 
 // infinite list of whole numbers
 CONSTANT["$`"] = $=> $.unshift(itr.range())

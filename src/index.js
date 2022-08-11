@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // modules
-import {_, sh, fs, INTRP, chalk} from './bridge.js'
+import {_, sh, INTRP, chalk} from './bridge.js'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 import * as rlp from 'readline/promises'
@@ -30,7 +30,7 @@ let exec = o=>{
   owarn(opts)
 
   return new INTRP(
-    'eval' in o ? o.eval || '' : fs.readFileSync(o.file) + '',
+    'eval' in o ? o.eval || '' : sh.cat(o.file),
     o.file,
     {verbose: o.verbose || o.step, step: o.step, impl: o.impl}
   )

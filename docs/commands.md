@@ -59,7 +59,7 @@ Command | Description
 <code>$E</code> | Euler's constant
 <code>$Pi</code> | Pi
 <code>$I</code> | Infinity
-<code>$T</code> | milliseconds since January 1, 1970 00:00:00.000
+<code>$T</code> | nanoseconds since Unix epoch
 <code>$\`</code> | infinite list of whole numbers
 <code>$\`P</code> | infinite list of primes
 <code>$\`R</code> | infinite list of uniformly random numbers between 0 and 1
@@ -144,8 +144,21 @@ Command | Description
 
 Command | Description
 --- | ---
-<code>read</code> | read file at path given by index 0
-<code>write</code> | write string at index 1 to file at path given by index 0
+<code>cat</code> | read file at path given by index 0
+<code>cd</code> | change current directory
+<code>chmod</code> | modify permissions
+<code>cp</code> | copy file at index 2 to index 1 with flags at index 0
+<code>exec</code> | execute shell command
+<code>ls</code> | list at given path
+<code>mkdir</code> | create directory
+<code>mv</code> | move file at index 1 to index 0
+<code>mvn</code> | `mv` without overwrite
+<code>rm</code> | remove path (BE CAREFUL WHEN USING THIS FUNCTION)
+<code>tempdir</code> | create/get tempdir
+<code>test</code> | test path
+<code>which</code> | find executable
+<code>*></code> | write string at index 1 to file at path given by index 0
+<code>*>></code> | `*>` but append
 <code>in</code> | push user input
 <code>inh</code> | push user input without echoing
 <code>out</code> | output index 0 to STDOUT
@@ -213,7 +226,7 @@ Command | Description
 --- | ---
 <code>len</code> | length of index 0
 <code>'</code> | `es` index 0 on list at index 1
-<code>++</code> | concatenate top 2 items as strings or lists
+<code>+*</code> | non-vectorized `++`
 <code>r:</code> | get random item from list
 <code>rep</code> | repeat list/string by index 0
 <code>union</code> | set union of lists at index 0 and index 1

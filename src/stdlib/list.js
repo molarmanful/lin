@@ -20,8 +20,10 @@ LIST["'"] = $=>{
   ))
 }
 
-// concatenate top 2 items as strings or lists
-LIST["++"] = $=> $.u2((a, b)=> $.isarr(a) ? _.concat(a, b) : a + $.str(b))
+LIST["++"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.str(x) + $.str(y), a, b))
+
+// non-vectorized `++`
+LIST["+*"] = $=> $.u2((a, b)=> $.isarr(a) ? _.concat(a, b) : a + $.str(b))
 
 // get random item from list
 LIST["r:"] = $=> $.exec('dup len rng * 0| g:', 1)

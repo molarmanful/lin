@@ -1,4 +1,4 @@
-import {rust, math, voca, DOT, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
+import {Temporal, rust, math, voca, DOT, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -25,6 +25,8 @@ class FN extends String {
     this.orig = orig
     return this
   }
+
+  [Symbol.toPrimitive](){ return this.toString() }
 }
 
 class INTRP {
@@ -36,7 +38,7 @@ class INTRP {
     this.lambda = 0
     this.paren = []
     this.ids = _.cloneDeep(SL)
-    this.lines = x.split`\n`
+    this.lines = x.split(/\r?\n/)
     this.lns = [[0, 0]]
     this.iter = []
     this.code = []
@@ -97,8 +99,8 @@ class INTRP {
 
       let orig = x.orig
       if(!this.isfns(x)){
-        if(this.istag(x)) x.xs = x.xs.split`\n`[0]
-        x = x.split`\n`[0]
+        if(this.istag(x)) x.xs = x.xs.split(/\r?\n/)[0]
+        x = x.split(/\r?\n/)[0]
       }
 
       if(orig && orig[0] == this.file && this.pkf.at(-1) && orig[0] != this.pkf.at(-1)?.file){
@@ -188,6 +190,21 @@ class INTRP {
               this.gl = 0
               if(a in DOT){
                 DOT[a](this)
+              }
+
+              else if(a.slice(0, 2) == 'cp'){
+                this.unshift(a.slice(2))
+                SL['cp'](this)
+              }
+
+              else if(a.slice(0, 2) == 'ls'){
+                this.unshift(a.slice(2))
+                SL['ls'](this)
+              }
+
+              else if(a.slice(0, 4) == 'test'){
+                this.unshift(a.slice(4))
+                SL['test'](this)
               }
 
               else if(a.slice(0, 2) == '?!'){
@@ -283,10 +300,12 @@ class INTRP {
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
   }
 
-  sz(x){
-    try { return x.size() }
-    catch(e){ return math.size(x) }
+  try(f, g){
+    try { return f() }
+    catch(e){ return g(e) }
   }
+
+  sz(x){ return this.try($=> x.size(), e=> math.size(x)) }
 
   oget(o, x){
     let O = o?.entries ? [...o.entries()] : Object.entries(o)
@@ -349,6 +368,7 @@ class INTRP {
     let r = a=> this.js2lin(a)
     return (
       x == null ? void 0
+      : x instanceof Date ? x.toTemporalInstant().toString()
       : this.isarr(x) ? x.map(r)
       : this.isobj(x) ? new Map(Object.entries(x)).map(r)
       : x
@@ -546,6 +566,8 @@ class INTRP {
       : this.isstr(a) ? JSON.stringify(a + '') + M(a)
       : this.ismat(a) ?
         `[${this.form(a.valueOf(), ' ')}]^${a.type == 'SparseMatrix' ? [...a].length : ''}`
+      : this.istmp(a) ?
+        `~(${a + ''})`
       : this.ismap(a) ?
         a.size ?
           `{${Array.from(a, ([b, i])=> `${this.form([b])}=>${this.form([i])}`).join` `}}`
@@ -718,7 +740,7 @@ class INTRP {
 
   mresolve(x){ return path.resolve(process.cwd(), x) }
 
-  mname(x){ try { return path.basename(x, path.extname(x)) } catch(e){ return x } }
+  mname(x){ return this.try($=> path.basename(x, path.extname(x)), e=> x) }
 
   gline(x){ return this.strtag(this.pkf.at(-1)?.lines?.[x] || this.lines[x], [this.pkf.at(-1)?.file, x]) }
 
@@ -776,7 +798,9 @@ class INTRP {
 
   ismat(x){ return ['DenseMatrix', 'SparseMatrix'].includes(x?.type) }
 
-  islen(x){ return x instanceof LENS}
+  islen(x){ return x instanceof LENS }
+
+  istmp(x){ return x instanceof Temporal.Instant }
 }
 
 export default INTRP
