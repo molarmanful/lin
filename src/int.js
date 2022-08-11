@@ -18,6 +18,15 @@ class LENS {
   }
 }
 
+class FN extends String {
+  constructor(xs, orig){
+    super(xs?.join ? xs.join` ` : xs)
+    this.xs = xs
+    this.orig = orig
+    return this
+  }
+}
+
 class INTRP {
 
   constructor(x, file=0, opts={}){
@@ -45,6 +54,7 @@ class INTRP {
     this.file = file && this.mresolve(file)
     this.PKG = PKG
     this.LENS = LENS
+    this.FN = FN
     this.pkg = []
     this.pkf = []
 
@@ -86,7 +96,10 @@ class INTRP {
       if(!this.isstr(x)) x += ''
 
       let orig = x.orig
-      x = x.split`\n`[0]
+      if(!this.isfns(x)){
+        if(this.istag(x)) x.xs = x.xs.split`\n`[0]
+        x = x.split`\n`[0]
+      }
 
       if(orig && orig[0] == this.file && this.pkf.at(-1) && orig[0] != this.pkf.at(-1)?.file){
         this.addf($=> this.pkf.pop())
@@ -96,11 +109,11 @@ class INTRP {
       if(orig) this.tline(orig[1], orig[0])
 
       // reuse stack frame
-      if(y) this.addf(...this.parse(x))
+      if(y) this.addf(...this.isfns(x) ? x.xs : this.parse(x))
 
       // new stack frame
       else {
-        this.addc(this.parse(x))
+        this.addc(this.isfns(x) ? x.xs : this.parse(x))
 
         while(this.code[0]?.length){
           let a = this.getf()
@@ -168,7 +181,7 @@ class INTRP {
             let A = this.gscope(a)
 
             // brackets/parens only
-            if(a.match(/^[()\[\]{}]{2,}$/)) this.exec(a.split``.join` `, 1)
+            if(a.match(/^[()\[\]{}]{2,}$/)) this.addf(...a)
 
             // magic dot
             else if(this.gl){
@@ -415,12 +428,11 @@ class INTRP {
 
   prep(x){ return _.isBoolean(x) ? +x : this.strtag(x) }
 
-  strtag(x, l = [0]){
-    if(this.isstr(x) && !x?.orig){
-      let X = new String(x)
-      X.orig = [l[0] || this.file, this.isnum(l[1]) ? 0 | l[1] : this.lns.at(-1)[1]]
-      return X
-    }
+  strtag(x, l=[0], a=0){
+    if(this.istag(x)) return x
+    let O = [l[0] || this.file, this.isnum(l[1]) ? 0 | l[1] : this.lns.at(-1)[1]]
+    if(a && this.isarr(x)) return new FN(x, O)
+    if(this.isstr(x) && !this.istag(x)) return new FN(x, O)
     return x
   }
 
@@ -429,16 +441,21 @@ class INTRP {
   fmatch(a, ctx, scp){
     if(scp[a] instanceof PKG) this.pkg.push(scp[a])
     else if(scp[a] instanceof Function) scp[a](ctx)
-    else this.exec(scp[a], 1)
+    else {
+      if(this.istag(scp[a]) && !this.isarr(scp[a].xs)) scp[a].xs = this.parse(scp[a].xs)
+      this.exec(scp[a], 1)
+    }
   }
 
   print(x){ console.log(x); return x }
 
-  id(x){
+  id(x, f=0){
     let y = new RE2(`^ *#${x}`)
     let line = this.lines.findIndex(a=> y.test(a))
     if(~line){
-      this.ids[x] = this.strtag(this.lines[line].replace(y, ''), [0, line])
+      let l = this.lines[line].replace(y, '')
+      if(f) l = this.parse(l)
+      this.ids[x] = this.strtag(l, [0, line], f)
     }
   }
 
@@ -544,7 +561,7 @@ class INTRP {
     ).join(y)
   }
 
-  parse(x){ return parse(this.isarr(x) ? x.join` ` : x + '') }
+  parse(x){ return this.isarr(x) ? x : this.isfns(x) ? x.xs : parse(this.str(x) + '') }
 
   gind(o, x){
     return this.clone(
@@ -740,6 +757,10 @@ class INTRP {
   isarl(x){ return _.isArrayLike(x) }
 
   isstr(x){ return _.isString(x) }
+
+  istag(x){ return x instanceof FN }
+
+  isfns(x){ return this.istag(x) && this.isarr(x.xs) }
 
   isrex(x){ return _.isRegExp(x) || x instanceof RE2 }
 

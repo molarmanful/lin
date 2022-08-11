@@ -40,6 +40,7 @@ Command | Description
 <code>sL</code> | `sl` but without overriding existing scoping rules
 <code>::</code> | bring ID at index 0 as string into global scope
 <code>type</code> | push type of index 0
+<code>gp</code> | parse string
 
 ## CONSTANT
 

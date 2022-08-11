@@ -11,12 +11,12 @@ BASE["$("] = $=>{
 }
 
 BASE[")"] = $=>{
-  let X = $.paren.join` `
+  let X = $.paren
   if($.scoped){
-    X = `\${ ${X} }`
+    X = ['${', ...X, '}']
     $.scoped = 0
   }
-  $.unshift(X)
+  $.unshift($.strtag(X, [0], 1))
   $.lambda = 0
   $.paren = []
   if($.apos){
@@ -122,7 +122,7 @@ BASE["sL"] = $=>
   }, $.shift())
 
 // bring ID at index 0 as string into global scope
-BASE["::"] = $=> $.v1(x=> $.id(x), $.shift())
+BASE["::"] = $=> $.v1(x=> $.id(x, 1), $.shift())
 
 // push type of index 0
 BASE["type"] = $=>{
@@ -139,6 +139,11 @@ BASE["type"] = $=>{
     : $.isobj(X) ? 'obl'
     : 0
   )
+}
+
+// parse string
+BASE["gp"] = $=>{
+  $.u1(a=> $.v1(x=> $.parse(x), a))
 }
 
 export default BASE

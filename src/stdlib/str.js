@@ -29,7 +29,7 @@ STR["lns"] = $=>{
 STR["tag"] = $=>{
   $.u2((a, b)=> $.v2((x, y)=>{
     let y1 = 0 | Number(y)
-    if(!$.isnum(y1)) $.err(`bad tag number "${X}"`)
+    if(!$.isnum(y1)) $.err(`bad tag number "${x}"`)
     return $.strtag($.untag(x), [0, y1])
   }, a, b))
 }
