@@ -66,6 +66,7 @@ Command | Description
 <code>$A</code> | uppercase alphabet
 <code>$a</code> | lowercase alphabet
 <code>$cwd</code> | current working directory
+<code>$env</code> | environment variables
 
 ## COUNT
 
@@ -157,6 +158,8 @@ Command | Description
 <code>tempdir</code> | create/get tempdir
 <code>test</code> | test path
 <code>which</code> | find executable
+<code>env</code> | get environment variable
+<code>env:</code> | set environment variable
 <code>*></code> | write string at index 1 to file at path given by index 0
 <code>*>></code> | `*>` but append
 <code>in</code> | push user input

@@ -62,4 +62,7 @@ CONSTANT["$a"] = $=> $.unshift('abcdefghijklmnopqrstuvwxyz')
 // current working directory
 CONSTANT["$cwd"] = $=> $.unshift(process.cwd())
 
+// environment variables
+CONSTANT["$env"] = $=> $.unshift($.js2lin(process.env))
+
 export default CONSTANT

@@ -71,6 +71,16 @@ IO["test"] = $=>
 // find executable
 IO["which"] = $=> $.u1(a=> $.v1(x=> sh.which($.str(x) + ''), a))
 
+// get environment variable
+IO["env"] = $=> $.u1(a=> $.v1(x=> sh.env[$.str(x) + ''], a))
+
+// set environment variable
+IO["env:"] = $=>{
+  let X = $.shift()
+  let Y = $.shift()
+  $.v2((x, y)=> sh.env[$.str(y) + ''] = x, Y, X)
+}
+
 // write string at index 1 to file at path given by index 0
 IO["*>"] = $=>{
   let X = $.shift()
