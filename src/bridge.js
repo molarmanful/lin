@@ -31,7 +31,7 @@ _.map = (x, f)=> ['DenseMatrix', 'SparseMatrix'].includes(x?.type) || x instance
 
 sh.config.fatal = true
 
-export * as fs from 'fs'
+// export * as fs from 'fs'
 export * as fsp from 'fs/promises'
 export * as $C from 'js-combinatorics'
 export * as itr from 'iter-tools-es'

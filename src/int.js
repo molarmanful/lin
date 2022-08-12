@@ -1,5 +1,5 @@
 import {Temporal, rust, voca, DOT, DOTS, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
-import {size} from 'mathjs'
+// import {size} from 'mathjs'
 
 class PKG {
   constructor(n, f){

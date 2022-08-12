@@ -1,4 +1,4 @@
-import {_, INTRP, fs, SL} from '../bridge.js'
+import {_, INTRP, SL} from '../bridge.js'
 
 let MODULE = {}
 
@@ -6,7 +6,7 @@ let imp = $=>{
   let F = $.mresolve($.shift() + '.lin')
   let X = $.mname(F)
   if(X.match(/["\d. ]/)) $.err(`bad pkg name "${X}"`)
-  let I = new INTRP(fs.readFileSync(F) + '', F)
+  let I = new INTRP(sh.cat(F), F)
   I.child = 1
   I.run()
   if(!('__PKG' in I.ids)) $.err(`not a pkg "${X}"`)
