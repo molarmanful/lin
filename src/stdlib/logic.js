@@ -15,7 +15,7 @@ LOGIC["&&"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.tru(x) && $.tru(y), a, b))
 LOGIC["&&_"] = $=> $.u2((a, b)=> $.tru(a) || $.tru(b))
 
 // logical or
-LOGIC["||_"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.tru(x) || $.tru(y), a, b))
+LOGIC["||"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.tru(x) || $.tru(y), a, b))
 
 // `||` but non-vectorized
 LOGIC["||_"] = $=> $.u2((a, b)=> $.tru(a) || $.tru(b))

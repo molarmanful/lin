@@ -253,7 +253,7 @@ Command | Description
 <code>!_</code> | `!` but non-vectorized
 <code>&&</code> | logical and
 <code>&&_</code> | `&&` but non-vectorized
-<code>\|\|_</code> | logical or
+<code>\|\|</code> | logical or
 <code>\|\|_</code> | `\|\|` but non-vectorized
 <code>=</code> | equal
 <code>=_</code> | `=` but non-vectorized
