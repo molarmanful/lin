@@ -1,4 +1,5 @@
-import {Temporal, rust, math, voca, DOT, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
+import {Temporal, rust, voca, DOT, DOTS, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
+import {size} from 'mathjs'
 
 class PKG {
   constructor(n, f){
@@ -191,60 +192,16 @@ class INTRP {
               if(a in DOT){
                 DOT[a](this)
               }
-
-              else if(a.slice(0, 2) == 'cp'){
-                this.unshift(a.slice(2))
-                SL['cp'](this)
-              }
-
-              else if(a.slice(0, 2) == 'ls'){
-                this.unshift(a.slice(2))
-                SL['ls'](this)
-              }
-
-              else if(a.slice(0, 4) == 'test'){
-                this.unshift(a.slice(4))
-                SL['test'](this)
-              }
-
-              else if(a.slice(0, 2) == '?!'){
-                this.unshift(a.slice(2))
-                SL['?!'](this)
-              }
-
-              else if(a.slice(0, 2) == '??'){
-                this.unshift(a.slice(2))
-                SL['??'](this)
-              }
-
-              else if(a[1] && a[0] == '='){
-                this.unshift(a.slice(1))
-                SL['>:'](this)
-              }
-
-              else if(a[0] == '?'){
-                this.unshift(a.slice(1))
-                SL['?'](this)
-              }
-
-              else if(a[1] && a[0] == ':'){
-                this.unshift(a.slice(1))
-                SL[':'](this)
-              }
-
-              else if(a[1] && a[0] == '#'){
-                this.unshift(a.slice(1))
-                SL.sl(this)
-              }
-
-              else if(a[1] && a[0] == '\\'){
-                this.unshift(a.slice(1))
-                SL.sL(this)
-              }
-
               else {
-                this.unshift(a)
-                SL.gl(this)
+                let A = Object.keys(DOTS).find(x=> a.startsWith(x))
+                if(A){
+                  this.unshift(a.slice(A.length))
+                  DOTS[a.slice(0, A.length)](this)
+                }
+                else {
+                  this.unshift(a)
+                  SL.gl(this)
+                }
               }
             }
 
@@ -305,7 +262,7 @@ class INTRP {
     catch(e){ return g(e) }
   }
 
-  sz(x){ return this.try($=> x.size(), e=> math.size(x)) }
+  sz(x){ return this.try($=> x.size(), e=> size(x)) }
 
   oget(o, x){
     let O = o?.entries ? [...o.entries()] : Object.entries(o)

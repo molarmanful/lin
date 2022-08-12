@@ -1,4 +1,5 @@
-import {Temporal, math, rust, itr, _} from '../bridge.js'
+import {Temporal, rust, itr, _} from '../bridge.js'
+import {random} from 'mathjs'
 
 let CONSTANT = {}
 
@@ -51,7 +52,7 @@ CONSTANT["$`"] = $=> $.unshift(itr.range())
 CONSTANT["$`P"] = $=> $.unshift(itr.filter(a=> rust.isprime(a + ''), itr.range({start: 2})))
 
 // infinite list of uniformly random numbers between 0 and 1
-CONSTANT["$`R"] = $=> $.unshift(itr.map(a=> math.random(), itr.range()))
+CONSTANT["$`R"] = $=> $.unshift(itr.map(a=> random(), itr.range()))
 
 // uppercase alphabet
 CONSTANT["$A"] = $=> $.unshift('ABCDEFGHIJKLMNOPQRSTUVWXYZ')

@@ -1,4 +1,4 @@
-import {parse, _, SL} from '../bridge.js'
+import {_, SL} from '../bridge.js'
 
 let BASE = {}
 
@@ -129,6 +129,7 @@ BASE["type"] = $=>{
   let X = $.shift()
   $.unshift(
     $.isarr(X) ? 'arr'
+    : $.istmp(X) ? 'tmp'
     : $.islen(X) ? 'len'
     : $.ismat(X) ? 'mat'
     : $.ismap(X) ? 'obj'

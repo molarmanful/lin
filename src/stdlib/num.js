@@ -1,4 +1,5 @@
-import {math, rust, $C, _, SL, itr} from '../bridge.js'
+import {rust, $C, _, SL, itr} from '../bridge.js'
+import {random, sum} from 'mathjs'
 
 let NUM = {}
 
@@ -62,7 +63,7 @@ NUM["abs"] = $=> $.u1(a=> $.v1(Math.abs, a))
 NUM["sign"] = $=> $.u1(a=> $.v1(Math.sign, a))
 
 // push uniformly random number between 0 and 1
-NUM["rng"] = $=> $.unshift(math.random())
+NUM["rng"] = $=> $.unshift(random())
 
 // natural logarithm
 NUM["ln"] = $=> $.u1(a=> $.v1(Math.ln, a))
@@ -214,7 +215,7 @@ NUM[">b"] = $=>{
 // convert base-n digit list to decimal number
 NUM["<b"] = $=>
   $.u2((a, b)=> $.v1(x=>
-    math.sum($.itrls(a).reverse().map((y, i)=> y * x ** i)),
+    sum($.itrls(a).reverse().map((y, i)=> y * x ** i)),
     b
   ))
 

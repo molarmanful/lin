@@ -86,10 +86,12 @@ Command | Description
 Command | Description
 --- | ---
 <code>.</code> | `lns`
+<code>(</code> | `(...) '`
 <code>+</code> | `dup`
 <code>*</code> | `dups`
 <code>+_</code> | `over`
 <code>-</code> | `pop`
+<code>-_</code> | `nip`
 <code>_</code> | `clr`
 <code>~</code> | `swap`
 <code>@</code> | `rot`
@@ -120,6 +122,16 @@ Command | Description
 <code>^</code> | `mat`
 <code>^_</code> | `mat_`
 <code>%</code> | `%craft`
+<code>cp</code> | `"..." cp`
+<code>cp</code> | `"..." cp`
+<code>ls</code> | `"..." ls`
+<code>test</code> | `"..." test`
+<code>?!</code> | `"..." ?!`
+<code>??</code> | `"..." ??`
+<code>?</code> | `"..." ?`
+<code>:</code> | `"..." :`
+<code>#</code> | `"..." sl`
+<code>\\</code> | `"..." sL`
 
 ## FLOW
 
@@ -229,7 +241,8 @@ Command | Description
 --- | ---
 <code>len</code> | length of index 0
 <code>'</code> | `es` index 0 on list at index 1
-<code>+*</code> | non-vectorized `++`
+<code>++</code> | concatenate strings
+<code>+*</code> | non-vectorized `++` (also works on lists)
 <code>r:</code> | get random item from list
 <code>rep</code> | repeat list/string by index 0
 <code>union</code> | set union of lists at index 0 and index 1
@@ -244,6 +257,7 @@ Command | Description
 <code>dups</code> | push entire stack as list
 <code>usurp</code> | set current stack to the list at index 0
 <code>bins</code> | get insert index of index 0 from binary searching over `es` of index 1 on each element in list
+<code>rfil</code> | fill integer gaps with ranges
 
 ## LOGIC
 

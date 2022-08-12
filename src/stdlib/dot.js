@@ -1,10 +1,12 @@
 import {SL} from '../bridge.js'
 
 let DOT = {}
+let DOTS = {}
 
 // `lns`
 DOT["."] = SL.lns
 
+// `(...) '`
 DOT["("] = $=> {
   $.apos = 1
   SL["("]($)
@@ -21,6 +23,9 @@ DOT["+_"] = SL.over
 
 // `pop`
 DOT["-"] = SL.pop
+
+// `nip`
+DOT["-_"] = SL.nip
 
 // `clr`
 DOT["_"] = SL.clr
@@ -112,4 +117,34 @@ DOT["^_"] = SL.mat_
 // `%craft`
 DOT["%"] = SL['%craft']
 
-export default DOT
+// `"..." cp`
+DOTS["cp"] = SL.cp
+
+// `"..." cp`
+DOTS["cp"] = SL.cp
+
+// `"..." ls`
+DOTS["ls"] = SL.ls
+
+// `"..." test`
+DOTS["test"] = SL.test
+
+// `"..." ?!`
+DOTS["?!"] = SL['?!']
+
+// `"..." ??`
+DOTS["??"] = SL['??']
+
+// `"..." ?`
+DOTS["?"] = SL['?']
+
+// `"..." :`
+DOTS[":"] = SL[':']
+
+// `"..." sl`
+DOTS["#"] = SL['sl']
+
+// `"..." sL`
+DOTS["\\"] = SL['sL']
+
+export {DOT, DOTS}

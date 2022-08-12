@@ -1,4 +1,4 @@
-import {itr, math, _, SL} from '../bridge.js'
+import {itr, _, SL} from '../bridge.js'
 
 let LIST = {}
 
@@ -20,9 +20,10 @@ LIST["'"] = $=>{
   ))
 }
 
+// concatenate strings
 LIST["++"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.str(x) + $.str(y), a, b))
 
-// non-vectorized `++`
+// non-vectorized `++` (also works on lists)
 LIST["+*"] = $=> $.u2((a, b)=> $.isarr(a) ? _.concat(a, b) : a + $.str(b))
 
 // get random item from list
@@ -37,22 +38,13 @@ LIST["rep"] = $=>{
 }
 
 // set union of lists at index 0 and index 1
-LIST["union"] = $=>{
-  SL.swap($)
-  $.unshift(_.union($.shift(), $.shift()))
-}
+LIST["union"] = $=> $.u2((a, b)=> _.unionBy(a, b, x=> $.untag(x)))
 
 // set intersection of lists at index 0 and index 1
-LIST["inter"] = $=>{
-  SL.swap($)
-  $.unshift(_.intersection($.shift(), $.shift()))
-}
+LIST["inter"] = $=> $.u2((a, b)=> _.intersectionBy(a, b, x=> $.untag(x)))
 
 // set difference of lists at index 0 and index 1
-LIST["diff"] = $=>{
-  SL.swap($)
-  $.unshift(_.difference($.shift(), $.shift()))
-}
+LIST["diff"] = $=> $.u2((a, b)=> _.differenceBy(a, b, x=> $.untag(x)))
 
 // wrap index 0 in a list
 LIST["wrap"] = $=> $.u1(a=> [a])
@@ -89,5 +81,8 @@ LIST["bins"] = $=>{
   $.unshift(X)
   $.unshift($.each(O, (x, f)=> _.sortedIndexBy(x, Y, f)))
 }
+
+// fill integer gaps with ranges
+LIST["rfil"] = $=> $.exec(".(.+ (2wins (.(.-> )).' flat ) dip )", 1)
 
 export default LIST
