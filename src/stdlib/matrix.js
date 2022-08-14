@@ -1,5 +1,4 @@
-import {$C, _, SL, itr, __} from '../bridge.js'
-import {mod, add, ceil, dotDivide, subset, index, concat, kron, dot, cross, pinv, inv, det, squeeze, transpose, prod, reshape, flatten, identity, zeros, matrix, sparse, diag, resize, size} from 'mathjs'
+import {math, $C, _, SL, itr, __} from '../bridge.js'
 
 let MATRIX = {}
 
@@ -7,9 +6,10 @@ let MATRIX = {}
 MATRIX["sz"] = $=> $.u1(a=> $.sz(a))
 
 // convert to matrix
-MATRIX["mat"] = $=> $.u1(matrix)
+MATRIX["mat"] = $=> $.u1(a=> math.matrix(math.resize(a, math.size(a))))
 
-let mstr = ($, a, f=x=> $.form([x]))=>{
+let mstr = ($, a, f=x=> $.form([x], ' '), sep=' ')=>{
+  a = $.itrlist(a)
   let S = $.sz(a)
   let D = S.length
   let A = $.imap(a, f, D)
@@ -20,7 +20,7 @@ let mstr = ($, a, f=x=> $.form([x]))=>{
   }
   return itr.execPipe(
     itr.range(),
-    itr.map(x=> x ? '\n'.repeat(x) : ' '),
+    itr.map(x=> x ? '\n'.repeat(x) : sep),
     itr.take(D),
     itr.reduce(A, (x, y)=> $.imap(x, z=> z.join(y), -1))
   )
@@ -33,18 +33,7 @@ MATRIX["m>s"] = $=> $.u1(a=> mstr($, a, x=> $.str(x) + ''))
 MATRIX["m>f"] = $=> $.u1(a=> mstr($, a))
 
 // convert matrix to "character" representation
-MATRIX["m>c"] = $=>
-  $.u1(a=>{
-    let S = $.sz(a)
-    let D = S.length
-    a = $.imap(a, x=> $.str(x) + '', D)
-    return itr.execPipe(
-      itr.range(),
-      itr.map(x=> x ? '\n'.repeat(x) : ''),
-      itr.take(S.length),
-      itr.reduce(a, (x, y)=> $.imap(x, z=> z.join(y), -1))
-    )
-  })
+MATRIX["m>c"] = $=> $.u1(a=> mstr($, a, x=> $.str(x) + '', ''))
 
 // convert multiline string to matrix
 MATRIX["s>m"] = $=>
@@ -60,39 +49,33 @@ MATRIX["]^"] = $=> $.exec('] mat', 1)
 // convert matrix to list
 MATRIX["mat_"] = $=> $.u1(a=> $.ismat(a) ? a.valueOf() : a)
 
-// convert to sparse matrix
-MATRIX[">sp"] = $=> $.u1(a=> sparse(a))
-
-// convert to dense matrix
-MATRIX[">dn"] = $=> $.u1(a=> matrix(a, 'dense'))
-
 // get diagonal
-MATRIX["d:"] = $=> $.u1(diag)
+MATRIX["d:"] = $=> $.u1(math.diag)
 
 // autofill with index 0 to create validly-shaped matrix
-MATRIX["fil"] = $=> $.u2((a, b)=> matrix(resize(a, size(a), b)))
+MATRIX["fil"] = $=> $.u2((a, b)=> math.matrix(math.resize(a, math.size(a), b)))
 
 // generate matrix of 0s from size at index 0
-MATRIX[">Zs"] = $=> $.u1(a=> zeros(a, 'sparse'))
+MATRIX[">Zs"] = $=> $.u1(a=> math.zeros(a))
 
-// identity matrix with side length at index 0
-MATRIX["eye"] = $=> $.u1(a=> $.v1(x=> identity(x, 'sparse'), a))
+// identity matrix
+MATRIX["eye"] = $=> $.u1(math.identity)
 
 // flatten matrix
-MATRIX["flt"] = $=> $.u1(a=> flatten(a))
+MATRIX["flt"] = $=> $.u1(a=> math.flatten(a))
 
 // resize matrix
-MATRIX[">sz"] = $=> $.u2((a, b)=> matrix(resize(a, b)))
+MATRIX[">sz"] = $=> $.u2((a, b)=> math.matrix(math.resize(a, b)))
 
 // reshape matrix
 MATRIX[">sh"] = $=>
-  $.u2((a, b)=> matrix(reshape($.itrlist(itr.take(prod(b), itr.cycle(flatten(a)))), b)))
+  $.u2((a, b)=> math.matrix(math.reshape($.itrlist(itr.take(math.prod(b), itr.cycle(math.flatten(a)))), b)))
 
 // transpose matrix
 MATRIX["tsp"] = $=>
   $.u1(a=>{
-    a = $.try($$=> transpose(a), e=> _.zip(...$.itrlist(a)))
-    return matrix(a)
+    a = $.try($$=> math.transpose(a), e=> _.zip(...$.itrlist(a)))
+    return math.matrix(a)
   })
 
 // rotate matrix clockwise
@@ -102,61 +85,61 @@ MATRIX["m@"] = $=> $.exec("tsp ( \\rev ' ) %' mat")
 MATRIX["m@_"] = $=> $.exec("tsp \\rev ' mat")
 
 // squeeze matrix
-MATRIX["sqz"] = $=> $.u1(squeeze)
+MATRIX["sqz"] = $=> $.u1(math.squeeze)
 
 // determinant
-MATRIX["det"] = $=> $.u1(det)
+MATRIX["det"] = $=> $.u1(math.det)
 
 // inverse
-MATRIX["inv"] = $=> $.u1(inv)
+MATRIX["inv"] = $=> $.u1(math.inv)
 
 // Moore-Penrose inverse
-MATRIX["pnv"] = $=> $.u1(pinv)
+MATRIX["pnv"] = $=> $.u1(math.pinv)
 
 // Kronecker product
-MATRIX["*kr"] = $=> $.u2(kron)
+MATRIX["*kr"] = $=> $.u2(math.kron)
 
 // dot product
-MATRIX["*dt"] = $=> $.u2(dot)
+MATRIX["*dt"] = $=> $.u2(math.dot)
 
 // cross product
-MATRIX["*cr"] = $=> $.u2(cross)
+MATRIX["*cr"] = $=> $.u2(math.cross)
 
 // concat matrices
-MATRIX["^++"] = $=> $.u3((a, b, c)=> $.v1(x=> concat(a, b, x), c))
+MATRIX["^++"] = $=> $.u3((a, b, c)=> $.v1(x=> math.concat(a, b, x), c))
 
 // `^++` on last axis
-MATRIX["^+"] = $=> $.u2(concat)
+MATRIX["^+"] = $=> $.u2(math.concat)
 
 // sort matrix
 MATRIX["srt"] = $=>{
   SL.swap($)
-  $.u1(a=> reshape($.each(flatten(a), _.sortBy), size(a)))
+  $.u1(a=> math.reshape($.each(math.flatten(a), _.sortBy), math.size(a)))
 }
 
 // construct matrix from size and function
-MATRIX["^it"] = $=> $.u1(a=> $.each(zeros(a).valueOf(), (x, f)=> $.imap(x, (y, i)=> f(i))))
+MATRIX["^it"] = $=> $.u1(a=> $.each(math.zeros(a).valueOf(), (x, f)=> $.imap(x, (y, i)=> f(i))))
 
 // split matrix into submatrices at index 0
 MATRIX["spl"] = $=>
   $.u2((a, b)=>{
     let r = x=> x.slice().reverse()
     let A = $.sz(a)
-    b = r(resize(r(b), [A.length], 1))
+    b = r(math.resize(r(b), [A.length], 1))
     let B = [...$C.CartesianProduct.from(r(b).map(x=> _.range(x)))]
     let C = [...$C.CartesianProduct.from(_.zipWith(r(b), r(A), (x, y)=> _.range(0, y ?? 1, x)))]
     let G = (x, i)=>{
-      try { return subset(x, index(...i)) }
+      try { return math.subset(x, math.index(...i)) }
       catch(e){}
     }
-    return reshape(
-      C.map(x=> B.map(y=> G(a, r(add(x, y))))),
-      [...ceil(dotDivide(A, b)), ...b]
+    return math.reshape(
+      C.map(x=> B.map(y=> G(a, r(math.add(x, y))))),
+      [...math.ceil(math.dotDivide(A, b)), ...b]
     )
   })
 
 let stencil = ($, X, F=(a, b)=> a?.[b])=> (x, f)=>
-  $.imap(x, (y, i)=> f(y, X.map(z=> add(z, i).reduce((a, b)=> F(a, b), x))))
+  $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> F(a, b), x))))
 
 // stencil matrix with specified neighborhood
 MATRIX["stn"] = $=>{
@@ -174,7 +157,7 @@ MATRIX["stm"] = $=>{
   SL.swap($)
   $.u1(a=>(
     a = $.itrlist(a),
-    $.each(a, stencil($, X, (a, b)=> a?.[mod(b, a.length)]), x=> x, 0, 1)
+    $.each(a, stencil($, X, (a, b)=> a?.[math.mod(b, a.length)]), x=> x, 0, 1)
   ))
 }
 

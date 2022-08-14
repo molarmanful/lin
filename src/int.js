@@ -1,5 +1,4 @@
-import {Temporal, rust, voca, DOT, DOTS, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
-// import {size} from 'mathjs'
+import {math, Temporal, rust, voca, DOT, DOTS, RE2, unesc, chalk, itr, _, path, parse, SL, __} from './bridge.js'
 
 class PKG {
   constructor(n, f){
@@ -193,14 +192,23 @@ class INTRP {
                 DOT[a](this)
               }
               else {
-                let A = Object.keys(DOTS).find(x=> a.startsWith(x))
+                let s = x=> _.sortBy(Object.keys(x), y=> -y.length).find(y=> a.startsWith(y))
+                let A = s(DOTS)
                 if(A){
                   this.unshift(a.slice(A.length))
                   DOTS[a.slice(0, A.length)](this)
                 }
                 else {
-                  this.unshift(a)
-                  SL.gl(this)
+                  let A = s(DOT)
+                  if(A){
+                    console.log('asdf', a.slice(A.length))
+                    DOT[a.slice(0, A.length)](this)
+                    this.exec(a.slice(A.length), 1)
+                  }
+                  else {
+                    this.unshift(a)
+                    SL.gl(this)
+                  }
                 }
               }
             }
@@ -257,12 +265,9 @@ class INTRP {
       console.warn(chalk.yellowBright(`WRN: ${x}\nLNS: ${this.form(_.reverse(this.lns),'\n     ')}`))
   }
 
-  try(f, g){
-    try { return f() }
-    catch(e){ return g(e) }
-  }
+  try(f, g){ try { return f() } catch(e){ return g(e) } }
 
-  sz(x){ return this.try($=> x.size(), e=> size(x)) }
+  sz(x){ return math.size(x) }
 
   oget(o, x){
     let O = o?.entries ? [...o.entries()] : Object.entries(o)
@@ -324,7 +329,7 @@ class INTRP {
   js2lin(x){
     let r = a=> this.js2lin(a)
     return (
-      x == null ? void 0
+      Number.isNaN(x) || x == null ? void 0
       : x instanceof Date ? x.toTemporalInstant().toString()
       : this.isarr(x) ? x.map(r)
       : this.isobj(x) ? new Map(Object.entries(x)).map(r)
@@ -338,8 +343,7 @@ class INTRP {
       x == void 0 ? null 
       : this.ismap(x) ? Object.fromEntries(x.map(r))
       : b && this.isitr(x) ? this.itrls(itr.map(r, x))
-      : this.ismat(x) ? x.valueOf().map(r)
-      : this.isarr(x) ? x.map(r)
+      : this.isi(x) ? x.map(r)
       : this.untag(x)
     )
   }
@@ -363,18 +367,29 @@ class INTRP {
 
   isi(x){ return this.isarr(x) || this.ismap(x) || this.ismat(x) }
 
+  len(x){
+    return (
+      this.ismat(x) ? math.size(x)[0]
+      : this.isitr(x) ? itr.size(x)
+      : this.ismap(x) ? x.size()
+      : x?.length
+    )
+  }
+
+  arap(x){ return this.try($=> [...x], e=> [x]) }
+
   v1(f, x){
-    if(this.ismat(x)) x = x.valueOf()
+    // if(this.ismat(x)) x = x.valueOf()
     if(this.isitr(x)) return itr.map(a=> this.v1(f, a), x)
     if(this.isi(x)) return x.map(a=> this.v1(f, a))
     return this.prep(f(x))
   }
 
   v2(f, x, y){
-    if(this.ismat(x)) x = x.valueOf()
-    if(this.ismat(y)) y = y.valueOf()
-    if(this.isi(x) && this.isi(y) && x.values().length == y.values().length)
-      return x.map((a, i)=> this.v2(f, a, y.get(i)))
+    // if(this.ismat(x)) x = x.valueOf()
+    // if(this.ismat(y)) y = y.valueOf()
+    if(this.isi(x) && this.isi(y) && this.len(x) == this.len(y))
+      return x.map((a, i)=> this.v2(f, a, __.get(i)(y)))
     if(this.isitr(x)) return itr.map(a=> this.v2(f, a, y), x)
     if(this.isitr(y)) return itr.map(a=> this.v2(f, x, a), y)
     if(this.isi(x)) return x.map(a=> this.v2(f, a, y))
@@ -383,27 +398,27 @@ class INTRP {
   }
 
   v3(f, x, y, z){
-    if(this.ismat(x)) x = x.valueOf()
-    if(this.ismat(y)) y = y.valueOf()
-    if(this.ismat(z)) z = z.valueOf()
-    if(this.isi(x) && this.isi(y) && this.isi(z) && x.values().length == y.values().length && y.values().length == z.values().length)
-      return x.map((a, i)=> this.v3(f, a, y.get(i), z.get(i)))
+    // if(this.ismat(x)) x = x.valueOf()
+    // if(this.ismat(y)) y = y.valueOf()
+    // if(this.ismat(z)) z = z.valueOf()
+    if(this.isi(x) && this.isi(y) && this.isi(z) && this.len(x) == this.len(y) && this.len(y) == this.len(z))
+      return x.map((a, i)=> this.v3(f, a, __.get(i)(y), __.get(i)(z)))
     if(this.isitr(x)) return itr.map(a=> this.v3(f, a, y, z), x)
     if(this.isitr(y)) return itr.map(a=> this.v3(f, x, a, z), y)
     if(this.isitr(z)) return itr.map(a=> this.v3(f, x, y, a), z)
-    if(this.isi(x) && this.isi(y) && x.values().length == y.values().length)
-      return x.map((a, i)=> this.v3(f, a, y.get(i), z))
-    if(this.isi(y) && this.isi(z) && y.values().length == z.values().length)
-      return y.map((a, i)=> this.v3(f, x, a, z.get(i)))
-    if(this.isi(x) && this.isi(z) && x.values().length == z.values().length)
-      return x.map((a, i)=> this.v3(f, a, y, z.get(i)))
+    if(this.isi(x) && this.isi(y) && this.len(x) == this.len(y))
+      return x.map((a, i)=> this.v3(f, a, __.get(i)(y), z))
+    if(this.isi(y) && this.isi(z) && this.len(y) == this.len(z))
+      return y.map((a, i)=> this.v3(f, x, a, __.get(i)(z)))
+    if(this.isi(x) && this.isi(z) && this.len(x) == this.len(z))
+      return x.map((a, i)=> this.v3(f, a, y, __.get(i)(z)))
     if(this.isi(x)) return x.map(a=> this.v3(f, a, y, z))
     if(this.isi(y)) return y.map(a=> this.v3(f, x, a, z))
     if(this.isi(z)) return z.map(a=> this.v3(f, x, y, a))
     else return this.prep(f(x, y, z))
   }
 
-  prep(x){ return _.isBoolean(x) ? +x : this.strtag(x) }
+  prep(x){ return Number.isNaN(x) || x == null ? void 0 : _.isBoolean(x) ? +x : this.strtag(x) }
 
   strtag(x, l=[0], a=0){
     if(this.istag(x)) return x
@@ -462,6 +477,7 @@ class INTRP {
     if(this.isstr(x) && x?.orig) return x
     return this.strtag(
       this.isstr(x) ? x + ''
+      : this.ismat(x) ? this.str(x.valueOf())
       : this.isarr(x) ? x.map(a=> this.str(a)).join` `
       : this.isitr(x) ? '[...]`'
       : this.ismap(x) ? Array.from(x, ([a, i])=> i + ' ' + this.str(a)).join`\n`
@@ -522,7 +538,7 @@ class INTRP {
       : this.isnum(a) ? a + ''
       : this.isstr(a) ? JSON.stringify(a + '') + M(a)
       : this.ismat(a) ?
-        `[${this.form(a.valueOf(), ' ')}]^${a.type == 'SparseMatrix' ? [...a].length : ''}`
+        `[${this.form(a.valueOf(), ' ')}]^`
       : this.istmp(a) ?
         `~(${a + ''})`
       : this.ismap(a) ?
@@ -554,7 +570,10 @@ class INTRP {
   get(x){ return this.gind(this.stack[this.st], ~x) }
 
   clone(x){
-    return _.cloneDeepWith(x, a=> this.isitr(a) ? a : void 0)
+    return _.cloneDeepWith(x, a=>
+      this.isitr(a) ? a
+      : void 0
+    )
   }
 
   splice(x, y=1, z){
@@ -577,7 +596,6 @@ class INTRP {
   }
 
   each(O, f=_.map, g=x=> x, s, ind){
-    if(this.ismat(O)) O = O.valueOf()
     return this.v1(x=> f(O, (a, i)=>
       g(this.quar($=>{
         this.stack[this.st] = s && itr.isIterable(a) ? [...a] : ind ? [i, a] : [a]
@@ -589,9 +607,11 @@ class INTRP {
   depth(x){
     return (
       this.isitr(x) ? 1
-      : this.isobj(x) ?
-        1 + Math.max(0, ...this.ismap(x) ? _.map(x, a=> this.depth(a)).values()
-        : _.map(x, a=> this.depth(a)))
+      : this.isi(x) ?
+        1 + Math.max(0,
+          ...this.ismap(x) ? _.map(x, a=> this.depth(a)).values()
+          : _.map(x, a=> this.depth(a))
+        )
       : 0
     )
   }
@@ -599,7 +619,6 @@ class INTRP {
   imap(x, F, D=1 / 0, f=(x, f)=> __.map(f)(x), g=itr.map, post=x=> x, d=[]){
     if(D < 0) D += this.depth(x)
     if(!D) return F(x, d)
-    if(this.ismat(x)) x = x.valueOf()
     if(this.isitr(x)) return g((a, i)=> this.imap(a, F, D - 1, f, g, post, d.concat(i)), x)
     if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, D - 1, f, g, post, d.concat(i)))
     return post(F(x, d))
@@ -607,14 +626,12 @@ class INTRP {
 
   walk(x, F, d=[]){
     x = F(x, d)
-    if(this.ismat(x)) x = x.valueOf()
     if(this.isitr(x)) return itr.map((a, i)=> this.walk(a, F, d.concat(i)), x)
-    if(this.isi(x)) return _.map(x, (a, i)=> this.walk(a, F, d.concat(i)))
+    if(this.isi(x)) return __.map((a, i)=> this.walk(a, F, d.concat(i)))(x)
     return x
   }
 
   *paths(x, v=0, d=[]){
-    if(this.ismat(x)) x = x.valueOf()
     yield v == 2 ? [x, d] : v == 1 ? x : d
     if(this.ismap(x))
       for(let [i, a] of x) yield* this.paths(a, v, d.concat(i))
@@ -627,7 +644,6 @@ class INTRP {
   }
 
   acc(O, ac=0, f=_.reduce, ind, g=x=> x){
-    if(this.ismat(O)) O = O.valueOf()
     let X = this.shift()
     let Y = ac && this.shift()
     let F = x=> (a, b, i)=>
@@ -639,7 +655,6 @@ class INTRP {
   }
 
   cmp(O, f=(x, f)=> x.sort(f), g=x=> x){
-    if(this.ismat(O)) O = O.valueOf()
     let X = this.shift()
     return f(O, (a, b)=>
       g(this.quar($=>{
@@ -753,7 +768,7 @@ class INTRP {
 
   isfun(x){ return _.isFunction(x) }
 
-  ismat(x){ return ['DenseMatrix', 'SparseMatrix'].includes(x?.type) }
+  ismat(x){ return math.isMatrix(x) }
 
   islen(x){ return x instanceof LENS }
 

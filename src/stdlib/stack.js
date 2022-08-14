@@ -1,5 +1,4 @@
-import {$C, itr, _, SL} from '../bridge.js'
-import {reshape} from 'mathjs'
+import {math, $C, itr, _, SL} from '../bridge.js'
 
 let STACK = {}
 
@@ -128,7 +127,7 @@ STACK["cols"] = $=> $.stack[$.st] = $.v1(x=> _.chunk($.stack[$.st], x), $.shift(
 STACK["shape"] = $=>{
   let X = $.itrlist($.shift())
   SL.blob($)
-  $.stack[$.st] = [...reshape($.itrlist(itr.take(X.reduce((a, b)=> a * b, 1), itr.cycle($.listitr($.stack[$.st])))), X)]
+  $.stack[$.st] = [...math.reshape($.itrlist(itr.take(X.reduce((a, b)=> a * b, 1), itr.cycle($.listitr($.stack[$.st])))), X)]
 }
 
 // group multiple arrays' items together by indices

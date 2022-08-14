@@ -123,7 +123,6 @@ Command | Description
 <code>^_</code> | `mat_`
 <code>%</code> | `%craft`
 <code>cp</code> | `"..." cp`
-<code>cp</code> | `"..." cp`
 <code>ls</code> | `"..." ls`
 <code>test</code> | `"..." test`
 <code>?!</code> | `"..." ?!`
@@ -296,12 +295,10 @@ Command | Description
 <code>m>c</code> | convert matrix to "character" representation
 <code>s>m</code> | convert multiline string to matrix
 <code>mat_</code> | convert matrix to list
-<code>>sp</code> | convert to sparse matrix
-<code>>dn</code> | convert to dense matrix
 <code>d:</code> | get diagonal
 <code>fil</code> | autofill with index 0 to create validly-shaped matrix
 <code>>Zs</code> | generate matrix of 0s from size at index 0
-<code>eye</code> | identity matrix with side length at index 0
+<code>eye</code> | identity matrix
 <code>flt</code> | flatten matrix
 <code>>sz</code> | resize matrix
 <code>>sh</code> | reshape matrix

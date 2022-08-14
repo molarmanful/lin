@@ -3,7 +3,7 @@ import {itr, _, SL} from '../bridge.js'
 let LIST = {}
 
 // length of index 0
-LIST["len"] = $=> $.u1(a=> a?.size || a?.length || ($.isitr(a) && itr.size(a)))
+LIST["len"] = $=> $.u1(a=> $.len(a))
 
 // `es` index 0 on list at index 1
 LIST["'"] = $=>{
@@ -24,7 +24,7 @@ LIST["'"] = $=>{
 LIST["++"] = $=> $.u2((a, b)=> $.v2((x, y)=> $.str(x) + $.str(y), a, b))
 
 // non-vectorized `++` (also works on lists)
-LIST["+*"] = $=> $.u2((a, b)=> $.isarr(a) ? _.concat(a, b) : a + $.str(b))
+LIST["+*"] = $=> $.u2((a, b)=> $.isarr(a) ? a.concat(b) : a + $.str(b))
 
 // get random item from list
 LIST["r:"] = $=> $.exec('dup len rng * 0| g:', 1)

@@ -120,9 +120,6 @@ DOT["%"] = SL['%craft']
 // `"..." cp`
 DOTS["cp"] = SL.cp
 
-// `"..." cp`
-DOTS["cp"] = SL.cp
-
 // `"..." ls`
 DOTS["ls"] = SL.ls
 
