@@ -15,23 +15,13 @@ Array.prototype.delete = function(i){ this.splice(i, 1) }
 
 math.DenseMatrix.prototype.map = math.SparseMatrix.prototype.map = function(f){
   let a = this.valueOf().map(f)
-  try {
-    return math.matrix(math.resize(a, this.size()))
-  }
+  try { return math.matrix(math.resize(a, this.size())) }
   catch(e){ return a }
 }
 
 math.DenseMatrix.prototype.get = math.SparseMatrix.prototype.get = function(i){
-    return this.subset(math.index(i, ...this.size().slice(1).map(s=> _.range(s))))
+  return this.valueOf()[i]
 }
-
-// nd.NDArray.prototype.get = function(i){
-//   try {
-//     let a = this.sliceElems(i)
-//     return a?.shape?.length ? a : a.toNestedArray()
-//   }
-//   catch(e){}
-// }
 
 Date.prototype.toTemporalInstant = toTemporalInstant
 

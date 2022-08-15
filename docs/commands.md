@@ -303,6 +303,7 @@ Command | Description
 <code>>sz</code> | resize matrix
 <code>>sh</code> | reshape matrix
 <code>tsp</code> | transpose matrix
+<code>tps</code> | `tsp` with custom axis permutation
 <code>m@</code> | rotate matrix clockwise
 <code>m@_</code> | rotate matrix counterclockwise
 <code>sqz</code> | squeeze matrix

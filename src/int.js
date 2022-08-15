@@ -201,7 +201,6 @@ class INTRP {
                 else {
                   let A = s(DOT)
                   if(A){
-                    console.log('asdf', a.slice(A.length))
                     DOT[a.slice(0, A.length)](this)
                     this.exec(a.slice(A.length), 1)
                   }
@@ -267,7 +266,7 @@ class INTRP {
 
   try(f, g){ try { return f() } catch(e){ return g(e) } }
 
-  sz(x){ return math.size(x) }
+  sz(x){ return math.size(x).valueOf() }
 
   oget(o, x){
     let O = o?.entries ? [...o.entries()] : Object.entries(o)
@@ -570,10 +569,7 @@ class INTRP {
   get(x){ return this.gind(this.stack[this.st], ~x) }
 
   clone(x){
-    return _.cloneDeepWith(x, a=>
-      this.isitr(a) ? a
-      : void 0
-    )
+    return _.cloneDeepWith(x, a=> this.isitr(a) ? a : void 0)
   }
 
   splice(x, y=1, z){

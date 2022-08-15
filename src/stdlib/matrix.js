@@ -78,6 +78,15 @@ MATRIX["tsp"] = $=>
     return math.matrix(a)
   })
 
+// `tsp` with custom axis permutation
+MATRIX["tps"] = $=>
+  $.u2((a, b)=>{
+    let s = $.sz(a)
+    return math.matrixFromFunction(b.map(x=> s.get(x)), i=>
+      b.map(x=> i.get(x)).reduce((x, i)=> x.get(i), a)
+    )
+  })
+
 // rotate matrix clockwise
 MATRIX["m@"] = $=> $.exec("tsp ( \\rev ' ) %' mat")
 
@@ -128,17 +137,13 @@ MATRIX["spl"] = $=>
     b = r(math.resize(r(b), [A.length], 1))
     let B = [...$C.CartesianProduct.from(r(b).map(x=> _.range(x)))]
     let C = [...$C.CartesianProduct.from(_.zipWith(r(b), r(A), (x, y)=> _.range(0, y ?? 1, x)))]
-    let G = (x, i)=>{
-      try { return math.subset(x, math.index(...i)) }
-      catch(e){}
-    }
     return math.reshape(
-      C.map(x=> B.map(y=> G(a, r(math.add(x, y))))),
+      math.matrix(C.map(x=> B.map(y=> math.add(x, y).reduce((z, i)=> z?.get(i), a)))),
       [...math.ceil(math.dotDivide(A, b)), ...b]
     )
   })
 
-let stencil = ($, X, F=(a, b)=> a?.[b])=> (x, f)=>
+let stencil = ($, X, F=(a, b)=> a?.get(b))=> (x, f)=>
   $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> F(a, b), x))))
 
 // stencil matrix with specified neighborhood
@@ -157,7 +162,7 @@ MATRIX["stm"] = $=>{
   SL.swap($)
   $.u1(a=>(
     a = $.itrlist(a),
-    $.each(a, stencil($, X, (a, b)=> a?.[math.mod(b, a.length)]), x=> x, 0, 1)
+    $.each(a, stencil($, X, (a, b)=> a?.get(math.mod(b, a.length))), x=> x, 0, 1)
   ))
 }
 
