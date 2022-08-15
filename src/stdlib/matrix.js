@@ -123,7 +123,7 @@ MATRIX["^+"] = $=> $.u2(math.concat)
 // sort matrix
 MATRIX["srt"] = $=>{
   SL.swap($)
-  $.u1(a=> math.reshape($.each(math.flatten(a), _.sortBy), math.size(a)))
+  $.u1(a=> math.reshape($.each(math.flatten(a).valueOf(), _.sortBy), math.size(a)))
 }
 
 // construct matrix from size and function
