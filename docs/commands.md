@@ -311,7 +311,7 @@ Command | Description
 <code>pnv</code> | Moore-Penrose inverse
 <code>*kr</code> | Kronecker product
 <code>*dt</code> | dot product
-<code>*cr</code> | cross product
+<code>*x</code> | cross product
 <code>^++</code> | concat matrices
 <code>^+</code> | `^++` on last axis
 <code>hi</code> | restrain to upper bound defined by index 0
@@ -360,8 +360,8 @@ Command | Description
 <code>\`vs</code> | get all views
 <code>\`pvs</code> | get all paths and views
 <code>%g</code> | lens view
-<code>%:</code> | lens modify
-<code>%s</code> | lens set
+<code>%:</code> | lens set
+<code>%_</code> | lens modify
 <code>%a</code> | lens map
 <code>%f</code> | lens filter
 <code>%F</code> | lens find

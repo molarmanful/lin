@@ -55,14 +55,11 @@ NEST["%craft"] = $=>
 // lens view
 NEST["%g"] = $=> $.u2((a, b)=> $.lget(a, b))
 
-// lens modify
-NEST["%:"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c))
-
 // lens set
-NEST["%s"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c, 1))
+NEST["%:"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c, 1))
 
-// lens remove
-// NEST["%_"] = $=> $.u2((a, b)=> $.lmod(a, void 0, b, 2))
+// lens modify
+NEST["%_"] = $=> $.u3((a, b, c)=> $.lmod(a, b, c))
 
 // lens map
 NEST["%a"] = $=> $.unshift($.lens.a)

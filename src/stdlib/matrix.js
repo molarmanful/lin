@@ -71,19 +71,15 @@ MATRIX[">sh"] = $=>
   $.u2((a, b)=> math.matrix(math.reshape($.itrlist(itr.take(math.prod(b), itr.cycle(math.flatten(a)))), b)))
 
 // transpose matrix
-MATRIX["tsp"] = $=>
-  $.u1(a=>{
-    a = $.try($$=> math.transpose(a), e=> _.zip(...$.itrlist(a)))
-    return math.matrix(a)
-  })
+MATRIX["tsp"] = $=> $.exec('.+ sz len.(.>.~ ) tps')
 
 // `tsp` with custom axis permutation
 MATRIX["tps"] = $=>
   $.u2((a, b)=>{
     let s = $.sz(a)
-    return math.matrixFromFunction(
-      b.map(x=> G(s, x)),
-      i=> b.map(x=> G(i, x)).reduce((x, i)=> G(x, i), a)
+    return $.imap(
+      math.zeros(b.map(x=> G(s, x))),
+      (n, i)=> b.map(x=> G(i, x)).reduce((x, i)=> G(x, i), a)
     )
   })
 
@@ -112,7 +108,7 @@ MATRIX["*kr"] = $=> $.u2(math.kron)
 MATRIX["*dt"] = $=> $.u2(math.dot)
 
 // cross product
-MATRIX["*cr"] = $=> $.u2(math.cross)
+MATRIX["*x"] = $=> $.u2(math.cross)
 
 // concat matrices
 MATRIX["^++"] = $=> $.u3((a, b, c)=> $.v1(x=> math.concat(a, b, x), c))
@@ -132,6 +128,16 @@ MATRIX["lo"] = $=>
     return math.reshape(B.map(x=> x.reduceRight(G, a)), A.map(([x, y])=> Math.max(0, x < 0 ? -x : y - x)))
   })
 
+let frame = ($, xs, x, n)=>
+  _.range($.sz(xs).length).reverse().reduce((a, b)=> $.imap(a, c=>{
+    let s = [n, ...$.sz(c).valueOf().slice(1)]
+    let C = $.imap(math.zeros(s), $$=> x)
+    return math.concat(C, c, C, 0)
+  }, b), xs)
+
+MATRIX["frm"] = $=>
+  $.u3((a, b, c)=> $.v2((x, y)=> frame($, a, x, y), b, c))
+
 // sort matrix
 MATRIX["srt"] = $=>{
   SL.swap($)
@@ -139,7 +145,7 @@ MATRIX["srt"] = $=>{
 }
 
 // construct matrix from size and function
-MATRIX["^it"] = $=> $.u1(a=> $.each(math.zeros(a).valueOf(), (x, f)=> $.imap(x, (y, i)=> f(i))))
+MATRIX["^it"] = $=> $.u1(a=> math.matrix($.each(math.zeros(a), (x, f)=> $.imap(x, (y, i)=> f(i)))))
 
 // split matrix into submatrices at index 0
 MATRIX["spl"] = $=>
