@@ -2,11 +2,13 @@ import {math, $C, _, SL, itr, __} from '../bridge.js'
 
 let MATRIX = {}
 
+let G = (x, i)=> x?.get && x.get(i)
+
 // matrix size
 MATRIX["sz"] = $=> $.u1(a=> $.sz(a))
 
 // convert to matrix
-MATRIX["mat"] = $=> $.u1(a=> math.matrix(math.resize(a, math.size(a))))
+MATRIX["mat"] = $=> $.u1(a=> math.matrix(math.resize(a, $.sz(a), null)))
 
 let mstr = ($, a, f=x=> $.form([x], ' '), sep=' ')=>{
   a = $.itrlist(a)
@@ -53,7 +55,7 @@ MATRIX["mat_"] = $=> $.u1(a=> $.ismat(a) ? a.valueOf() : a)
 MATRIX["d:"] = $=> $.u1(math.diag)
 
 // autofill with index 0 to create validly-shaped matrix
-MATRIX["fil"] = $=> $.u2((a, b)=> math.matrix(math.resize(a, math.size(a), b)))
+MATRIX["fil"] = $=> $.u2((a, b)=> math.matrix(math.resize(a, $.sz(a), b)))
 
 // generate matrix of 0s from size at index 0
 MATRIX[">Zs"] = $=> $.u1(a=> math.zeros(a))
@@ -63,9 +65,6 @@ MATRIX["eye"] = $=> $.u1(math.identity)
 
 // flatten matrix
 MATRIX["flt"] = $=> $.u1(a=> math.flatten(a))
-
-// resize matrix
-MATRIX[">sz"] = $=> $.u2((a, b)=> math.matrix(math.resize(a, b)))
 
 // reshape matrix
 MATRIX[">sh"] = $=>
@@ -82,8 +81,9 @@ MATRIX["tsp"] = $=>
 MATRIX["tps"] = $=>
   $.u2((a, b)=>{
     let s = $.sz(a)
-    return math.matrixFromFunction(b.map(x=> s.get(x)), i=>
-      b.map(x=> i.get(x)).reduce((x, i)=> x.get(i), a)
+    return math.matrixFromFunction(
+      b.map(x=> G(s, x)),
+      i=> b.map(x=> G(i, x)).reduce((x, i)=> G(x, i), a)
     )
   })
 
@@ -120,10 +120,22 @@ MATRIX["^++"] = $=> $.u3((a, b, c)=> $.v1(x=> math.concat(a, b, x), c))
 // `^++` on last axis
 MATRIX["^+"] = $=> $.u2(math.concat)
 
+// restrain to upper bound defined by index 0
+MATRIX["hi"] = $=>
+  $.u2((a, b)=> math.resize(a, _.zip(b, $.sz(a)).map(([x, y])=> Math.min(x < 0 ? Math.max(0, x + y) : x, y))))
+
+// restrain to lower bound defined by index 0
+MATRIX["lo"] = $=>
+  $.u2((a, b)=> {
+    let A = _.zip(b, $.sz(a))
+    let B = [...$C.CartesianProduct.from(A.slice().reverse().map(([x, y])=> _.range(...x < 0 ? [x, 0] : x < y ? [x, y] : [0])))]
+    return math.reshape(B.map(x=> x.reduceRight(G, a)), A.map(([x, y])=> Math.max(0, x < 0 ? -x : y - x)))
+  })
+
 // sort matrix
 MATRIX["srt"] = $=>{
   SL.swap($)
-  $.u1(a=> math.reshape($.each(math.flatten(a).valueOf(), _.sortBy), math.size(a)))
+  $.u1(a=> math.reshape($.each(math.flatten(a).valueOf(), _.sortBy), $.sz(a)))
 }
 
 // construct matrix from size and function
@@ -136,14 +148,14 @@ MATRIX["spl"] = $=>
     let A = $.sz(a)
     b = r(math.resize(r(b), [A.length], 1))
     let B = [...$C.CartesianProduct.from(r(b).map(x=> _.range(x)))]
-    let C = [...$C.CartesianProduct.from(_.zipWith(r(b), r(A), (x, y)=> _.range(0, y ?? 1, x)))]
+    let C = [...$C.CartesianProduct.from(_.zip(b, A).reverse().map(([x, y])=> _.range(0, y, x)))]
     return math.reshape(
-      math.matrix(C.map(x=> B.map(y=> math.add(x, y).reduce((z, i)=> z?.get(i), a)))),
+      math.matrix(C.map(x=> B.map(y=> math.add(x, y).reduceRight(G, a)))),
       [...math.ceil(math.dotDivide(A, b)), ...b]
     )
   })
 
-let stencil = ($, X, F=(a, b)=> a?.get(b))=> (x, f)=>
+let stencil = ($, X, F=G)=> (x, f)=>
   $.imap(x, (y, i)=> f(y, X.map(z=> math.add(z, i).reduce((a, b)=> F(a, b), x))))
 
 // stencil matrix with specified neighborhood
@@ -162,7 +174,7 @@ MATRIX["stm"] = $=>{
   SL.swap($)
   $.u1(a=>(
     a = $.itrlist(a),
-    $.each(a, stencil($, X, (a, b)=> a?.get(math.mod(b, a.length))), x=> x, 0, 1)
+    $.each(a, stencil($, X, (a, b)=> G(a, math.mod(b, a.length))), x=> x, 0, 1)
   ))
 }
 

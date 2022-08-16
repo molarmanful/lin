@@ -300,7 +300,6 @@ Command | Description
 <code>>Zs</code> | generate matrix of 0s from size at index 0
 <code>eye</code> | identity matrix
 <code>flt</code> | flatten matrix
-<code>>sz</code> | resize matrix
 <code>>sh</code> | reshape matrix
 <code>tsp</code> | transpose matrix
 <code>tps</code> | `tsp` with custom axis permutation
@@ -315,6 +314,8 @@ Command | Description
 <code>*cr</code> | cross product
 <code>^++</code> | concat matrices
 <code>^+</code> | `^++` on last axis
+<code>hi</code> | restrain to upper bound defined by index 0
+<code>lo</code> | restrain to lower bound defined by index 0
 <code>srt</code> | sort matrix
 <code>^it</code> | construct matrix from size and function
 <code>spl</code> | split matrix into submatrices at index 0

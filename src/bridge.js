@@ -1,7 +1,17 @@
 import _ from 'lodash-es'
 import {Temporal, Intl, toTemporalInstant} from '@js-temporal/polyfill'
 import sh from 'shelljs'
-import * as math from 'mathjs'
+import {create, all} from 'mathjs'
+
+let math = create(all)
+
+let mat = math.matrix.bind(math)
+math.import({
+  matrix(xs, ...a){
+    let f = x=> x?.map ? x.map(f) : x?.xs ? x.xs : x
+    return mat(xs.map(f), ...a)
+  }
+}, {override: true})
 
 Map.prototype.map = function(f){ return new Map(this.entries.map(([i, a])=> f(a, i))) }
 
@@ -14,13 +24,12 @@ Array.prototype.set = function(i, a){ return i >= 0 ? (this[i] = a) : (this[this
 Array.prototype.delete = function(i){ this.splice(i, 1) }
 
 math.DenseMatrix.prototype.map = math.SparseMatrix.prototype.map = function(f){
-  let a = this.valueOf().map(f)
-  try { return math.matrix(math.resize(a, this.size())) }
-  catch(e){ return a }
+  return math.matrix(this.valueOf().map(f))
 }
 
 math.DenseMatrix.prototype.get = math.SparseMatrix.prototype.get = function(i){
-  return this.valueOf()[i]
+  let a = this.valueOf().get(i)
+  return a instanceof Array ? math.matrix(a) : a
 }
 
 Date.prototype.toTemporalInstant = toTemporalInstant

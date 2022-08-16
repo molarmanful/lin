@@ -368,7 +368,7 @@ class INTRP {
 
   len(x){
     return (
-      this.ismat(x) ? math.size(x)[0]
+      this.ismat(x) ? x.size()[0]
       : this.isitr(x) ? itr.size(x)
       : this.ismap(x) ? x.size()
       : x?.length
@@ -614,7 +614,7 @@ class INTRP {
 
   imap(x, F, D=1 / 0, f=(x, f)=> __.map(f)(x), g=itr.map, post=x=> x, d=[]){
     if(D < 0) D += this.depth(x)
-    if(!D) return F(x, d)
+    if(D == 0) return post(F(x, d))
     if(this.isitr(x)) return g((a, i)=> this.imap(a, F, D - 1, f, g, post, d.concat(i)), x)
     if(this.isi(x)) return f(x, (a, i)=> this.imap(a, F, D - 1, f, g, post, d.concat(i)))
     return post(F(x, d))

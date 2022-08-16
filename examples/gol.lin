@@ -1,5 +1,5 @@
 [ \DISP \GEN ] :: 2^Q.#n ;
-( rng 2*0| ) [20 20] ^it >sp ;
+( rng 2*0| ) [20 20] ^it ;
 wipe DISP GEN @
 
 #DISP ;
