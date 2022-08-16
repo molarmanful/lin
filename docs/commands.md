@@ -316,6 +316,7 @@ Command | Description
 <code>^+</code> | `^++` on last axis
 <code>hi</code> | restrain to upper bound defined by index 0
 <code>lo</code> | restrain to lower bound defined by index 0
+<code>frm</code> | frame matrix with border of index 1 and width at index 0
 <code>srt</code> | sort matrix
 <code>^it</code> | construct matrix from size and function
 <code>spl</code> | split matrix into submatrices at index 0

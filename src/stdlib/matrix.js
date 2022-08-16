@@ -135,6 +135,7 @@ let frame = ($, xs, x, n)=>
     return math.concat(C, c, C, 0)
   }, b), xs)
 
+// frame matrix with border of index 1 and width at index 0
 MATRIX["frm"] = $=>
   $.u3((a, b, c)=> $.v2((x, y)=> frame($, a, x, y), b, c))
 
