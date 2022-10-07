@@ -12,7 +12,7 @@
 ㌖㍇㌚㌮㍔㌫㌙㌖㌗㍊㍑㌭㍔㌄
 ```
 
-**See [sclin](https://github.com/molarmanful/sclin) for a proper lin that is harder, better, faster, and stronger!**
+**See [sclin](https://github.com/molarmanful/sclin) for an updated lin implementation that is harder, better, faster, and stronger!**
 
 Draft Node.js implementation of lin, the little language that could.
 
